@@ -39,7 +39,7 @@ class CFTime (np.ndarray):
     _sec2unit['hours'] = 1.0/3600.0
     _sec2unit['days'] = 1.0/(24.0*3600.0)
 
-    def __new__(self, ncfile, name='ocean_time', units=None, **kwargs):
+    def __new__(self, ncfile, name='time', units=None, **kwargs):
         self._nc = Dataset(ncfile)
         data = self._nc.variables[name][:]
         if units == None:
@@ -64,7 +64,7 @@ class CFTime (np.ndarray):
         if self._units in ['day','d','ds']:
             self._units='days'
 
-        return data.view(ocean_time)
+        return data.view(CFTime)
     
     def nearest_index(self, dateo):
         to = date2num(dateo)
