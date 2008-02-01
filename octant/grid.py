@@ -12,7 +12,7 @@ import cPickle
 from warnings import warn
 from ctypes import *
 
-from ocemopy.extern import PolygonGeometry
+from octant.extern import PolygonGeometry
 from scipy.special import erf
 
 from numpy import *
@@ -859,7 +859,7 @@ class CGrid(object):
 class Gridgen_ctypes(CGrid):
     """docstring for Gridgen"""
     
-    _libgridgen = pydll.LoadLibrary("libgridgen.dylib")
+    _libgridgen = pydll.LoadLibrary("libgridgen.so")
 
     _libgridgen.gridgen_generategrid2.restype = c_void_p
     _libgridgen.gridnodes_getx.restype = POINTER(POINTER(c_double))
