@@ -7,10 +7,12 @@
 #   Removed second BoundaryInteractor class, and added interative gridgen
 #   capabilities.
 
-import copy
+from copy import deepcopy
 import cPickle
 from warnings import warn
 from ctypes import *
+import sys
+import os
 
 from octant.extern import PolygonGeometry
 from scipy.special import erf
@@ -28,8 +30,6 @@ try:
     from matplotlib.toolkits.basemap import Basemap
 except:
     warn("Can't import Basemap, so cannot use geographic grids.")
-
-
 
 class BoundaryClick(object):
     """
@@ -55,11 +55,10 @@ class BoundaryClick(object):
         
         p : define vertex as beta=1 (a Positive turn, marked with green triangle)
         m : define vertex as beta=1 (a Negative turn, marked with red triangle)
-        z : define vertex as beta=0 (no corner, marked with green triangle)
+        z : define vertex as beta=0 (no corner, marked with a black dot)
         
         G : generate grid from the current boundary using gridgen
         T : toggle visability of the current grid
-        R : remove the gridlines from the figure
     
     Methods:
     
@@ -110,64 +109,6 @@ class BoundaryClick(object):
                 self._ax.lines.remove(line)
             delattr(self, '_gridlines')
     
-    def _init_boundary_interactor(self):
-        """Send polyclick thread to boundary interactor"""
-        # Get rid old mpl connections.
-        self._ax.figure.canvas.mpl_disconnect(self._key_id)
-        self._ax.figure.canvas.mpl_disconnect(self._click_id)
-        
-        # Shade the selected region in a polygon
-        self._poly = Polygon(self.verts, alpha=0.1, fc='k', animated=True)
-        self._ax.add_patch(self._poly)
-        
-        # change line to animated
-        # self._line.set_animated(True)
-        # self._line.set_markerfacecolor('k')
-        self._line.set_marker('None')
-        
-        # Link in the two lines that will show the beta values
-        # pline for positive turns, mline for negative (minus) turns.
-        self._pline = Line2D([], [], marker='^', ms=12, mfc='g',\
-                             animated=True, lw=0)
-        self._mline = Line2D([], [], marker='v', ms=12, mfc='r',\
-                             animated=True, lw=0)
-        self._zline = Line2D([], [], marker='o', mfc='k', animated=True, lw=0)
-        self._sline = Line2D([], [], marker='s', mfc='k', animated=True, lw=0)
-        
-        self._update_beta_lines()
-        self._ax.add_artist(self._pline)
-        self._ax.add_artist(self._mline)
-        self._ax.add_artist(self._zline)
-        self._ax.add_artist(self._sline)
-        
-        # get the canvas and connect the callback events
-        cid = self._poly.add_callback(self._poly_changed)
-        self._ind = None # the active vert
-        
-        self._canvas.mpl_connect('draw_event', self._draw_callback)
-        self._canvas.mpl_connect('button_press_event',\
-                                 self._button_press_callback)
-        self._canvas.mpl_connect('key_press_event', self._key_press_callback)
-        self._canvas.mpl_connect('button_release_event',\
-                                 self._button_release_callback)
-        self._canvas.mpl_connect('motion_notify_event',\
-                                 self._motion_notify_callback)
-    
-    def _on_return(self, event):
-        if event.key in ('enter', None):
-            self._init_boundary_interactor()
-    
-    def _on_click(self, event):
-        self.x.append(event.xdata)
-        self.y.append(event.ydata)
-        self.beta.append(0)
-        self._line.set_data(self.x, self.y)
-        
-        self._background = self._canvas.copy_from_bbox(self._ax.bbox)
-        self._ax.draw_artist(self._line)
-        self._canvas.blit(self._ax.bbox)
-    
-    
     def _draw_callback(self, event):
         self._background = self._canvas.copy_from_bbox(self._ax.bbox)
         self._ax.draw_artist(self._poly)
@@ -189,7 +130,7 @@ class BoundaryClick(object):
         'get the index of the vertex under point if within epsilon tolerance'
         try:
             x, y = zip(*self._poly.xy)
-        
+            
             # display coords
             xt, yt = self._poly.get_transform().numerix_x_y(x, y)
             d = sqrt((xt-event.x)**2 + (yt-event.y)**2)
@@ -208,10 +149,10 @@ class BoundaryClick(object):
             d = sqrt((xt-event.x)**2 + (yt-event.y)**2)
             indseq = nonzero(equal(d, amin(d)))[0]
             ind = indseq[0]
-
+            
             if d[ind]>=self._epsilon:
                 ind = None
-
+            
             return ind
     
     def _button_press_callback(self, event):
@@ -234,6 +175,7 @@ class BoundaryClick(object):
         
         if event.key=='t':
             self._showbetas = not self._showbetas
+            self._line.set_visible(self._showbetas)
             self._pline.set_visible(self._showbetas)
             self._mline.set_visible(self._showbetas)
             self._zline.set_visible(self._showbetas)
@@ -263,14 +205,17 @@ class BoundaryClick(object):
             if ind is not None:
                 self.gridgen_options['ul_idx'] = ind
         elif event.key=='i':
-            xys = self._poly.get_transform().seq_xy_tups(self._poly.xy)
+            xys = self._poly.get_transform().transform(self._poly.xy)
             p = event.x, event.y # display coords
             for i in range(len(xys)-1):
                 s0 = xys[i]
                 s1 = xys[i+1]
                 d = dist_point_to_segment(p, s0, s1)
                 if d<=self._epsilon:
-                    self._poly.xy.insert(i+1, (event.xdata, event.ydata))
+                    self._poly.xy = array(
+                        list(self._poly.xy[:i+1]) +
+                        [(event.xdata, event.ydata)] +
+                        list(self._poly.xy[i+1:]))
                     self._line.set_data(zip(*self._poly.xy))
                     self.beta.insert(i+1, 0)
                     break
@@ -278,13 +223,15 @@ class BoundaryClick(object):
             s1 = xys[0]
             d = dist_point_to_segment(p, s0, s1)
             if d<=self._epsilon:
-                self._poly.xy.append((event.xdata, event.ydata))
+                self._poly.xy = array(
+                    list(self._poly.xy) +
+                    [(event.xdata, event.ydata)])
                 self._line.set_data(zip(*self._poly.xy))
                 self.beta.append(0)
         elif event.key=='G' or event.key == '1':
-            options = copy.deepcopy(self.gridgen_options)
+            options = deepcopy(self.gridgen_options)
             shp = options.pop('shp')
-            self.grd = gridgen(self.x, self.y, self.beta, shp,\
+            self.grd = Gridgen(self.x, self.y, self.beta, shp,\
                                       **options)
             self.remove_grid()
             self._showgrid = True
@@ -298,8 +245,6 @@ class BoundaryClick(object):
                                             **gridlineprops):
                 self._ax.add_line(line)
                 self._gridlines.append(line)
-        elif event.key=='R':
-            self.remove_grid()
         elif event.key=='T' or event.key == '2':
             self._showgrid = not self._showgrid
             if hasattr(self, '_gridlines'):
@@ -333,18 +278,21 @@ class BoundaryClick(object):
         self._canvas.blit(self._ax.bbox)
     
     
-    def __init__(self, x=[], y=[], beta=None, ax=None, **gridgen_options):
+    def __init__(self, x, y, beta, ax=None, **gridgen_options):
         
         if isinstance(x, str):
             x, y, beta = load(x)
         
-        if ax is None: ax = pl.gca()
+        assert len(x) >= 4, 'Boundary must have at least four points.'
+        
+        if ax is None: 
+            ax = pl.gca()
+        
         self._ax = ax
-
+        
         # Set default gridgen option, and copy over specified options.
-        self.gridgen_options = {'ul_idx': 0, 
-                                'shp': (32, 32),
-                                'verbose': True}
+        self.gridgen_options = {'ul_idx': 0, 'shp': (32, 32)}
+        
         for key, value in gridgen_options.iteritems():
             self.gridgen_options[key] = gridgen_options[key]
         
@@ -357,19 +305,42 @@ class BoundaryClick(object):
             assert len(x)==len(beta), 'beta must have same length as x and y'
             self.beta = list(beta)
         
-        self._line = pl.Line2D(x, y, marker='o', markerfacecolor='orange',\
-                               animated=True)
+        self._line = Line2D(x, y, animated=True, ls='-', color='k', alpha=0.5, lw=1)
         self._ax.add_line(self._line)
         
         self._canvas = self._line.figure.canvas        
         
-        self._key_id = self._ax.figure.canvas.mpl_connect('key_press_event',\
-                                                          self._on_return)
-        self._click_id = \
-            self._ax.figure.canvas.mpl_connect('button_press_event',\
-                                               self._on_click)
-        if len(x) > 0:
-            self._init_boundary_interactor()
+        self._poly = Polygon(self.verts, alpha=0.1, fc='k', animated=True)
+        self._ax.add_patch(self._poly)
+        
+        # Link in the two lines that will show the beta values
+        # pline for positive turns, mline for negative (minus) turns.
+        self._pline = Line2D([], [], marker='^', ms=12, mfc='g',\
+                             animated=True, lw=0)
+        self._mline = Line2D([], [], marker='v', ms=12, mfc='r',\
+                             animated=True, lw=0)
+        self._zline = Line2D([], [], marker='o', mfc='k', animated=True, lw=0)
+        self._sline = Line2D([], [], marker='s', mfc='k', animated=True, lw=0)
+        
+        self._update_beta_lines()
+        self._ax.add_artist(self._pline)
+        self._ax.add_artist(self._mline)
+        self._ax.add_artist(self._zline)
+        self._ax.add_artist(self._sline)
+        
+        # get the canvas and connect the callback events
+        cid = self._poly.add_callback(self._poly_changed)
+        self._ind = None # the active vert
+        
+        self._canvas.mpl_connect('draw_event', self._draw_callback)
+        self._canvas.mpl_connect('button_press_event',\
+                                 self._button_press_callback)
+        self._canvas.mpl_connect('key_press_event', self._key_press_callback)
+        self._canvas.mpl_connect('button_release_event',\
+                                 self._button_release_callback)
+        self._canvas.mpl_connect('motion_notify_event',\
+                                 self._motion_notify_callback)
+    
     
     def dump(self, bry_file):
         f = open(bry_file, 'wb')
@@ -485,11 +456,6 @@ class Focus(object):
         return x, y
 
 
-
-_CGrid_doc = '''
-
-
-'''
 class CGrid(object):
     """A class for a curvilinear Arikawa C-Grid.
         
@@ -529,8 +495,6 @@ class CGrid(object):
        mask (if given) and the masked locations.
         
     """
-    
-    __doc__ = _CGrid_doc
     
     def __init__(self, x=None, y=None,  \
                        lon=None, lat=None, \
@@ -726,18 +690,18 @@ class CGrid(object):
         
         
         
-        self.pm = extrapolate_mask(self.pm, mask=(self.mask==0.0))
-        self.pn = extrapolate_mask(self.pn, mask=(self.mask==0.0))
+        # self.pm = extrapolate_mask(self.pm, mask=(self.mask==0.0))
+        # self.pn = extrapolate_mask(self.pn, mask=(self.mask==0.0))
         
         if isinstance(self.pn, ma.MaskedArray):
-            self.dndx = ma.zeros((self.Mp, self.Lp), dtype='d')
+            self.dndx = ma.zeros(self.x_rho.shape, dtype='d')
         else:
-            self.dndx = zeros((self.Mp, self.Lp), dtype='d')
+            self.dndx = zeros(self.x_rho.shape, dtype='d')
         
         if isinstance(self.pm, ma.MaskedArray):
-            self.dmde = ma.zeros((self.Mp, self.Lp), dtype='d')
+            self.dmde = ma.zeros(self.x_rho.shape, dtype='d')
         else:
-            self.dmde = zeros((self.Mp, self.Lp), dtype='d')
+            self.dmde = zeros(self.x_rho.shape, dtype='d')
         
         self.dndx[1:-1,1:-1] = 0.5*(1.0/self.pn[1:-1,2:] - 1.0/self.pn[1:-1,:-2])
         self.dmde[1:-1,1:-1] = 0.5*(1.0/self.pm[2:,1:-1] - 1.0/self.pm[:-2,1:-1])
@@ -748,7 +712,7 @@ class CGrid(object):
         self.angle = arctan2(diff(0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])), \
                            diff(0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])))
         
-        self.angle = extrapolate_mask(self.angle, mask=(self.mask==0.0))
+        # self.angle = extrapolate_mask(self.angle, mask=(self.mask==0.0))
     
     def calculate_projection(self, proj=None):        
         if isinstance(self.lat_vert, ma.MaskedArray):
@@ -854,13 +818,22 @@ class CGrid(object):
     lat_u   = property(_get_lat_u)
     lat_v   = property(_get_lat_v)
     lat_psi = property(_get_lat_psi)
-    
 
-class Gridgen_ctypes(CGrid):
+
+class Gridgen(CGrid):
     """docstring for Gridgen"""
     
-    _libgridgen = pydll.LoadLibrary("libgridgen.so")
-
+    # for directory in sys.path:
+    #     if directory.endswith('site-packages'):
+    #         print os.path.join(directory, '_gridgen.so')
+    #         try:
+    #             _libgridgen = CDLL(os.path.join(directory, '_gridgen.so'))
+    #             break
+    #         except:
+    #             pass
+    
+    _libgridgen = pydll.LoadLibrary("libgridgen.dylib")
+    
     _libgridgen.gridgen_generategrid2.restype = c_void_p
     _libgridgen.gridnodes_getx.restype = POINTER(POINTER(c_double))
     _libgridgen.gridnodes_gety.restype = POINTER(POINTER(c_double))
@@ -870,8 +843,8 @@ class Gridgen_ctypes(CGrid):
     
     def generate_grid(self):
         
-        # if self._gn is not None:
-        #     self._libgridgen.gridnodes_destroy(self._gn)
+        if self._gn is not None:
+            self._libgridgen.gridnodes_destroy(self._gn)
         
         nbry = len(self.xbry)
         
@@ -920,9 +893,9 @@ class Gridgen_ctypes(CGrid):
                  nnodes=14, precision=1.0e-12, nppe=3, \
                  newton=True, thin=True, checksimplepoly=True, verbose=False):
         
-        self.xbry = asarray(xbry)
-        self.ybry = asarray(ybry)
-        self.beta = asarray(beta)
+        self.xbry = asarray(xbry, dtype='d')
+        self.ybry = asarray(ybry, dtype='d')
+        self.beta = asarray(beta, dtype='d')
         assert self.beta.sum() == 4.0, 'sum of beta must be 4.0'
         self.shape = shape
         self.ny = shape[0]
@@ -945,7 +918,7 @@ class Gridgen_ctypes(CGrid):
         self.generate_grid()
     
     def __del__(self):
-        """delete gridnode object upon deletion (still memory leaks..)"""
+        """delete gridnode object upon deletion"""
         self._libgridgen.gridnodes_destroy(self._gn)
 
 
@@ -997,3 +970,18 @@ def rho_to_vert(xr, yr, pm, pn, ang):
     
     return x, y
 
+
+def bry_box():
+    ax = pl.gca()
+    ### return x, y, beta as box 10% away from the axis edges.
+
+if __name__ == '__main__':
+    x = [0.2, 0.85, 0.9, 0.82, 0.23]
+    y = [0.2, 0.25, 0.5, 0.82, .83]
+    beta = [1.0, 1.0, 0.0, 1.0, 1.0]
+    
+    grd = Gridgen(x, y, beta, (32, 32))
+    ax = pl.subplot(111)
+    
+    BoundaryClick(x, y, beta)
+    pl.show()

@@ -43,9 +43,7 @@ Subpackages:
 
 '''
 
-#__all__ = ['grid', 'io', 'tools', 'getm']
-
-from grid import CGrid, Gridgen_ctypes
+from grid import CGrid, Gridgen
 import io
 import extern
 
