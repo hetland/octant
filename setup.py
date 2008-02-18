@@ -57,11 +57,31 @@ iso = Extension(name = '_iso',
 # step3d_t = Extension(name = '_step3d_t',
 #                      sources = ['octant/ocean/step3d_t.f'])
 # 
+gridgen = Extension(name = '_gridgen',
+           extra_compile_args=['-DTRILIBRARY'],
+           sources=["octant/extern/gridgen/broyden.c",
+                    "octant/extern/gridgen/delaunay.c",
+                    "octant/extern/gridgen/geom.c",
+                    "octant/extern/gridgen/gridgen.c",
+                    "octant/extern/gridgen/hash.c",
+                    "octant/extern/gridgen/issimplepoly.c",
+                    "octant/extern/gridgen/istack.c",
+                    "octant/extern/gridgen/ode.c",
+                    "octant/extern/gridgen/swcr.c",
+                    "octant/extern/gridgen/triangle.c",
+                    "octant/extern/gridgen/vertlist.c",
+                    "octant/extern/gridgen/zode.c",
+                    "octant/extern/gridutils/gridnodes.c",
+                    "octant/extern/gridutils/gucommon.c",
+                    "octant/extern/gridutils/gridmap.c",
+                    "octant/extern/gridutils/poly.c"])
+                                           
 delaunay = Extension(name = '_delaunay',
            sources=["octant/extern/delaunay/_delaunay.cpp",
                     "octant/extern/delaunay/VoronoiDiagramGenerator.cpp",
                     "octant/extern/delaunay/delaunay_utils.cpp",
                     "octant/extern/delaunay/natneighbors.cpp"])
+
 
 doclines = __doc__.split("\n")
  
@@ -87,7 +107,7 @@ if __name__ == '__main__':
                       'octant.extern.delaunay'],
           license = 'BSD',
           platforms = ["any"],
-          ext_modules = [delaunay, iso],
+          ext_modules = [delaunay, iso, gridgen],
           classifiers = filter(None, classifiers.split("\n")),
           # package_data = package_data,
           )

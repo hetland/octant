@@ -43,9 +43,10 @@ Subpackages:
 
 '''
 
-from grid import CGrid, Gridgen
+from grid import CGrid, Gridgen, BoundaryClick, Focus, FocusPoint
 import io
 import extern
+from cf import CFTime
 
 # import tools
 # import getm

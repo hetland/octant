@@ -20,7 +20,7 @@ datetime
 import numpy as np
 import datetime
 from dateutil.parser import parse
-from pylab import date2num,num2date
+from pylab import date2num, num2date
 from octant.io import Dataset
 
 class CFTime (np.ndarray):
@@ -42,29 +42,41 @@ class CFTime (np.ndarray):
     def __new__(self, ncfile, name='time', units=None, **kwargs):
         self._nc = Dataset(ncfile)
         data = self._nc.variables[name][:]
+        
+        data = data.view(CFTime)
+        
         if units == None:
-            self._units = self._nc.variables[name].units
+            data._units = self._nc.variables[name].units
         else:
-            self._units = units
+            data._units = units
         
-        units_split=self._units.split(' ',2)
+        units_split=data._units.split(' ',2)
         assert len(units_split) == 3 and units_split[1] == 'since', \
-            'units string improperly formatted\n' + self._units
-        self.origin=parse(units_split[2])
+            'units string improperly formatted\n' + data._units
         
-        self._units = units_split[0].lower()
+        try:
+            data.origin=parse(units_split[2])
+        except:
+            print 'Could not convert units.  Setting origin to 1970-01-01 00:00:00.'
+            data.origin = datetime.datetime(1970, 01, 01)
+        
+        data._units = units_split[0].lower()
         
         # compatibility to CF convention v1.0/udunits names:
-        if self._units in ['second','sec','secs','s']:
-            self._units='seconds'
-        if self._units in ['min','minute','mins']:
-            self._units='minutes'
-        if self._units in ['h','hs','hr','hrs','hour']:
-            self._units='hours'
-        if self._units in ['day','d','ds']:
-            self._units='days'
+        if data._units in ['second','sec','secs','s']:
+            data._units='seconds'
+        if data._units in ['min','minute','mins']:
+            data._units='minutes'
+        if data._units in ['h','hs','hr','hrs','hour']:
+            data._units='hours'
+        if data._units in ['day','d','ds']:
+            data._units='days'
 
-        return data.view(CFTime)
+        return data
+    
+    def __array_finalize__(self, obj):
+        self.origin = getattr(obj, 'origin', {})
+        self._units = getattr(obj, '_units', {})
     
     def nearest_index(self, dateo):
         to = date2num(dateo)
