@@ -31,7 +31,7 @@ try:
 except:
     warn("Can't import Basemap, so cannot use geographic grids.")
 
-class BoundaryClick(object):
+class BoundaryInteractor(object):
     """
     bry = BoundaryClick(x=[], y=[], beta=None, ax=gca(), **gridgen_options)
     
@@ -983,5 +983,5 @@ if __name__ == '__main__':
     grd = Gridgen(x, y, beta, (32, 32))
     ax = pl.subplot(111)
     
-    BoundaryClick(x, y, beta)
+    BoundaryInteractor(x, y, beta)
     pl.show()
