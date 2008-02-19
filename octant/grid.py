@@ -515,15 +515,21 @@ class CGrid(object):
     def __init__(self, x, y, proj=None, mask=None, f=None, h=None):
                 
         # self.proj is used to determine if the grid is geographic.
-        # self.proj is None for Cartesian grids, a Basemap instance otherwise.
+        # self.proj is None for Cartesian grids
+        # proj is a Basemap instance otherwise.
+        
         self.proj = proj
+        
+        assert np.ndim(x)==2 and np.ndim(y)==2 and np.shape(x)==np.shape(y), \
+            'x and y must be 2D arrays of the same size.'
+        
         if self.proj is not None:
-            self.lon_vert = x
-            self.lat_vert = y
+            self.lon_vert = np.asarray(x, dtype='d')
+            self.lat_vert = np.asarray(y, dtype='d')
             self.x_vert, self.y_vert = self.proj(x, y)
         else:
-            self.x_vert = x
-            self.y_vert = y
+            self.x_vert = np.asarray(x, dtype='d')
+            self.y_vert = np.asarray(y, dtype='d')
             self.lon_vert = None
             self.lat_vert = None
         
@@ -567,6 +573,131 @@ class CGrid(object):
             self.f = np.asarray(f, dtype='d')
             
         self.h = h
+    
+    def calculate_metrics(self):
+        'Calculates pm, pn, dndx, dmde, and angle from x_vert and y_vert'
+        if self.proj is not None:
+            gc_dist = np.vectorize(lambda lon1, lat1, lon2, lat2: \
+                         GreatCircle(6378137.0, 6356752.3142, \
+                                          lon1, lat1, lon2, lat2).distance)
+            lon_temp = 0.5*(self.lon_vert[1:,:]+self.lon_vert[:-1,:])
+            lat_temp = 0.5*(self.lat_vert[1:,:]+self.lat_vert[:-1,:])
+            if isinstance(lat_temp, np.ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
+            if isinstance(lon_temp, np.ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
+            self.pm = 1.0 / gc_dist(lon_temp[:,1:],  lat_temp[:,1:], \
+                                    lon_temp[:,:-1], lat_temp[:,:-1])
+            lon_temp = 0.5*(self.lon_vert[:,1:]+self.lon_vert[:,:-1])
+            lat_temp = 0.5*(self.lat_vert[:,1:]+self.lat_vert[:,:-1])
+            if isinstance(lat_temp, np.ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
+            if isinstance(lon_temp, np.ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
+            self.pn = 1.0 / gc_dist(lon_temp[1:,:],  lat_temp[1:,:], \
+                                    lon_temp[:-1,:], lat_temp[:-1,:])
+        else:
+            x_temp = 0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])
+            y_temp = 0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])
+            self.pm = 1.0 / np.sqrt(np.diff(x_temp, axis=1)**2 + np.diff(y_temp, axis=1)**2)
+            x_temp = 0.5*(self.x_vert[:,1:]+self.x_vert[:,:-1])
+            y_temp = 0.5*(self.y_vert[:,1:]+self.y_vert[:,:-1])
+            self.pn = 1.0 / np.sqrt(np.diff(x_temp, axis=0)**2 + np.diff(y_temp, axis=0)**2)
+        
+        if np.any(~np.isfinite(self.pm)) or np.any(~np.isfinite(self.pm)):
+            self.pm = np.ma.masked_where(~np.isfinite(self.pm), self.pm)
+            self.pn = np.ma.masked_where(~np.isfinite(self.pn), self.pn)
+        
+        # self.pm = extrapolate_mask(self.pm, mask=(self.mask==0.0))
+        # self.pn = extrapolate_mask(self.pn, mask=(self.mask==0.0))
+        
+        if isinstance(self.pn, np.ma.MaskedArray):
+            self.dndx = np.ma.zeros(self.x_rho.shape, dtype='d')
+        else:
+            self.dndx = np.zeros(self.x_rho.shape, dtype='d')
+        
+        if isinstance(self.pm, np.ma.MaskedArray):
+            self.dmde = np.ma.zeros(self.x_rho.shape, dtype='d')
+        else:
+            self.dmde = np.zeros(self.x_rho.shape, dtype='d')
+        
+        self.dndx[1:-1,1:-1] = 0.5*(1.0/self.pn[1:-1,2:] - 1.0/self.pn[1:-1,:-2])
+        self.dmde[1:-1,1:-1] = 0.5*(1.0/self.pm[2:,1:-1] - 1.0/self.pm[:-2,1:-1])
+        
+        if self.x_vert is None or self.y_vert is None:
+            self.calculate_projection()
+        
+        self.angle = np.arctan2(np.diff(0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])), \
+                                np.diff(0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])))
+        
+        # self.angle = extrapolate_mask(self.angle, mask=(self.mask==0.0))
+    
+    def calculate_projection(self, proj=None):        
+        if isinstance(self.lat_vert, np.ma.MaskedArray):
+            mask_lat = self.lat_vert.mask 
+            lat_temp = self.lat_vert.filled(0.0)
+        else:
+            lat_temp = self.lat_vert
+        
+        if isinstance(self.lon_vert, np.ma.MaskedArray): 
+            mask_lon = self.lon_vert.mask
+            lon_temp = self.lon_vert.filled(0.0)
+        else:
+            lon_temp = self.lon_vert
+        
+        self.x_vert, self.y_vert = self.proj(lon_temp, lat_temp)
+        
+        if isinstance(self.lon_vert, np.ma.MaskedArray):
+            self.x_vert = np.ma.masked_array(self.x_vert, mask=mask_lon)
+        
+        if isinstance(self.lat_vert, np.ma.MaskedArray):
+            self.y_vert = np.ma.masked_array(self.y_vert, mask=mask_lat)
+    
+    def calculate_orthogonality(self):
+        '''
+        Calculate orthogonality error in radiens
+        '''
+        z = self.x_vert + 1j*self.y_vert
+        du = np.diff(z, axis=1); du = (du/abs(du))[:-1,:]
+        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,:-1]
+        ang1 = np.arccos(du.real*dv.real + du.imag*dv.imag)
+        du = np.diff(z, axis=1); du = (du/abs(du))[1:,:]
+        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,:-1]
+        ang2 = np.arccos(du.real*dv.real + du.imag*dv.imag)
+        du = np.diff(z, axis=1); du = (du/abs(du))[:-1,:]
+        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,1:]
+        ang3 = np.arccos(du.real*dv.real + du.imag*dv.imag)
+        du = np.diff(z, axis=1); du = (du/abs(du))[1:,:]
+        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,1:]
+        ang4 = np.arccos(du.real*dv.real + du.imag*dv.imag)
+        ang = np.mean([abs(ang1), abs(ang2), abs(ang3), abs(ang4)], axis=0)
+        ang = (ang-np.pi/2.0)
+        return ang
+    
+    def mask_polygon(self, polyverts, inverse=False):
+        """
+        Mask Cartesian points contained within the polygons contained in the
+        list'polygons'.
+        
+        A cell is masked if the cell center (x_rho, y_rho) is within the
+        polygon. Other sub-masks (mask_u, mask_v, and mask_psi) are updated
+        automatically.
+        """
+        mask = self.mask_rho
+        
+        if inverse:
+            mask = np.asarray(~np.bool_(mask), dtype='d')
+        
+        iwater = mask == 1.0
+        x_wet = self._get_x_rho()[iwater]
+        y_wet = self._get_y_rho()[iwater]
+        
+        mask_wet = mask[iwater]
+        
+        inside = PolygonGeometry(polyverts).inside(zip(x_wet, y_wet))
+        
+        if np.any(inside):
+            mask_wet[inside] = 0.0
+            mask[iwater] = mask_wet
+            if inverse:
+                mask = np.asarray(~np.bool_(a), dtype='d')
+            self.mask_rho = mask
     
     def _get_mask_u(self):
         return self.mask_rho[:,1:]*self.mask_rho[:,:-1]
@@ -638,167 +769,11 @@ class CGrid(object):
         if self.lon_vert is None or self.lat_vert is None: return
         return self.lat_vert[1:-1,1:-1]
     
-    
-    def _get_sc_w(self):
-        if None in (self.theta_s, self.theta_b, self.hc, self.N): return
-        return mgrid[-1.0:0.0:1j*(self.N+1)]
-    
-    def _get_sc_r(self):
-        if None in (self.theta_s, self.theta_b, self.hc, self.N): return
-        sc_w = mgrid[-1.0:0.0:1j*(self.N+1)]
-        return 0.5*(sc_w[1:]+sc_w[:-1])
-    
-    def _get_Cs_r(self):
-        if None in (self.theta_s, self.theta_b, self.hc, self.N): return
-        if self.theta_s == 0.0: return self._get_sc_r()
-        return (1-self.theta_b)*sinh(self.theta_s*self._get_sc_r())/ \
-               np.sinh(self.theta_s)+0.5*self.theta_b \
-               *(np.tanh(self.theta_s*(self._get_sc_r()+0.5)) \
-               - np.tanh(0.5*self.theta_s))/np.tanh(0.5*self.theta_s)
-    
-    def _get_Cs_w(self):
-        if None in (self.theta_s, self.theta_b, self.hc, self.N): return
-        if self.theta_s == 0.0: return self._get_sc_w()
-        return (1-self.theta_b)*np.sinh(self.theta_s*self._get_sc_w())/ \
-               np.sinh(self.theta_s)+0.5*self.theta_b \
-               *(np.tanh(self.theta_s*(self._get_sc_w()+0.5)) \
-                - np.tanh(0.5*self.theta_s))/np.tanh(0.5*self.theta_s)
-    
-    
-    def calculate_metrics(self):
-        'Calculates pm, pn, dndx, dmde, and angle from x_vert and y_vert'
-        if self.proj is not None:
-            gc_dist = np.vectorize(lambda lon1, lat1, lon2, lat2: \
-                         GreatCircle(6378137.0, 6356752.3142, \
-                                          lon1, lat1, lon2, lat2).distance)
-            lon_temp = 0.5*(self.lon_vert[1:,:]+self.lon_vert[:-1,:])
-            lat_temp = 0.5*(self.lat_vert[1:,:]+self.lat_vert[:-1,:])
-            if isinstance(lat_temp, np.ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
-            if isinstance(lon_temp, np.ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
-            self.pm = 1.0 / gc_dist(lon_temp[:,1:],  lat_temp[:,1:], \
-                                    lon_temp[:,:-1], lat_temp[:,:-1])
-            lon_temp = 0.5*(self.lon_vert[:,1:]+self.lon_vert[:,:-1])
-            lat_temp = 0.5*(self.lat_vert[:,1:]+self.lat_vert[:,:-1])
-            if isinstance(lat_temp, np.ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
-            if isinstance(lon_temp, np.ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
-            self.pn = 1.0 / gc_dist(lon_temp[1:,:],  lat_temp[1:,:], \
-                                    lon_temp[:-1,:], lat_temp[:-1,:])
-        else:
-            x_temp = 0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])
-            y_temp = 0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])
-            self.pm = 1.0 / np.sqrt(np.diff(x_temp, axis=1)**2 + np.diff(y_temp, axis=1)**2)
-            x_temp = 0.5*(self.x_vert[:,1:]+self.x_vert[:,:-1])
-            y_temp = 0.5*(self.y_vert[:,1:]+self.y_vert[:,:-1])
-            self.pn = 1.0 / np.sqrt(np.diff(x_temp, axis=0)**2 + np.diff(y_temp, axis=0)**2)
-        
-        if np.any(~np.isfinite(self.pm)) or np.any(~np.isfinite(self.pm)):
-            self.pm = np.ma.masked_where(~np.isfinite(self.pm), self.pm)
-            self.pn = np.ma.masked_where(~np.isfinite(self.pn), self.pn)
-        
-        
-        
-        # self.pm = extrapolate_mask(self.pm, mask=(self.mask==0.0))
-        # self.pn = extrapolate_mask(self.pn, mask=(self.mask==0.0))
-        
-        if isinstance(self.pn, np.ma.MaskedArray):
-            self.dndx = np.ma.zeros(self.x_rho.shape, dtype='d')
-        else:
-            self.dndx = np.zeros(self.x_rho.shape, dtype='d')
-        
-        if isinstance(self.pm, np.ma.MaskedArray):
-            self.dmde = np.ma.zeros(self.x_rho.shape, dtype='d')
-        else:
-            self.dmde = np.zeros(self.x_rho.shape, dtype='d')
-        
-        self.dndx[1:-1,1:-1] = 0.5*(1.0/self.pn[1:-1,2:] - 1.0/self.pn[1:-1,:-2])
-        self.dmde[1:-1,1:-1] = 0.5*(1.0/self.pm[2:,1:-1] - 1.0/self.pm[:-2,1:-1])
-        
-        if self.x_vert is None or self.y_vert is None:
-            self.calculate_projection()
-        
-        self.angle = np.arctan2(np.diff(0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])), \
-                                np.diff(0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])))
-        
-        # self.angle = extrapolate_mask(self.angle, mask=(self.mask==0.0))
-    
-    def calculate_projection(self, proj=None):        
-        if isinstance(self.lat_vert, np.ma.MaskedArray):
-            mask_lat = self.lat_vert.mask 
-            lat_temp = self.lat_vert.filled(0.0)
-        else:
-            lat_temp = self.lat_vert
-        
-        if isinstance(self.lon_vert, np.ma.MaskedArray): 
-            mask_lon = self.lon_vert.mask
-            lon_temp = self.lon_vert.filled(0.0)
-        else:
-            lon_temp = self.lon_vert
-        
-        self.x_vert, self.y_vert = self.proj(lon_temp, lat_temp)
-        
-        if isinstance(self.lon_vert, np.ma.MaskedArray):
-            self.x_vert = np.ma.masked_array(self.x_vert, mask=mask_lon)
-        
-        if isinstance(self.lat_vert, np.ma.MaskedArray):
-            self.y_vert = np.ma.masked_array(self.y_vert, mask=mask_lat)
-    
-    def calculate_orthogonality(self):
-        '''
-        Calculate orthogonality error in radiens
-        '''
-        z = self.x_vert + 1j*self.y_vert
-        du = np.diff(z, axis=1); du = (du/abs(du))[:-1,:]
-        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,:-1]
-        ang1 = np.arccos(du.real*dv.real + du.imag*dv.imag)
-        du = np.diff(z, axis=1); du = (du/abs(du))[1:,:]
-        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,:-1]
-        ang2 = arccos(du.real*dv.real + du.imag*dv.imag)
-        du = np.diff(z, axis=1); du = (du/abs(du))[:-1,:]
-        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,1:]
-        ang3 = np.arccos(du.real*dv.real + du.imag*dv.imag)
-        du = np.diff(z, axis=1); du = (du/abs(du))[1:,:]
-        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,1:]
-        ang4 = np.arccos(du.real*dv.real + du.imag*dv.imag)
-        ang = mean([abs(ang1), abs(ang2), abs(ang3), abs(ang4)], axis=0)
-        ang = (ang-np.pi/2.0)
-        return ang
-    
-    def mask_polygon(self, polyverts, inverse=False):
-        """
-        Mask Cartesian points contained within the polygons contained in the
-        list'polygons'.
-        
-        A cell is masked if the cell center (x_rho, y_rho) is within the
-        polygon. Other sub-masks (mask_u, mask_v, and mask_psi) are updated
-        automatically.
-        """
-        mask = self.mask_rho
-        
-        if inverse:
-            mask = np.asarray(~np.bool_(mask), dtype='d')
-        
-        iwater = mask == 1.0
-        x_wet = self._get_x_rho()[iwater]
-        y_wet = self._get_y_rho()[iwater]
-        
-        mask_wet = mask[iwater]
-        
-        inside = PolygonGeometry(polyverts).inside(zip(x_wet, y_wet))
-        
-        if np.any(inside):
-            mask_wet[inside] = 0.0
-            mask[iwater] = mask_wet
-            if inverse:
-                mask = np.asarray(~np.bool_(a), dtype='d')
-            self.mask_rho = mask
-    
-    
     x = property(lambda self: self.x_vert)
     y = property(lambda self: self.y_vert)
     lon = property(lambda self: self.lon_vert)
     lat = property(lambda self: self.lat_vert)
     mask = property(lambda self: self.mask_rho)
-    
     mask_u   = property(_get_mask_u)
     mask_v   = property(_get_mask_v)
     mask_psi = property(_get_mask_psi)
