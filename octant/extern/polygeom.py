@@ -135,29 +135,32 @@ class PolygonGeometry(np.ndarray):
         
         p = Polygon(vertices) where vertices is an Nx2 array
         
-        p.inside(x, y) - Calculate whether points lie inside the polygon.
-        p.area() - The area enclosed by the polygon.
-        p.centroid() - The centroid of the polygon
+        p is an array that contains the verticies of the polygon 
+            (closed if not already)
+        
+        p.get_area()      - method to get polygon area
+        p.get_centroid()  - method to get polygon centroid
+        p.inside(x, y)    - Calculate whether points lie inside the polygon.
+        
+        p.area       - The area enclosed by the polygon.
+        p.centroid   - The centroid of the polygon
+        
         """
         verts = np.atleast_2d(verts)
-                
         assert verts.shape[1] == 2, 'Vertices should be an Nx2 array, but is %s' % str(verts.shape)
         assert len(verts) >= 3, 'Need 3 vertices to create polygon.'
-        
         # close polygon, if needed
         if not np.all(verts[0]==verts[-1]):
             verts = np.vstack((verts,verts[0]))
-
-        self.verts = verts
         
-        return verts.view(Polygeom).copy()
-    
+        verts = verts.view(PolygonGeometry)
+        return verts
     
     def inside(self,points):
         points = np.atleast_2d(points)
         assert points.shape[1] == 2, \
                "Points should be of shape Nx2, is %s" % str(points.shape)
-        return npnpoly(self.verts,points).astype(bool)
+        return npnpoly(self, points).astype(bool)
     
     def get_area(self):
         """
@@ -166,14 +169,14 @@ class PolygonGeometry(np.ndarray):
         From Paul Bourke's webpage:
           http://astronomy.swin.edu.au/~pbourke/geometry
         """
-        v = self.verts
+        v = self
         v_first = v[:-1][:,[1,0]]
         v_second = v[1:]
         return np.diff(v_first*v_second).sum()/2.0
 
     def get_centroid(self):
         "Return the centroid of the polygon"
-        v = self.verts
+        v = self
         a = np.diff(v[:-1][:,[1,0]]*v[1:])
         area = a.sum()/2.0
         return ((v[:-1,:] + v[1:,:])*a).sum(axis=0) / (6.0*area)
@@ -190,7 +193,7 @@ if __name__ == '__main__':
                       [0.85,0.15],
                       [0.85,0.85],
                       [0.15,0.85]])
-    pa = Polygeom(verts)
+    pa = PolygonGeometry(verts)
     print pa.area
     print (0.85-0.15)**2
     
@@ -210,11 +213,11 @@ if __name__ == '__main__':
                       [0.85,0.15],
                       [0.85,0.85],
                       [0.15,0.85]])
-    pb = Polygeom(verts)
+    pb = PolygonGeometry(verts)
     inside = pb.inside(grid)
     pl.plot(grid[:,0][inside], grid[:,1][inside], 'g.')
     pl.plot(grid[:,0][~inside], grid[:,1][~inside],'r.')
-    pl.plot(pb.verts[:,0],pb.verts[:,1], '-k')
+    pl.plot(pb[:,0],pb[:,1], '-k')
     print pb.centroid
     xc, yc = pb.centroid
     print xc, yc
@@ -226,14 +229,14 @@ if __name__ == '__main__':
     grid = np.mgrid[0:1:1000j,0:1:1000j].reshape(2,-1).swapaxes(0,1)
     xp = np.sin(np.arange(0,np.pi,0.01))
     yp = np.cos(np.arange(0,np.pi,0.01))
-    pc = Polygeom(np.hstack([xp[:,np.newaxis],yp[:,np.newaxis]]))
+    pc = PolygonGeometry(np.hstack([xp[:,np.newaxis],yp[:,np.newaxis]]))
     print "%d points inside %d vertex poly..." % (grid.size/2,len(verts)),
     sys.stdout.flush()
     inside = pc.inside(grid)
     print "done."
     pl.plot(grid[:,0][inside], grid[:,1][inside], 'g+')
     pl.plot(grid[:,0][~inside], grid[:,1][~inside], 'r.')
-    pl.plot(pc.verts[:,0], pc.verts[:,1], '-k')
+    pl.plot(pc[:,0], pc[:,1], '-k')
     xc, yc = pc.centroid
     print xc, yc
     pl.plot([xc], [yc], 'co')

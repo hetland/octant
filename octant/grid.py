@@ -10,15 +10,13 @@
 from copy import deepcopy
 import cPickle
 from warnings import warn
-from ctypes import *
-import sys
+import ctypes
 import os
 
-from octant.extern import PolygonGeometry
-from scipy.special import erf
-
-from numpy import *
+import numpy as np
 import pylab as pl
+
+from scipy.special import erf
 
 from matplotlib.artist import Artist
 from matplotlib.patches import Polygon, CirclePolygon
@@ -26,10 +24,8 @@ from matplotlib.lines import Line2D
 from matplotlib.numerix.mlab import amin
 from matplotlib.mlab import dist_point_to_segment
 
-try:
-    from matplotlib.toolkits.basemap import Basemap
-except:
-    warn("Can't import Basemap, so cannot use geographic grids.")
+from octant.extern import PolygonGeometry
+from octant.extern import GreatCircle
 
 class BoundaryInteractor(object):
     """
@@ -133,8 +129,8 @@ class BoundaryInteractor(object):
             
             # display coords
             xt, yt = self._poly.get_transform().numerix_x_y(x, y)
-            d = sqrt((xt-event.x)**2 + (yt-event.y)**2)
-            indseq = nonzero(equal(d, amin(d)))
+            d = np.sqrt((xt-event.x)**2 + (yt-event.y)**2)
+            indseq = np.nonzero(np.equal(d, np.amin(d)))
             ind = indseq[0]
         
             if d[ind]>=self._epsilon:
@@ -143,11 +139,11 @@ class BoundaryInteractor(object):
             return ind
         except:
             # display coords
-            xy = asarray(self._poly.xy)
+            xy = np.asarray(self._poly.xy)
             xyt = self._poly.get_transform().transform(xy)
             xt, yt = xyt[:, 0], xyt[:, 1]
-            d = sqrt((xt-event.x)**2 + (yt-event.y)**2)
-            indseq = nonzero(equal(d, amin(d)))[0]
+            d = np.sqrt((xt-event.x)**2 + (yt-event.y)**2)
+            indseq = np.nonzero(np.equal(d, np.amin(d)))[0]
             ind = indseq[0]
             
             if d[ind]>=self._epsilon:
@@ -212,7 +208,7 @@ class BoundaryInteractor(object):
                 s1 = xys[i+1]
                 d = dist_point_to_segment(p, s0, s1)
                 if d<=self._epsilon:
-                    self._poly.xy = array(
+                    self._poly.xy = np.array(
                         list(self._poly.xy[:i+1]) +
                         [(event.xdata, event.ydata)] +
                         list(self._poly.xy[i+1:]))
@@ -223,7 +219,7 @@ class BoundaryInteractor(object):
             s1 = xys[0]
             d = dist_point_to_segment(p, s0, s1)
             if d<=self._epsilon:
-                self._poly.xy = array(
+                self._poly.xy = np.array(
                     list(self._poly.xy) +
                     [(event.xdata, event.ydata)])
                 self._line.set_data(zip(*self._poly.xy))
@@ -231,8 +227,13 @@ class BoundaryInteractor(object):
         elif event.key=='G' or event.key == '1':
             options = deepcopy(self.gridgen_options)
             shp = options.pop('shp')
-            self.grd = Gridgen(self.x, self.y, self.beta, shp,\
-                                      **options)
+            if self.proj is None:
+                x = self.x
+                y = self.y
+                self.grd = Gridgen(x, y, self.beta, shp, proj=self.proj, **options)
+            else:
+                lon, lat = self.proj(self.x, self.y, inverse=True)
+                self.grd = Gridgen(lon, lat, self.beta, shp, proj=self.proj, **options)
             self.remove_grid()
             self._showgrid = True
             gridlineprops = {'linestyle':'-', 'color':'k', 'lw':0.2}
@@ -278,10 +279,13 @@ class BoundaryInteractor(object):
         self._canvas.blit(self._ax.bbox)
     
     
-    def __init__(self, x, y, beta, ax=None, **gridgen_options):
+    def __init__(self, x, y=None, beta=None, ax=None, proj=None, **gridgen_options):
         
         if isinstance(x, str):
-            x, y, beta = load(x)
+            bry_dict = np.load(x)
+            x = bry_dict['x']
+            y = bry_dict['y']
+            beta = bry_dict['beta']
         
         assert len(x) >= 4, 'Boundary must have at least four points.'
         
@@ -289,6 +293,8 @@ class BoundaryInteractor(object):
             ax = pl.gca()
         
         self._ax = ax
+        
+        self.proj = proj
         
         # Set default gridgen option, and copy over specified options.
         self.gridgen_options = {'ul_idx': 0, 'shp': (32, 32)}
@@ -342,23 +348,28 @@ class BoundaryInteractor(object):
                                  self._motion_notify_callback)
     
     
-    def dump(self, bry_file):
+    def save_bry(self, bry_file='bry.pickle'):
         f = open(bry_file, 'wb')
         bry_dict = {'x': self.x, 'y': self.y, 'beta': self.beta}
         cPickle.dump(bry_dict, f, protocol=-1)
         f.close()
     
-    def load(self, bry_file):
-        bry_dict = load(bry_file)
+    def load_bry(self, bry_file='bry.pickle'):
+        bry_dict = np.load(bry_file)
         x = bry_dict['x']
         y = bry_dict['y']
-        beta = bry_dict['beta']
         self._line.set_data(x, y)
+        self.beta = bry_dict['beta']
         if hasattr(self, '_poly'):
             self._poly.xy = zip(x, y)
             self._update_beta_lines()
             self._draw_callback(None)
             self._canvas.draw()
+    
+    def save_grid(self, grid_file='grid.pickle'):
+        f = open(grid_file, 'wb')
+        cPickle.dump(self.grd, f, protocol=-1)
+        f.close()
     
     def _get_verts(self): return zip(self.x, self.y)
     verts = property(_get_verts)    
@@ -394,17 +405,22 @@ class FocusPoint(object):
     
     def __call__(self, x, y):
         
-        x = asarray(x)
-        y = asarray(y)
-        assert not any(x>1.0) or not any(x<0.0) or not any(y>1.0) or not any(x<0.0), \
+        x = np.asarray(x)
+        y = np.asarray(y)
+        assert not np.any(x>1.0) or not np.any(x<0.0)  \
+            or not np.any(y>1.0) or not np.any(x<0.0), \
                 'x and y must both be within the range [0, 1].'
         
         alpha = 1.0 - 1.0/self.factor
         def xf(x, y):
-            return x - 0.5*sqrt(pi)*self.Rx*alpha*exp(-(y-self.yo)**2/self.Ry**2)*erf((x-self.xo)/self.Rx)
+            return x - 0.5*np.sqrt(pi)*self.Rx*alpha \
+                          *np.exp(-(y-self.yo)**2/self.Ry**2) \
+                          *erf((x-self.xo)/self.Rx)
         
         def yf(x, y):
-            return y - 0.5*sqrt(pi)*self.Ry*alpha*exp(-(x-self.xo)**2/self.Rx**2)*erf((y-self.yo)/self.Ry)
+            return y - 0.5*np.sqrt(pi)*self.Ry*alpha \
+                          *np.exp(-(x-self.xo)**2/self.Rx**2) \
+                          *erf((y-self.yo)/self.Ry)
         
         xf0 = xf(0.0, y); xf1 = xf(1.0, y)
         yf0 = yf(x, 0.0); yf1 = yf(x, 1.0)
@@ -496,68 +512,59 @@ class CGrid(object):
         
     """
     
-    def __init__(self, x=None, y=None,  \
-                       lon=None, lat=None, \
-                       mask=None, proj=None, \
-                       f=None, h=None):
-        
-        # check for neccessary inputs
-        assert  (x is not None and y is not None) or \
-                (lon is not None and lat is not None),  \
-                'Must define either x/y or lat/lon grid verticies'
-        
-        self.x_vert = x
-        self.y_vert = y
-        self.lon_vert = lon
-        self.lat_vert = lat
-        
-        # If lat and lon are input, the grid is geographic.
-        self.geographic=False
-        if  lon is not None and lat is not None:
-            self.geographic=True
-            if proj is None:    # Use Mercator projection if none given.
-                self.proj = Basemap(projection='merc', resolution=None, lat_ts=0.0)
-            else:
-                self.proj = proj
+    def __init__(self, x, y, proj=None, mask=None, f=None, h=None):
+                
+        # self.proj is used to determine if the grid is geographic.
+        # self.proj is None for Cartesian grids, a Basemap instance otherwise.
+        self.proj = proj
+        if self.proj is not None:
+            self.lon_vert = x
+            self.lat_vert = y
+            self.x_vert, self.y_vert = self.proj(x, y)
+        else:
+            self.x_vert = x
+            self.y_vert = y
+            self.lon_vert = None
+            self.lat_vert = None
         
         # Generate the grid mask
-        if mask is not None:
-            self.mask_rho = mask
+        if mask is None:
+            self.mask_rho = np.ones(self.x_rho.shape, dtype='d')
         else:
-            self.mask_rho = ones(self.x_rho.shape, dtype='d')
+            self.mask_rho = mask
         
         # If maskedarray is given for verticies, modify the mask such that 
         # non-existant grid points are masked.  A cell requires all four
         # verticies to be defined as a water point.
-        if isinstance(self.x_vert, ma.MaskedArray):
+        if isinstance(self.x_vert, np.ma.MaskedArray):
             mask = (self.x_vert.mask[:-1,:-1] | self.x_vert.mask[1:,:-1] | \
                     self.x_vert.mask[:-1,1:] | self.x_vert.mask[1:,1:])
-            self.mask_rho = asarray(~(~bool_(self.mask_rho) | mask), dtype='d')
+            self.mask_rho = np.asarray(~(~np.bool_(self.mask_rho) | mask), dtype='d')
         
-        if isinstance(self.y_vert, ma.MaskedArray):
+        if isinstance(self.y_vert, np.ma.MaskedArray):
             mask = (self.y_vert.mask[:-1,:-1] | self.y_vert.mask[1:,:-1] | \
                     self.y_vert.mask[:-1,1:] | self.y_vert.mask[1:,1:])
-            self.mask_rho = asarray(~(~bool_(self.mask_rho) | mask), dtype='d')
+            self.mask_rho = np.asarray(~(~np.bool_(self.mask_rho) | mask), dtype='d')
         
-        if isinstance(self.lon_vert, ma.MaskedArray):
+        if isinstance(self.lon_vert, np.ma.MaskedArray):
             mask = (self.lon_vert.mask[:-1,:-1] | self.lon_vert.mask[1:,:-1] | \
                     self.lon_vert.mask[:-1,1:] | self.lon_vert.mask[1:,1:])
-            self.mask_rho = asarray(~(~bool_(self.mask_rho) | mask), dtype='d')
+            self.mask_rho = np.asarray(~(~np.bool_(self.mask_rho) | mask), dtype='d')
         
-        if isinstance(self.lat_vert, ma.MaskedArray):
+        if isinstance(self.lat_vert, np.ma.MaskedArray):
             mask = (self.lat_vert.mask[:-1,:-1] | self.lat_vert.mask[1:,:-1] | \
                     self.lat_vert.mask[:-1,1:] | self.lat_vert.mask[1:,1:])
-            self.mask_rho = asarray(~(~bool_(self.mask_rho) | mask), dtype='d')
+            self.mask_rho = np.asarray(~(~np.bool_(self.mask_rho) | mask), dtype='d')
         
-        if (self.x_vert is None or self.y_vert is None) and self.geographic:
+        if self.proj is not None:
             self.calculate_projection()
         
         self.calculate_metrics()
         
-        if self.geographic and f is None:
-            self.f = 2 * 7.29e-5 * cos(self.lat_rho * pi / 180.)
+        if self.proj is not None and f is None:
+            self.f = 2 * 7.29e-5 * np.cos(self.lat_rho * np.pi / 180.)
         else:
-            self.f = asarray(f, dtype='d')
+            self.f = np.asarray(f, dtype='d')
             
         self.h = h
     
@@ -645,63 +652,63 @@ class CGrid(object):
         if None in (self.theta_s, self.theta_b, self.hc, self.N): return
         if self.theta_s == 0.0: return self._get_sc_r()
         return (1-self.theta_b)*sinh(self.theta_s*self._get_sc_r())/ \
-               sinh(self.theta_s)+0.5*self.theta_b \
-               *(tanh(self.theta_s*(self._get_sc_r()+0.5)) \
-               - tanh(0.5*self.theta_s))/tanh(0.5*self.theta_s)
+               np.sinh(self.theta_s)+0.5*self.theta_b \
+               *(np.tanh(self.theta_s*(self._get_sc_r()+0.5)) \
+               - np.tanh(0.5*self.theta_s))/np.tanh(0.5*self.theta_s)
     
     def _get_Cs_w(self):
         if None in (self.theta_s, self.theta_b, self.hc, self.N): return
         if self.theta_s == 0.0: return self._get_sc_w()
-        return (1-self.theta_b)*sinh(self.theta_s*self._get_sc_w())/ \
-               sinh(self.theta_s)+0.5*self.theta_b \
-               *(tanh(self.theta_s*(self._get_sc_w()+0.5)) \
-                - tanh(0.5*self.theta_s))/tanh(0.5*self.theta_s)
+        return (1-self.theta_b)*np.sinh(self.theta_s*self._get_sc_w())/ \
+               np.sinh(self.theta_s)+0.5*self.theta_b \
+               *(np.tanh(self.theta_s*(self._get_sc_w()+0.5)) \
+                - np.tanh(0.5*self.theta_s))/np.tanh(0.5*self.theta_s)
     
     
     def calculate_metrics(self):
         'Calculates pm, pn, dndx, dmde, and angle from x_vert and y_vert'
-        if self.geographic:
-            gc_dist = vectorize(lambda lon1, lat1, lon2, lat2: \
-                      GreatCircle(6378137.0, 6356752.3142, \
+        if self.proj is not None:
+            gc_dist = np.vectorize(lambda lon1, lat1, lon2, lat2: \
+                         GreatCircle(6378137.0, 6356752.3142, \
                                           lon1, lat1, lon2, lat2).distance)
             lon_temp = 0.5*(self.lon_vert[1:,:]+self.lon_vert[:-1,:])
             lat_temp = 0.5*(self.lat_vert[1:,:]+self.lat_vert[:-1,:])
-            if isinstance(lat_temp, ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
-            if isinstance(lon_temp, ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
+            if isinstance(lat_temp, np.ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
+            if isinstance(lon_temp, np.ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
             self.pm = 1.0 / gc_dist(lon_temp[:,1:],  lat_temp[:,1:], \
                                     lon_temp[:,:-1], lat_temp[:,:-1])
             lon_temp = 0.5*(self.lon_vert[:,1:]+self.lon_vert[:,:-1])
             lat_temp = 0.5*(self.lat_vert[:,1:]+self.lat_vert[:,:-1])
-            if isinstance(lat_temp, ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
-            if isinstance(lon_temp, ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
+            if isinstance(lat_temp, np.ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
+            if isinstance(lon_temp, np.ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
             self.pn = 1.0 / gc_dist(lon_temp[1:,:],  lat_temp[1:,:], \
                                     lon_temp[:-1,:], lat_temp[:-1,:])
         else:
             x_temp = 0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])
             y_temp = 0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])
-            self.pm = 1.0 / sqrt(diff(x_temp, axis=1)**2 + diff(y_temp, axis=1)**2)
+            self.pm = 1.0 / np.sqrt(np.diff(x_temp, axis=1)**2 + np.diff(y_temp, axis=1)**2)
             x_temp = 0.5*(self.x_vert[:,1:]+self.x_vert[:,:-1])
             y_temp = 0.5*(self.y_vert[:,1:]+self.y_vert[:,:-1])
-            self.pn = 1.0 / sqrt(diff(x_temp, axis=0)**2 + diff(y_temp, axis=0)**2)
+            self.pn = 1.0 / np.sqrt(np.diff(x_temp, axis=0)**2 + np.diff(y_temp, axis=0)**2)
         
-        if any(~isfinite(self.pm)) or any(~isfinite(self.pm)):
-            self.pm = ma.masked_where(~isfinite(self.pm), self.pm)
-            self.pn = ma.masked_where(~isfinite(self.pn), self.pn)
+        if np.any(~np.isfinite(self.pm)) or np.any(~np.isfinite(self.pm)):
+            self.pm = np.ma.masked_where(~np.isfinite(self.pm), self.pm)
+            self.pn = np.ma.masked_where(~np.isfinite(self.pn), self.pn)
         
         
         
         # self.pm = extrapolate_mask(self.pm, mask=(self.mask==0.0))
         # self.pn = extrapolate_mask(self.pn, mask=(self.mask==0.0))
         
-        if isinstance(self.pn, ma.MaskedArray):
-            self.dndx = ma.zeros(self.x_rho.shape, dtype='d')
+        if isinstance(self.pn, np.ma.MaskedArray):
+            self.dndx = np.ma.zeros(self.x_rho.shape, dtype='d')
         else:
-            self.dndx = zeros(self.x_rho.shape, dtype='d')
+            self.dndx = np.zeros(self.x_rho.shape, dtype='d')
         
-        if isinstance(self.pm, ma.MaskedArray):
-            self.dmde = ma.zeros(self.x_rho.shape, dtype='d')
+        if isinstance(self.pm, np.ma.MaskedArray):
+            self.dmde = np.ma.zeros(self.x_rho.shape, dtype='d')
         else:
-            self.dmde = zeros(self.x_rho.shape, dtype='d')
+            self.dmde = np.zeros(self.x_rho.shape, dtype='d')
         
         self.dndx[1:-1,1:-1] = 0.5*(1.0/self.pn[1:-1,2:] - 1.0/self.pn[1:-1,:-2])
         self.dmde[1:-1,1:-1] = 0.5*(1.0/self.pm[2:,1:-1] - 1.0/self.pm[:-2,1:-1])
@@ -709,19 +716,19 @@ class CGrid(object):
         if self.x_vert is None or self.y_vert is None:
             self.calculate_projection()
         
-        self.angle = arctan2(diff(0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])), \
-                           diff(0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])))
+        self.angle = np.arctan2(np.diff(0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])), \
+                                np.diff(0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])))
         
         # self.angle = extrapolate_mask(self.angle, mask=(self.mask==0.0))
     
     def calculate_projection(self, proj=None):        
-        if isinstance(self.lat_vert, ma.MaskedArray):
+        if isinstance(self.lat_vert, np.ma.MaskedArray):
             mask_lat = self.lat_vert.mask 
             lat_temp = self.lat_vert.filled(0.0)
         else:
             lat_temp = self.lat_vert
         
-        if isinstance(self.lon_vert, ma.MaskedArray): 
+        if isinstance(self.lon_vert, np.ma.MaskedArray): 
             mask_lon = self.lon_vert.mask
             lon_temp = self.lon_vert.filled(0.0)
         else:
@@ -729,34 +736,34 @@ class CGrid(object):
         
         self.x_vert, self.y_vert = self.proj(lon_temp, lat_temp)
         
-        if isinstance(self.lon_vert, ma.MaskedArray):
-            self.x_vert = ma.masked_array(self.x_vert, mask=mask_lon)
+        if isinstance(self.lon_vert, np.ma.MaskedArray):
+            self.x_vert = np.ma.masked_array(self.x_vert, mask=mask_lon)
         
-        if isinstance(self.lat_vert, ma.MaskedArray):
-            self.y_vert = ma.masked_array(self.y_vert, mask=mask_lat)
+        if isinstance(self.lat_vert, np.ma.MaskedArray):
+            self.y_vert = np.ma.masked_array(self.y_vert, mask=mask_lat)
     
     def calculate_orthogonality(self):
         '''
         Calculate orthogonality error in radiens
         '''
         z = self.x_vert + 1j*self.y_vert
-        du = diff(z, axis=1); du = (du/abs(du))[:-1,:]
-        dv = diff(z, axis=0); dv = (dv/abs(dv))[:,:-1]
-        ang1 = arccos(du.real*dv.real + du.imag*dv.imag)
-        du = diff(z, axis=1); du = (du/abs(du))[1:,:]
-        dv = diff(z, axis=0); dv = (dv/abs(dv))[:,:-1]
+        du = np.diff(z, axis=1); du = (du/abs(du))[:-1,:]
+        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,:-1]
+        ang1 = np.arccos(du.real*dv.real + du.imag*dv.imag)
+        du = np.diff(z, axis=1); du = (du/abs(du))[1:,:]
+        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,:-1]
         ang2 = arccos(du.real*dv.real + du.imag*dv.imag)
-        du = diff(z, axis=1); du = (du/abs(du))[:-1,:]
-        dv = diff(z, axis=0); dv = (dv/abs(dv))[:,1:]
-        ang3 = arccos(du.real*dv.real + du.imag*dv.imag)
-        du = diff(z, axis=1); du = (du/abs(du))[1:,:]
-        dv = diff(z, axis=0); dv = (dv/abs(dv))[:,1:]
-        ang4 = arccos(du.real*dv.real + du.imag*dv.imag)
+        du = np.diff(z, axis=1); du = (du/abs(du))[:-1,:]
+        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,1:]
+        ang3 = np.arccos(du.real*dv.real + du.imag*dv.imag)
+        du = np.diff(z, axis=1); du = (du/abs(du))[1:,:]
+        dv = np.diff(z, axis=0); dv = (dv/abs(dv))[:,1:]
+        ang4 = np.arccos(du.real*dv.real + du.imag*dv.imag)
         ang = mean([abs(ang1), abs(ang2), abs(ang3), abs(ang4)], axis=0)
-        ang = (ang-pi/2.0)
+        ang = (ang-np.pi/2.0)
         return ang
     
-    def maskpoly(self, polyverts, inverse=False, geographic=None):
+    def mask_polygon(self, polyverts, inverse=False):
         """
         Mask Cartesian points contained within the polygons contained in the
         list'polygons'.
@@ -765,31 +772,24 @@ class CGrid(object):
         polygon. Other sub-masks (mask_u, mask_v, and mask_psi) are updated
         automatically.
         """
-        if geographic is None:
-            geographic = self.geographic
-        
         mask = self.mask_rho
         
         if inverse:
-            mask = asarray(~bool_(mask), dtype='d')
+            mask = np.asarray(~np.bool_(mask), dtype='d')
         
         iwater = mask == 1.0
-        if geographic:
-            x_wet = self._get_lon_rho()[iwater]
-            y_wet = self._get_lat_rho()[iwater]
-        else:
-            x_wet = self._get_x_rho()[iwater]
-            y_wet = self._get_y_rho()[iwater]
+        x_wet = self._get_x_rho()[iwater]
+        y_wet = self._get_y_rho()[iwater]
         
         mask_wet = mask[iwater]
         
-        inside = PolyGeom(polyverts).inside(zip(x_wet, y_wet))
+        inside = PolygonGeometry(polyverts).inside(zip(x_wet, y_wet))
         
-        if any(inside):
+        if np.any(inside):
             mask_wet[inside] = 0.0
             mask[iwater] = mask_wet
             if inverse:
-                mask = asarray(~bool_(a), dtype='d')
+                mask = np.asarray(~np.bool_(a), dtype='d')
             self.mask_rho = mask
     
     
@@ -832,14 +832,14 @@ class Gridgen(CGrid):
     #         except:
     #             pass
     
-    _libgridgen = pydll.LoadLibrary("libgridgen.dylib")
+    _libgridgen = ctypes.pydll.LoadLibrary("libgridgen.dylib")
     
-    _libgridgen.gridgen_generategrid2.restype = c_void_p
-    _libgridgen.gridnodes_getx.restype = POINTER(POINTER(c_double))
-    _libgridgen.gridnodes_gety.restype = POINTER(POINTER(c_double))
-    _libgridgen.gridnodes_getnce1.restype = c_int
-    _libgridgen.gridnodes_getnce2.restype = c_int
-    _libgridgen.gridmap_build.restype = c_void_p
+    _libgridgen.gridgen_generategrid2.restype = ctypes.c_void_p
+    _libgridgen.gridnodes_getx.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
+    _libgridgen.gridnodes_gety.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
+    _libgridgen.gridnodes_getnce1.restype = ctypes.c_int
+    _libgridgen.gridnodes_getnce2.restype = ctypes.c_int
+    _libgridgen.gridmap_build.restype = ctypes.c_void_p
     
     def generate_grid(self):
         
@@ -848,41 +848,49 @@ class Gridgen(CGrid):
         
         nbry = len(self.xbry)
         
-        nsigmas = c_int(0)
-        sigmas = c_void_p(0)
-        nrect = c_int(0)
-        xrect =  c_void_p(0)
-        yrect = c_void_p(0)
+        nsigmas = ctypes.c_int(0)
+        sigmas = ctypes.c_void_p(0)
+        nrect = ctypes.c_int(0)
+        xrect =  ctypes.c_void_p(0)
+        yrect = ctypes.c_void_p(0)
         
-        self._gn = self._libgridgen.gridgen_generategrid2( c_int(nbry), 
-             (c_double * nbry)(*self.xbry), (c_double * nbry)(*self.ybry), 
-             (c_double * nbry)(*self.beta),
-             c_int(self.ul_idx), c_int(self.nx), c_int(self.ny), 
-             c_int(0), POINTER(c_double)(), POINTER(c_double)(),
-             c_int(self.nnodes), c_int(self.newton), c_double(self.precision),
-             c_int(self.checksimplepoly), c_int(self.thin), c_int(self.nppe),
-             c_int(self.verbose),
-             byref(nsigmas), byref(sigmas), byref(nrect),
-             byref(xrect), byref(yrect) )
+        self._gn = self._libgridgen.gridgen_generategrid2( ctypes.c_int(nbry), 
+             (ctypes.c_double * nbry)(*self.xbry), 
+             (ctypes.c_double * nbry)(*self.ybry), 
+             (ctypes.c_double * nbry)(*self.beta),
+             ctypes.c_int(self.ul_idx), 
+             ctypes.c_int(self.nx), 
+             ctypes.c_int(self.ny), 
+             ctypes.c_int(0), 
+             ctypes.POINTER(ctypes.c_double)(), 
+             ctypes.POINTER(ctypes.c_double)(),
+             ctypes.c_int(self.nnodes), 
+             ctypes.c_int(self.newton), 
+             ctypes.c_double(self.precision),
+             ctypes.c_int(self.checksimplepoly), 
+             ctypes.c_int(self.thin), 
+             ctypes.c_int(self.nppe),
+             ctypes.c_int(self.verbose),
+             ctypes.byref(nsigmas), 
+             ctypes.byref(sigmas), 
+             ctypes.byref(nrect),
+             ctypes.byref(xrect), 
+             ctypes.byref(yrect) )
         
         x = self._libgridgen.gridnodes_getx(self._gn)        
-        x = asarray([x[j][i] for j in range(self.ny) for i in range(self.nx)])
+        x = np.asarray([x[j][i] for j in range(self.ny) for i in range(self.nx)])
         x.shape = (self.ny, self.nx)
         
         y = self._libgridgen.gridnodes_gety(self._gn)        
-        y = asarray([y[j][i] for j in range(self.ny) for i in range(self.nx)])
+        y = np.asarray([y[j][i] for j in range(self.ny) for i in range(self.nx)])
         y.shape = (self.ny, self.nx)
         
-        if any(isnan(x)) or any(isnan(y)):
-            x = ma.masked_where(isnan(x), x)
-            y = ma.masked_where(isnan(y), y)
+        if np.any(np.isnan(x)) or np.any(np.isnan(y)):
+            x = np.ma.masked_where(np.isnan(x), x)
+            y = np.ma.masked_where(np.isnan(y), y)
         
         if self.proj is not None:
-            if isinstance(xp, ma.MaskedArray): xp=xp.filled(nan)
-            if isinstance(yp, ma.MaskedArray): yp=yp.filled(nan)
-            lon, lat = proj(x, y, inverse=True)
-            lon = ma.masked_where(isnan(lon), lon)
-            lat = ma.masked_where(isnan(lat), lat)
+            lon, lat = self.proj(x, y, inverse=True)
             super(Gridgen, self).__init__(lon, lat, proj=self.proj)
         else:
             super(Gridgen, self).__init__(x, y)
@@ -893,9 +901,9 @@ class Gridgen(CGrid):
                  nnodes=14, precision=1.0e-12, nppe=3, \
                  newton=True, thin=True, checksimplepoly=True, verbose=False):
         
-        self.xbry = asarray(xbry, dtype='d')
-        self.ybry = asarray(ybry, dtype='d')
-        self.beta = asarray(beta, dtype='d')
+        self.xbry = np.asarray(xbry, dtype='d')
+        self.ybry = np.asarray(ybry, dtype='d')
+        self.beta = np.asarray(beta, dtype='d')
         assert self.beta.sum() == 4.0, 'sum of beta must be 4.0'
         self.shape = shape
         self.ny = shape[0]
@@ -912,7 +920,7 @@ class Gridgen(CGrid):
         
         self.proj = proj
         if self.proj is not None:
-            xbry, ybry = proj(xbry, ybry)
+            self.xbry, self.ybry = proj(self.xbry, self.ybry)
         
         self._gn = None
         self.generate_grid()
@@ -933,29 +941,29 @@ def rho_to_vert(xr, yr, pm, pn, ang):
     theta = 0.5*(ang[:-1,-1]+ang[1:,-1])
     dx = 0.5*(1.0/pm[:-1,-1]+1.0/pm[1:,-1])
     dy = 0.5*(1.0/pn[:-1,-1]+1.0/pn[1:,-1])
-    x[1:-1,-1] = x[1:-1,-2] + dx*cos(theta)
-    y[1:-1,-1] = y[1:-1,-2] + dx*sin(theta)
+    x[1:-1,-1] = x[1:-1,-2] + dx*np.cos(theta)
+    y[1:-1,-1] = y[1:-1,-2] + dx*np.sin(theta)
     
     # west side
     theta = 0.5*(ang[:-1,0]+ang[1:,0])
     dx = 0.5*(1.0/pm[:-1,0]+1.0/pm[1:,0])
     dy = 0.5*(1.0/pn[:-1,0]+1.0/pn[1:,0])
-    x[1:-1,0] = x[1:-1,1] - dx*cos(theta)
-    y[1:-1,0] = y[1:-1,1] - dx*sin(theta)
+    x[1:-1,0] = x[1:-1,1] - dx*np.cos(theta)
+    y[1:-1,0] = y[1:-1,1] - dx*np.sin(theta)
     
     # north side
     theta = 0.5*(ang[-1,:-1]+ang[-1,1:])
     dx = 0.5*(1.0/pm[-1,:-1]+1.0/pm[-1,1:])
     dy = 0.5*(1.0/pn[-1,:-1]+1.0/pn[-1,1:])
-    x[-1,1:-1] = x[-2,1:-1] - dy*sin(theta)
-    y[-1,1:-1] = y[-2,1:-1] + dy*cos(theta)
+    x[-1,1:-1] = x[-2,1:-1] - dy*np.sin(theta)
+    y[-1,1:-1] = y[-2,1:-1] + dy*np.cos(theta)
     
     # here we are now going to the south side..
     theta = 0.5*(ang[0,:-1]+ang[0,1:])
     dx = 0.5*(1.0/pm[0,:-1]+1.0/pm[0,1:])
     dy = 0.5*(1.0/pn[0,:-1]+1.0/pn[0,1:])
-    x[0,1:-1] = x[1,1:-1] + dy*sin(theta)
-    y[0,1:-1] = y[1,1:-1] - dy*cos(theta)
+    x[0,1:-1] = x[1,1:-1] + dy*np.sin(theta)
+    y[0,1:-1] = y[1,1:-1] - dy*np.cos(theta)
     
     #Corners
     x[0,0] = 4.0*xr[0,0]-x[1,0]-x[0,1]-x[1,1]
@@ -971,17 +979,94 @@ def rho_to_vert(xr, yr, pm, pn, ang):
     return x, y
 
 
-def bry_box():
-    ax = pl.gca()
-    ### return x, y, beta as box 10% away from the axis edges.
+class edit_mask_mesh(object):
+    
+    def _on_key(self, event):
+        if event.key == 'e':
+            self._clicking = not self._clicking
+            pl.title('Editing %s -- click "e" to toggle' % self._clicking)
+            pl.draw()
+    
+    def _on_click(self, event):
+        x, y = event.xdata, event.ydata
+        if event.button==1 and event.inaxes is not None and self._clicking == True:
+            d = (x-self._xc)**2 + (y-self._yc)**2
+            if isinstance(self.xv, ma.MaskedArray):
+                idx = np.argwhere(d[~self._xc.mask] == d.min())
+            else:
+                idx = np.argwhere(d.flatten() == d.min())
+            self._mask[idx] = float(not self._mask[idx])
+            i, j = np.argwhere(d == d.min())[0]
+            self.mask[i, j] = float(not self.mask[i, j])
+            self._pc.set_array(self._mask)
+            self._pc.changed()
+            pl.draw()
+    
+    def __init__(self, xv, yv, mask, **kwargs):
+        assert xv.shape == yv.shape, 'xv and yv must have the same shape'
+        for dx, dq in zip(xv.shape, mask.shape):
+             assert dx==dq+1, \
+             'xv and yv must be cell verticies (i.e., one cell bigger in each dimension)'
+        
+        self.xv = xv
+        self.yv = yv
+        
+        self.mask = mask
+        
+        land_color = kwargs.pop('land_color', (0.6, 1.0, 0.6))
+        sea_color = kwargs.pop('sea_color', (0.6, 0.6, 1.0))
+        
+        cm = pl.matplotlib.colors.ListedColormap([land_color, sea_color], 
+                                                 name='land/sea')
+        self._pc = pl.pcolor(xv, yv, mask, cmap=cm, vmin=0, vmax=1, **kwargs)
+        self._xc = 0.25*(xv[1:,1:]+xv[1:,:-1]+xv[:-1,1:]+xv[:-1,:-1])
+        self._yc = 0.25*(yv[1:,1:]+yv[1:,:-1]+yv[:-1,1:]+yv[:-1,:-1])
+        
+        if isinstance(self.xv, ma.MaskedArray):
+            self._mask = mask[~self._xc.mask]
+        else:
+            self._mask = mask.flatten()
+        
+        pl.connect('button_press_event', self._on_click)
+        pl.connect('key_press_event', self._on_key)
+        self._clicking = False
+        pl.title('Editing %s -- click "e" to toggle' % self._clicking)
+        pl.draw()
+
 
 if __name__ == '__main__':
-    x = [0.2, 0.85, 0.9, 0.82, 0.23]
-    y = [0.2, 0.25, 0.5, 0.82, .83]
-    beta = [1.0, 1.0, 0.0, 1.0, 1.0]
-    
-    grd = Gridgen(x, y, beta, (32, 32))
-    ax = pl.subplot(111)
-    
-    BoundaryInteractor(x, y, beta)
-    pl.show()
+    geographic = True
+    if geographic:
+        from matplotlib.toolkits.basemap import Basemap
+        proj = Basemap(projection='lcc',
+                       resolution='i',
+                       llcrnrlon=-72.0,
+                       llcrnrlat= 40.0,
+                       urcrnrlon=-63.0,
+                       urcrnrlat=47.0,
+                       lat_0=43.0,
+                       lon_0=-62.5)
+        
+        lon = (-71.977385177601761, -70.19173825913137,
+               -63.045075098584945,-64.70104074097425)
+        lat = (42.88215610827428, 41.056141745853786,
+               44.456701607935841, 46.271758064353897)
+        beta = [1.0, 1.0, 1.0, 1.0]
+
+        grd = Gridgen(lon, lat, beta, (68, 128), proj=proj)
+        
+        for seg in proj.coastsegs:
+            grd.mask_polygon(seg)
+        
+        pl.pcolor(grd.x, grd.y, grd.mask)
+        pl.show()
+    else:
+        x = [0.2, 0.85, 0.9, 0.82, 0.23]
+        y = [0.2, 0.25, 0.5, 0.82, .83]
+        beta = [1.0, 1.0, 0.0, 1.0, 1.0]
+        
+        grd = Gridgen(x, y, beta, (32, 32))
+        
+        ax = pl.subplot(111)
+        BoundaryInteractor(x, y, beta)
+        pl.show()
