@@ -43,7 +43,7 @@ Subpackages:
 
 '''
 
-from grid import CGrid, Gridgen, BoundaryInteractor, Focus, FocusPoint
+#from grid import CGrid, BoundaryInteractor, Focus, FocusPoint
 import io
 import extern
 from cf import CFTime

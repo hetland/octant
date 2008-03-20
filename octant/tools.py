@@ -3,9 +3,11 @@
 
 from numpy import *
 import warnings
+import numpy as np
 
-from ocemopy.io import Dataset
+from octant.io import Dataset
 from ocemopy.tools import delaunay
+import numpy as np
 
 try:
     from matplotlib.toolkits.basemap.greatcircle import GreatCircle
@@ -421,4 +423,22 @@ def extrapolate_mask(a, mask=None):
     # to the bad points (mask == 0)
     a[mask] = interp(ibad, jbad)
     return a
+
+class Transect_extrapolator(object):
+    """
+    General Transect object
+    """
+    def __init__(self, xg, yg, verts):
+        self.xg = np.asarray(xg)
+        self.yg = np.asarray(yg)
+        self.verts = verts
+        self._xv, self._yv = zip(*verts)
+        
+        self._tri = delaunay.Triangulation(self.xg.flat, self.yg.flat)
+    
+    def extrapolate(self, prop):
+        """
+        extrapolate transect values in the prop datafield
+        """
+        return self._tri.nn_interpolator(prop)(self._xv, self._yv)
 
