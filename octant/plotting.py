@@ -111,7 +111,7 @@ def cmap_discretize(cmap, N):
     # Return colormap object.
     return pl.matplotlib.colors.LinearSegmentedColormap('colormap',cdict,1024)
 
-def layers(field,bath,h=None,xc=None,lines=None,FillValue=-9999.0,shading='flat'):
+def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-9999.0,shading='flat',lw=0.5):
         """
         plot 2d field as layers with pcolor
         
@@ -119,12 +119,21 @@ def layers(field,bath,h=None,xc=None,lines=None,FillValue=-9999.0,shading='flat'
                       bath[xmax],
                       h=h[kmax,xmax],
                       xc=xc[xmax],
-                      lines=LineColor)
+                      missingbath=-10.0,
+                      fillvalue=-9999.0,
+                      shading='flat',
+                      lines=LineColor,
+                      lw=0.5)
 
-        h,xc,FillValue and shading are optional, default is sigma
+        h,xc,missingbath,fillvalue,shading and lw are optional, default is sigma
         coordinates h=bath/kmax, default FillValue=-9999.0,
-        default shading='flat'
-        and default xc is the vector of array indices
+        default shading='flat', default lw=0.05,
+        and default xc is the vector of array indices.
+
+        Polygons where bath == missingbath are filled with fillvalue and
+        are masked afterwards. The 2dfield can be preconfigured
+        with (fillvalue)s where "layers" should not plot any value
+        (e.g. if certain layers should be removed)
 
         If lines is given, the layer interfaces are
         plotted as lines in color e.g. lines='black'
@@ -136,13 +145,13 @@ def layers(field,bath,h=None,xc=None,lines=None,FillValue=-9999.0,shading='flat'
             xc=pl.arange(xmax,dtype='f')
         
         dx2=0.5*(xc[1]-xc[0])
-        xco=np.interp((arange(2*xmax+1)-1)/2.0,arange(xmax),xc,left=xc[0]-dx2,right=xc[-1]+dx2)
+        xco=np.interp((pl.arange(2*xmax+1)-1)/2.0,pl.arange(xmax),xc,left=xc[0]-dx2,right=xc[-1]+dx2)
         bathd=np.interp(xco,xc,bath,left=bath[0],right=bath[-1])
 
         if h==None:
             h=np.asarray([bath/kmax for k in range(kmax)])
         
-        zi=-bath+pl.cumsum(numpy.vstack([zeros((1,xmax)),h]),axis=0);
+        zi=-bath+pl.cumsum(np.vstack([np.zeros((1,xmax)),h]),axis=0);
         zd=np.zeros((kmax+1,2*xmax+1),dtype='f')
         fieldd=np.zeros((kmax+1,2*xmax+1),dtype='f')
         
@@ -155,19 +164,19 @@ def layers(field,bath,h=None,xc=None,lines=None,FillValue=-9999.0,shading='flat'
                     zd[k,1]=zi[k,x]
                     fieldd[k,0]=field[k,x]
                     fieldd[k,1]=field[k,x]
-                elif (bath[x]<=-10.0):
-                    zd[k,2*x+1]=FillValue
-                    fieldd[k,2*x+1]=FillValue
-                    fieldd[k,2*x]=FillValue
-                    if (bath[x-1]<=-10.0):
-                        zd[k,2*x]=FillValue
+                elif (bath[x]<=missingbath):
+                    zd[k,2*x+1]=fillvalue
+                    fieldd[k,2*x+1]=fillvalue
+                    fieldd[k,2*x]=fillvalue
+                    if (bath[x-1]<=missingbath):
+                        zd[k,2*x]=fillvalue
                     else:
                         zd[k,2*x]=zi[k,x-1]
                 else:
                     zd[k,2*x+1]=zi[k,x]
                     fieldd[k,2*x+1]=field[k,x]
                     fieldd[k,2*x]=field[k,x]
-                    if (bath[x-1]<=-10.0):
+                    if (bath[x-1]<=missingbath):
                         zd[k,2*x]=zi[k,x]
                     else:
                         zd[k,2*x]=0.5*(zi[k,x-1]+zi[k,x])
@@ -176,15 +185,16 @@ def layers(field,bath,h=None,xc=None,lines=None,FillValue=-9999.0,shading='flat'
                     zd[k,-1]=zi[k,x]
                     fieldd[k,-1]=field[k,x]
 
-        fmasked=np.ma.masked_where(fieldd==FillValue,fieldd)
+        fmasked=np.ma.masked_where(fieldd==fillvalue,fieldd)
          
-        pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,shading=shading)
+        pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,shading=shading)
         
         if lines!=None:
             xi=np.array([xc for k in range(kmax)])
             bathi=np.array([bath for k in range(kmax)])
-            plot(xi.T,np.ma.masked_where(bathi.T<=-10.0,zi[:-1,:].T),color=lines)
-        axis('tight')
-        show()
+            pl.plot(xi.T,np.ma.masked_where(bathi.T<=-10.0,zi[:-1,:].T), \
+                    color=lines,lw=lw)
+        pl.axis('tight')
+        pl.show()
 
 
