@@ -249,9 +249,12 @@ class Bdy3d(object):
         units - CF units string
         const - has to be a float value. If set, then the data-array is filled with const
         """
-        varvar=self._ncdf.createVariable(var,'f8',(self._tname,self._nbdyname,self._zname))
+        varvar=self._ncdf.createVariable(var,'f8', \
+                (self._tname,self._nbdyname,self._zname))
+        varvar.units=units
         if const!=None:
-            varvar[:]=np.ones((self._tnum,self._nbdy,self._znum),dtype='f8')*float(const)
+            varvar[:]=np.ones((self._tnum,self._nbdy,self._znum), \
+                    dtype='f8')*float(const)
         self._ncdf.sync()
 
 
@@ -280,6 +283,7 @@ class Bdy3d(object):
             self._ncdf.variables[varname][tind,:,:]=data
             if tind == self.tnum:
                 self._ncdf.variables[self._tname][tind]=time
+                self._tnum=self._tnum+1
             self._ncdf.sync()
         else:
             print "ERROR: length of data has to fit nbdy = ",self._nbdy," and znum = ",self._znum

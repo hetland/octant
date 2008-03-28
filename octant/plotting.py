@@ -14,6 +14,7 @@ Functions:
 sticks - velocity vector stick plot along a time axis
 cmap_discretize - create a discrete colorbar from standard colormaps
                   which can be applied to e.g. pcolor
+ztodepth - change negative z-ax ticklabels to positive depths
 layers - a function for plotting vertical transects based on layer heights
 
 """
@@ -111,9 +112,10 @@ def cmap_discretize(cmap, N):
     # Return colormap object.
     return pl.matplotlib.colors.LinearSegmentedColormap('colormap',cdict,1024)
 
-def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-9999.0,shading='flat',lw=0.5):
+def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-9999.0,lw=0.5,**kwargs):
         """
-        plot 2d field as layers with pcolor
+        plot 2d field as layers with pcolor based on layer heights.
+                  (perfect for GETM results)
         
         usage: layers(2dfield[kmax,xmax],
                       bath[xmax],
@@ -121,19 +123,22 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
                       xc=xc[xmax],
                       missingbath=-10.0,
                       fillvalue=-9999.0,
-                      shading='flat',
                       lines=LineColor,
-                      lw=0.5)
+                      lw=0.5,
+                      **kwargs)
 
         h,xc,missingbath,fillvalue,shading and lw are optional, default is sigma
         coordinates h=bath/kmax, default FillValue=-9999.0,
-        default shading='flat', default lw=0.05,
-        and default xc is the vector of array indices.
+        default lw=0.05, and default xc is the vector of array indices.
 
-        Polygons where bath == missingbath are filled with fillvalue and
-        are masked afterwards. The 2dfield can be preconfigured
-        with (fillvalue)s where "layers" should not plot any value
-        (e.g. if certain layers should be removed)
+        Polygons where bath == missingbath in any point are filled
+        with fillvalue and are masked afterwards.
+        The 2dfield can be preconfigured with (fillvalue)s where
+        "layers" should not plot any value (e.g. if certain layers
+        should be removed)
+        
+        Additional keyword arguments are passed to pcolor such as
+        cmap=cm.hsv or shading='flat'.
 
         If lines is given, the layer interfaces are
         plotted as lines in color e.g. lines='black'
@@ -187,7 +192,7 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
 
         fmasked=np.ma.masked_where(fieldd==fillvalue,fieldd)
          
-        pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,shading=shading)
+        pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,**kwargs)
         
         if lines!=None:
             xi=np.array([xc for k in range(kmax)])
@@ -195,6 +200,116 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
             pl.plot(xi.T,np.ma.masked_where(bathi.T<=-10.0,zi[:-1,:].T), \
                     color=lines,lw=lw)
         pl.axis('tight')
-        pl.show()
+#        pl.show()
 
+def ztodepth(ax=pl.gca(),ylabelstr='depth [m]'):
+    """
+    ztodepth - change negative z-ax ticklabels 
+                 on the y-axis to positive depths
+
+    usage: ztodepth(ax=gca(),
+                    ylabelstr='depth [m]')
+
+    ztodepth gets the yticks and creates positive yticklabels
+    for annotation in depth instead of position on z-axis.
+    Its recommended to change yticks if needed before
+    running ztodepth.
+
+    If ylabelstr is not set to "None", then the y-axis gets
+    the label "depth [m]" or other specified with ylabelstr.
+
+    """
+
+    yt = ax.get_yticks()
+    dtl = [str(y*-1.0) for y in yt]
+    ax.set_yticklabels(dtl)
+    if ylabelstr != None:
+        ax.set_ylabel(ylabelstr)
+
+def drawscale(m,lon,lat,length,yoffset=None,fontsize=8.0,linewidth=0.5):
+       """draw a fancy map scale from lon-length/2,lat-yoffset to
+       lon-length/2,lat-yoffset, label it with actual distance in km
+       
+       usage drawscale(m - mapping object,
+                       lon - lon value of center of scale
+                       lat - lat value of center of scale
+                       length - maximum length shown by scale in km
+                       yoffset - height of scale in "km"
+                       fontsize - fontsize of ticklabels
+                       linewidth - width of used lines)
+       
+       """
+       length = length*1000 #input length is km
+
+       # idea for future: try to divide by 5, 4 and 3 to find
+       # the best split factor and then create the x-coordinates
+
+       #we need 5 sets of x coordinates (in map units)
+       #center of scale
+       xc,yc = m(lon,lat)
+       #left edge of scale
+       lon1,lat1 = m(xc-length/2,yc,inverse=True)
+       x1,y1 = m(lon1,lat1)
+       #quarter scale
+       lon2,lat2 = m(xc-length/4,yc,inverse=True)
+       x2,y2 = m(lon2,lat2)
+       #three quarter scale
+       lon3,lat3 = m(xc+length/4,yc,inverse=True)
+       x3,y3 = m(lon3,lat3)
+       #right edge of scale
+       lon4,lat4 = m(xc+length/2,yc,inverse=True)
+       x4,y4 = m(lon4,lat4)
+
+       if yoffset is None: yoffset = 0.05*length
+
+       #plot top line
+       ytop = yc+yoffset/2
+       ybottom = yc-yoffset/2
+       ytick = ybottom - yoffset/2
+       ytext = ytick - yoffset/2
+       m.plot([x1,x4],[ytop,ytop],color='k',lw=linewidth)
+       #plot bottom line
+       m.plot([x1,x4],[ybottom,ybottom],color='k',lw=linewidth)
+       #plot left edge
+       m.plot([x1,x1],[ybottom,ytop],color='k',lw=linewidth)
+       #plot right edge
+       m.plot([x4,x4],[ybottom,ytop],color='k',lw=linewidth)
+
+       #make a filled black box from left edge to 1/4 way across
+       pl.fill([x1,x2,x2,x1,x1],[ytop,ytop,ybottom,ybottom,ytop], \
+               'k',lw=linewidth)
+       #make a filled white box from 1/4 way across to 1/2 way across
+       pl.fill([x2,xc,xc,x2,x2],[ytop,ytop,ybottom,ybottom,ytop], \
+               'w',lw=linewidth)
+       #make a filled white box from 1/2 way across to 3/4 way across
+       pl.fill([xc,x3,x3,xc,xc],[ytop,ytop,ybottom,ybottom,ytop], \
+               'k',lw=linewidth)
+       #make a filled white box from 3/4 way across to end
+       pl.fill([x3,x4,x4,x3,x3],[ytop,ytop,ybottom,ybottom,ytop], \
+               'w',lw=linewidth)
+
+       #plot 3 tick marks at left edge, center, and right edge
+       m.plot([x1,x1],[ytick,ybottom],color='k',lw=linewidth)
+       m.plot([xc,xc],[ytick,ybottom],color='k',lw=linewidth)
+       m.plot([x4,x4],[ytick,ybottom],color='k',lw=linewidth)
+
+       #label 3 tick marks
+       pl.text(x1,ytext,'%d' % (0),\
+            horizontalalignment='center',\
+            verticalalignment='top',\
+            fontsize=fontsize)
+       pl.text(xc,ytext,'%d' % (round((length/2)/1000)),\
+            horizontalalignment='center',\
+            verticalalignment='top',\
+            fontsize=fontsize)
+       pl.text(x4,ytext,'%d' % (round((length)/1000)),\
+            horizontalalignment='center',\
+            verticalalignment='top',\
+            fontsize=fontsize)
+
+       #put units on top
+       pl.text(xc,ytop+yoffset/2,'km',\
+            horizontalalignment='center',\
+            verticalalignment='bottom',\
+            fontsize=fontsize)
 
