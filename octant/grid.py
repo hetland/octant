@@ -413,12 +413,12 @@ class FocusPoint(object):
         
         alpha = 1.0 - 1.0/self.factor
         def xf(x, y):
-            return x - 0.5*np.sqrt(pi)*self.Rx*alpha \
+            return x - 0.5*np.sqrt(np.pi)*self.Rx*alpha \
                           *np.exp(-(y-self.yo)**2/self.Ry**2) \
                           *erf((x-self.xo)/self.Rx)
         
         def yf(x, y):
-            return y - 0.5*np.sqrt(pi)*self.Ry*alpha \
+            return y - 0.5*np.sqrt(np.pi)*self.Ry*alpha \
                           *np.exp(-(x-self.xo)**2/self.Rx**2) \
                           *erf((y-self.yo)/self.Ry)
         
@@ -503,8 +503,8 @@ class CGrid(object):
        
         For a grid in geographic coordinates:
        
-        grd = CGrid(lon, lat, proj=<Basemap Mercator projection>, mask=None,
-       f=None, h=None)
+        grd = CGrid(lon, lat, proj=<Basemap Mercator projection>, 
+                    mask=None, f=None, h=None)
        
         Input vertex arrays may be either numpy arrays or MaskedArrays. If
        masked arrays are used, the mask will be a combination of the specified
@@ -523,19 +523,24 @@ class CGrid(object):
         assert np.ndim(x)==2 and np.ndim(y)==2 and np.shape(x)==np.shape(y), \
             'x and y must be 2D arrays of the same size.'
         
+        if np.any(np.isnan(x)) or np.any(np.isnan(y)):
+            x = np.ma.masked_where(isnan(x), x)
+            y = np.ma.masked_where(isnan(y), y)
+            
         if self.proj is not None:
-            self.lon_vert = np.asarray(x, dtype='d')
-            self.lat_vert = np.asarray(y, dtype='d')
+            self.lon_vert = x
+            self.lat_vert = y
             self.x_vert, self.y_vert = self.proj(x, y)
         else:
-            self.x_vert = np.asarray(x, dtype='d')
-            self.y_vert = np.asarray(y, dtype='d')
+            self.x_vert = x
+            self.y_vert = y
             self.lon_vert = None
             self.lat_vert = None
         
         # Generate the grid mask
         if mask is None:
-            self.mask_rho = np.ones(self.x_rho.shape, dtype='d')
+            mask_shape = tuple([n-1 for n in self.x_vert.shape])
+            self.mask_rho = np.ones(mask_shape, dtype='d')
         else:
             self.mask_rho = mask
         
@@ -562,92 +567,92 @@ class CGrid(object):
                     self.lat_vert.mask[:-1,1:] | self.lat_vert.mask[1:,1:])
             self.mask_rho = np.asarray(~(~np.bool_(self.mask_rho) | mask), dtype='d')
         
-        if self.proj is not None:
-            self.calculate_projection()
-        
-        self.calculate_metrics()
-        
+        self._calculate_subgrids()
+        self._calculate_metrics()        
         if self.proj is not None and f is None:
             self.f = 2 * 7.29e-5 * np.cos(self.lat_rho * np.pi / 180.)
         else:
             self.f = np.asarray(f, dtype='d')
             
         self.h = h
+        
+    def _calculate_subgrids(self):
+        self.x_rho = 0.25*(self.x_vert[1:,1:]+self.x_vert[1:,:-1]+ \
+                           self.x_vert[:-1,1:]+self.x_vert[:-1,:-1])
+        self.y_rho = 0.25*(self.y_vert[1:,1:]+self.y_vert[1:,:-1]+ \
+                           self.y_vert[:-1,1:]+self.y_vert[:-1,:-1])
+        self.x_u = 0.5*(self.x_vert[:-1,1:-1] + self.x_vert[1:,1:-1])
+        self.y_u = 0.5*(self.y_vert[:-1,1:-1] + self.y_vert[1:,1:-1])
+        self.x_v = 0.5*(self.x_vert[1:-1,:-1] + self.x_vert[1:-1,1:])
+        self.y_v = 0.5*(self.y_vert[1:-1,:-1] + self.y_vert[1:-1,1:])
+        self.x_psi = self.x_vert[1:-1,1:-1]
+        self.y_psi = self.y_vert[1:-1,1:-1]
+        
+        if self.proj is not None:
+            self.lon_rho, self.lat_rho = self.proj(self.x_rho, self.y_rho, inverse=True)
+            self.lon_u, self.lat_u = self.proj(self.x_u, self.y_u, inverse=True)
+            self.lon_v, self.lat_v = self.proj(self.x_v, self.y_v, inverse=True)
+            self.lon_psi, self.lat_psi = self.proj(self.x_psi, self.y_psi, inverse=True)
     
-    def calculate_metrics(self):
+    def _calculate_metrics(self):
         'Calculates pm, pn, dndx, dmde, and angle from x_vert and y_vert'
         if self.proj is not None:
             gc_dist = np.vectorize(lambda lon1, lat1, lon2, lat2: \
                          GreatCircle(6378137.0, 6356752.3142, \
                                           lon1, lat1, lon2, lat2).distance)
-            lon_temp = 0.5*(self.lon_vert[1:,:]+self.lon_vert[:-1,:])
-            lat_temp = 0.5*(self.lat_vert[1:,:]+self.lat_vert[:-1,:])
-            if isinstance(lat_temp, np.ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
-            if isinstance(lon_temp, np.ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
-            self.pm = 1.0 / gc_dist(lon_temp[:,1:],  lat_temp[:,1:], \
-                                    lon_temp[:,:-1], lat_temp[:,:-1])
-            lon_temp = 0.5*(self.lon_vert[:,1:]+self.lon_vert[:,:-1])
-            lat_temp = 0.5*(self.lat_vert[:,1:]+self.lat_vert[:,:-1])
-            if isinstance(lat_temp, np.ma.MaskedArray): lat_temp = lat_temp.filled(0.0)
-            if isinstance(lon_temp, np.ma.MaskedArray): lon_temp = lon_temp.filled(0.0)
-            self.pn = 1.0 / gc_dist(lon_temp[1:,:],  lat_temp[1:,:], \
-                                    lon_temp[:-1,:], lat_temp[:-1,:])
+            dx = gc_dist(self.lon[:,1:],  self.lat[:,1:], \
+                         self.lon[:,:-1], self.lat[:,:-1])
+            self.dx = 0.5*(dx[1:,:]+dx[:-1,:])
+            self.pm = 1.0/self.dx
+            dy = gc_dist(self.lon[1:,:],  self.lat[1:,:], \
+                         self.lon[:-1,:], self.lat[:-1,:])
+            self.dy = 0.5*(dy[:,1:]+dy[:,:-1])
+            self.pn = 1.0/self.dy
         else:
             x_temp = 0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])
             y_temp = 0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])
-            self.pm = 1.0 / np.sqrt(np.diff(x_temp, axis=1)**2 + np.diff(y_temp, axis=1)**2)
+            self.dx = np.sqrt(np.diff(x_temp, axis=1)**2 + np.diff(y_temp, axis=1)**2)
             x_temp = 0.5*(self.x_vert[:,1:]+self.x_vert[:,:-1])
             y_temp = 0.5*(self.y_vert[:,1:]+self.y_vert[:,:-1])
-            self.pn = 1.0 / np.sqrt(np.diff(x_temp, axis=0)**2 + np.diff(y_temp, axis=0)**2)
+            self.dy = np.sqrt(np.diff(x_temp, axis=0)**2 + np.diff(y_temp, axis=0)**2)
         
-        if np.any(~np.isfinite(self.pm)) or np.any(~np.isfinite(self.pm)):
-            self.pm = np.ma.masked_where(~np.isfinite(self.pm), self.pm)
-            self.pn = np.ma.masked_where(~np.isfinite(self.pn), self.pn)
-        
-        # self.pm = extrapolate_mask(self.pm, mask=(self.mask==0.0))
-        # self.pn = extrapolate_mask(self.pn, mask=(self.mask==0.0))
-        
-        if isinstance(self.pn, np.ma.MaskedArray):
+        if isinstance(self.dy, np.ma.MaskedArray):
             self.dndx = np.ma.zeros(self.x_rho.shape, dtype='d')
         else:
             self.dndx = np.zeros(self.x_rho.shape, dtype='d')
         
-        if isinstance(self.pm, np.ma.MaskedArray):
+        if isinstance(self.dx, np.ma.MaskedArray):
             self.dmde = np.ma.zeros(self.x_rho.shape, dtype='d')
         else:
             self.dmde = np.zeros(self.x_rho.shape, dtype='d')
         
-        self.dndx[1:-1,1:-1] = 0.5*(1.0/self.pn[1:-1,2:] - 1.0/self.pn[1:-1,:-2])
-        self.dmde[1:-1,1:-1] = 0.5*(1.0/self.pm[2:,1:-1] - 1.0/self.pm[:-2,1:-1])
+        self.dndx[1:-1,1:-1] = 0.5*(self.dy[1:-1,2:] - self.dy[1:-1,:-2])
+        self.dmde[1:-1,1:-1] = 0.5*(self.dx[2:,1:-1] - self.dx[:-2,1:-1])
         
-        if self.x_vert is None or self.y_vert is None:
-            self.calculate_projection()
-        
-        self.angle = np.arctan2(np.diff(0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])), \
-                                np.diff(0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])))
-        
-        # self.angle = extrapolate_mask(self.angle, mask=(self.mask==0.0))
-    
-    def calculate_projection(self, proj=None):        
-        if isinstance(self.lat_vert, np.ma.MaskedArray):
-            mask_lat = self.lat_vert.mask 
-            lat_temp = self.lat_vert.filled(0.0)
+        if isinstance(self.x_vert, np.ma.MaskedArray) or \
+           isinstance(self.y_vert, np.ma.MaskedArray):
+            self.angle = np.ma.zeros(self.x_vert.shape, dtype='d')
         else:
-            lat_temp = self.lat_vert
+            self.angle = np.zeros(self.x_vert.shape, dtype='d')
         
-        if isinstance(self.lon_vert, np.ma.MaskedArray): 
-            mask_lon = self.lon_vert.mask
-            lon_temp = self.lon_vert.filled(0.0)
-        else:
-            lon_temp = self.lon_vert
+        angle_ud = np.arctan2(np.diff(self.y_vert, axis=1), np.diff(self.x_vert, axis=1))
+        angle_lr = np.arctan2(np.diff(self.y_vert, axis=0), np.diff(self.x_vert, axis=0)) - np.pi/2.0        
+        # domain center
+        self.angle[1:-1,1:-1] = 0.25*(angle_ud[1:-1,1:]+angle_ud[1:-1,:-1]\
+                                     +angle_lr[1:,1:-1]+angle_lr[:-1,1:-1])
+        # edges
+        self.angle[0,1:-1] = (1.0/3.0)*(angle_lr[0,1:-1]+angle_ud[0,1:]+angle_ud[0,:-1])
+        self.angle[-1,1:-1] = (1.0/3.0)*(angle_lr[-1,1:-1]+angle_ud[-1,1:]+angle_ud[-1,:-1])
+        self.angle[1:-1,0] = (1.0/3.0)*(angle_ud[1:-1,0]+angle_lr[1:,0]+angle_lr[:-1,0])
+        self.angle[1:-1,-1] = (1.0/3.0)*(angle_ud[1:-1,-1]+angle_lr[1:,-1]+angle_lr[:-1,-1])
+        #conrers
+        self.angle[0,0] = 0.5*(angle_lr[0,0]+angle_ud[0,0])
+        self.angle[0,-1] = 0.5*(angle_lr[0,-1]+angle_ud[0,-1])
+        self.angle[-1,0] = 0.5*(angle_lr[-1,0]+angle_ud[-1,0])
+        self.angle[-1,-1] = 0.5*(angle_lr[-1,-1]+angle_ud[-1,-1])
         
-        self.x_vert, self.y_vert = self.proj(lon_temp, lat_temp)
-        
-        if isinstance(self.lon_vert, np.ma.MaskedArray):
-            self.x_vert = np.ma.masked_array(self.x_vert, mask=mask_lon)
-        
-        if isinstance(self.lat_vert, np.ma.MaskedArray):
-            self.y_vert = np.ma.masked_array(self.y_vert, mask=mask_lat)
+        self.angle_rho = np.arctan2(np.diff(0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])), \
+                                    np.diff(0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])))        
     
     def calculate_orthogonality(self):
         '''
@@ -670,34 +675,21 @@ class CGrid(object):
         ang = (ang-np.pi/2.0)
         return ang
     
-    def mask_polygon(self, polyverts, inverse=False):
+    def mask_polygon(self, polyverts, mask_value=0.0):
         """
-        Mask Cartesian points contained within the polygons contained in the
-        list'polygons'.
+        Mask Cartesian points contained within the polygon defined by polyverts
         
         A cell is masked if the cell center (x_rho, y_rho) is within the
         polygon. Other sub-masks (mask_u, mask_v, and mask_psi) are updated
         automatically.
+        
+        mask_value [=0.0] may be specified to alter the value of the mask set
+        within the polygon.  E.g., mask_value=1 for water points.
         """
         mask = self.mask_rho
-        
-        if inverse:
-            mask = np.asarray(~np.bool_(mask), dtype='d')
-        
-        iwater = mask == 1.0
-        x_wet = self._get_x_rho()[iwater]
-        y_wet = self._get_y_rho()[iwater]
-        
-        mask_wet = mask[iwater]
-        
-        inside = PolygonGeometry(polyverts).inside(zip(x_wet, y_wet))
-        
+        inside = PolygonGeometry(polyverts).inside(zip(self.x_rho.flat, self.y_rho.flat))        
         if np.any(inside):
-            mask_wet[inside] = 0.0
-            mask[iwater] = mask_wet
-            if inverse:
-                mask = np.asarray(~np.bool_(a), dtype='d')
-            self.mask_rho = mask
+            self.mask_rho.flat[inside] = mask_value
     
     def _get_mask_u(self):
         return self.mask_rho[:,1:]*self.mask_rho[:,:-1]
@@ -709,90 +701,15 @@ class CGrid(object):
         return self.mask_rho[1:,1:]*self.mask_rho[:-1,1:]* \
                self.mask_rho[1:,:-1]*self.mask_rho[:-1,:-1]
     
-    def _get_x_rho(self):
-        return 0.25*(self.x_vert[1:,1:]+self.x_vert[1:,:-1]+ \
-                     self.x_vert[:-1,1:]+self.x_vert[:-1,:-1])
-    
-    def _get_y_rho(self):
-        return 0.25*(self.y_vert[1:,1:]+self.y_vert[1:,:-1]+ \
-                     self.y_vert[:-1,1:]+self.y_vert[:-1,:-1])
-    
-    def _get_x_u(self):
-        return 0.5*(self.x_vert[:-1,1:-1] + self.x_vert[1:,1:-1])
-    
-    def _get_y_u(self):
-        return 0.5*(self.y_vert[:-1,1:-1] + self.y_vert[1:,1:-1])
-    
-    def _get_x_v(self):
-        return 0.5*(self.x_vert[1:-1,:-1] + self.x_vert[1:-1,1:])
-    
-    def _get_y_v(self):
-        return 0.5*(self.y_vert[1:-1,:-1] + self.y_vert[1:-1,1:])
-    
-    def _get_x_psi(self):
-        return self.x_vert[1:-1,1:-1]
-    
-    def _get_y_psi(self):
-        return self.y_vert[1:-1,1:-1]
-    
-    def _get_lon_rho(self):
-        if self.lon_vert is None or self.lat_vert is None: return
-        return 0.25*(self.lon_vert[1:,1:]+self.lon_vert[1:,:-1]+ \
-                     self.lon_vert[:-1,1:]+self.lon_vert[:-1,:-1])
-    
-    def _get_lat_rho(self):
-        if self.lon_vert is None or self.lat_vert is None: return
-        return 0.25*(self.lat_vert[1:,1:]+self.lat_vert[1:,:-1]+ \
-                     self.lat_vert[:-1,1:]+self.lat_vert[:-1,:-1])
-    
-    def _get_lon_u(self):
-        if self.lon_vert is None or self.lat_vert is None: return
-        return 0.5*(self.lon_vert[:-1,1:-1] + self.lon_vert[1:,1:-1])
-    
-    def _get_lat_u(self):
-        if self.lon_vert is None or self.lat_vert is None: return
-        return 0.5*(self.lat_vert[:-1,1:-1] + self.lat_vert[1:,1:-1])
-    
-    def _get_lon_v(self):
-        if self.lon_vert is None or self.lat_vert is None: return
-        return 0.5*(self.lon_vert[1:-1,:-1] + self.lon_vert[1:-1,1:])
-    
-    def _get_lat_v(self):
-        if self.lon_vert is None or self.lat_vert is None: return
-        return 0.5*(self.lat_vert[1:-1,:-1] + self.lat_vert[1:-1,1:])
-    
-    def _get_lon_psi(self):
-        if self.lon_vert is None or self.lat_vert is None: return
-        return self.lon_vert[1:-1,1:-1]
-    
-    def _get_lat_psi(self):
-        if self.lon_vert is None or self.lat_vert is None: return
-        return self.lat_vert[1:-1,1:-1]
-    
-    x = property(lambda self: self.x_vert)
-    y = property(lambda self: self.y_vert)
-    lon = property(lambda self: self.lon_vert)
-    lat = property(lambda self: self.lat_vert)
-    mask = property(lambda self: self.mask_rho)
+    x = property(lambda self: self.x_vert, None, None, 'Shorthand for x_vert')
+    y = property(lambda self: self.y_vert, None, None, 'Shorthand for x_vert')
+    lon = property(lambda self: self.lon_vert, None, None, 'Shorthand for lon_vert')
+    lat = property(lambda self: self.lat_vert, None, None, 'Shorthand for lat_vert')
+    mask = property(lambda self: self.mask_rho, None, None, 'Shorthand for mask_vert')
     mask_u   = property(_get_mask_u)
     mask_v   = property(_get_mask_v)
     mask_psi = property(_get_mask_psi)
-    x_rho = property(_get_x_rho)
-    x_u   = property(_get_x_u)
-    x_v   = property(_get_x_v)
-    x_psi = property(_get_x_psi)
-    y_rho = property(_get_y_rho)
-    y_u   = property(_get_y_u)
-    y_v   = property(_get_y_v)
-    y_psi = property(_get_y_psi)
-    lon_rho = property(_get_lon_rho)
-    lon_u   = property(_get_lon_u)
-    lon_v   = property(_get_lon_v)
-    lon_psi = property(_get_lon_psi)
-    lat_rho = property(_get_lat_rho)
-    lat_u   = property(_get_lat_u)
-    lat_v   = property(_get_lat_v)
-    lat_psi = property(_get_lat_psi)
+
 
 
 class Gridgen(CGrid):
@@ -829,16 +746,28 @@ class Gridgen(CGrid):
         xrect =  ctypes.c_void_p(0)
         yrect = ctypes.c_void_p(0)
         
-        self._gn = self._libgridgen.gridgen_generategrid2( ctypes.c_int(nbry), 
+        if self.focus is None:
+            ngrid = ctypes.c_int(0)
+            xgrid = ctypes.POINTER(ctypes.c_double)()
+            ygrid = ctypes.POINTER(ctypes.c_double)()
+        else:
+            y, x =  np.mgrid[0:1:self.ny*1j, 0:1:self.nx*1j]
+            xgrid, ygrid = self.focus(x, y)
+            ngrid = ctypes.c_int(xgrid.size)
+            xgrid = (ctypes.c_double * xgrid.size)(*xgrid.flatten())
+            ygrid = (ctypes.c_double * ygrid.size)(*ygrid.flatten())
+        
+        self._gn = self._libgridgen.gridgen_generategrid2(
+             ctypes.c_int(nbry), 
              (ctypes.c_double * nbry)(*self.xbry), 
              (ctypes.c_double * nbry)(*self.ybry), 
              (ctypes.c_double * nbry)(*self.beta),
              ctypes.c_int(self.ul_idx), 
              ctypes.c_int(self.nx), 
              ctypes.c_int(self.ny), 
-             ctypes.c_int(0), 
-             ctypes.POINTER(ctypes.c_double)(), 
-             ctypes.POINTER(ctypes.c_double)(),
+             ngrid, 
+             xgrid, 
+             ygrid,
              ctypes.c_int(self.nnodes), 
              ctypes.c_int(self.newton), 
              ctypes.c_double(self.precision),
@@ -852,12 +781,14 @@ class Gridgen(CGrid):
              ctypes.byref(xrect), 
              ctypes.byref(yrect) )
         
-        x = self._libgridgen.gridnodes_getx(self._gn)        
-        x = np.asarray([x[j][i] for j in range(self.ny) for i in range(self.nx)])
+        x = self._libgridgen.gridnodes_getx(self._gn)
+        x = np.asarray([x[0][i] for i in range(self.ny*self.nx)])
+        # x = np.asarray([x[j][i] for j in range(self.ny) for i in range(self.nx)])
         x.shape = (self.ny, self.nx)
         
-        y = self._libgridgen.gridnodes_gety(self._gn)        
-        y = np.asarray([y[j][i] for j in range(self.ny) for i in range(self.nx)])
+        y = self._libgridgen.gridnodes_gety(self._gn)    
+        y = np.asarray([y[0][i] for i in range(self.ny*self.nx)])            
+        # y = np.asarray([y[j][i] for j in range(self.ny) for i in range(self.nx)])
         y.shape = (self.ny, self.nx)
         
         if np.any(np.isnan(x)) or np.any(np.isnan(y)):
@@ -1028,7 +959,7 @@ if __name__ == '__main__':
                44.456701607935841, 46.271758064353897)
         beta = [1.0, 1.0, 1.0, 1.0]
 
-        grd = Gridgen(lon, lat, beta, (68, 128), proj=proj)
+        grd = Gridgen(lon, lat, beta, (32, 32), proj=proj)
         
         for seg in proj.coastsegs:
             grd.mask_polygon(seg)

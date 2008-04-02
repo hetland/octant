@@ -11,45 +11,56 @@ interpolation. Specific tools are also included for ROMS and GETM.
 Subpackages:
 
     grid  -  Tools for dealing with curvilinear grids
-      gridgen
-      focus
-      boundaryclick
-      Grid
-      gshhs
-      greatcircle
+      BoundaryInteractor
+      CGrid
+      Focus
+      Gridgen
 
-    tools -  Generic tools.
-      polygeom
-      polyclick
-      delaunay
+    extern -  External, but useful tools.
+      PolygonGeometry
+      PolygonInteractor
+      GreatCircle
+      pupynere
 
     io
-      pupynere
       Dataset
-
-    ocean
-      depths
-      velocity
-      time
-
-    roms -  Tools specific to the Regional Ocean Modeling System
-      nc_variables
-      write_roms_grid
-
-    getm - Tools specific to the General Estuarine Transport Model
-      nc_variables
-      write_getm_grid
+      MFDataset
+     
+    cf
+      CFTime
+    
+    tools
+      rot2d
+      nanmask
+      shrink
+    
+    
+    Things to be implemented in the future:
+    # ocean
+    #   depths
+    #   velocity
+    #   time
+    # 
+    # roms -  Tools specific to the Regional Ocean Modeling System
+    #   nc_variables
+    #   write_roms_grid
+    # 
+    # getm - Tools specific to the General Estuarine Transport Model
+    #   nc_variables
+    #   write_getm_grid
 
 
 '''
 
 #from grid import CGrid, BoundaryInteractor, Focus, FocusPoint
-import io
-import extern
 from cf import CFTime
+from extern import PolygonGeometry, PolygonInteractor, GreatCircle, pupynere, delaunay
+import grid
+from io import MFDataset, Dataset
+import ocean
+from tools import rot2d, nanmask, shrink
 
-# import tools
-# import getm
+
 
 __authors__ = ['Robert Hetland <hetland@tamu.edu>',
                'Richard Hofmeister <richard.hofmeister@io-warnemuende.de>']

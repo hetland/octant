@@ -6,7 +6,7 @@ import warnings
 import numpy as np
 
 from octant.io import Dataset
-from ocemopy.tools import delaunay
+from octant.extern import delaunay
 import numpy as np
 
 try:
