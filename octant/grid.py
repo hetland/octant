@@ -656,7 +656,7 @@ class CGrid(object):
     
     def calculate_orthogonality(self):
         '''
-        Calculate orthogonality error in radiens
+        Calculate orthogonality error in radians
         '''
         z = self.x_vert + 1j*self.y_vert
         du = np.diff(z, axis=1); du = (du/abs(du))[:-1,:]
