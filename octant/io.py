@@ -15,12 +15,13 @@ with an input of a netCDF4.Dataset or MFnetCDF4.Dataset object:
   nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on file (with wildcard chars)
 '''
 
+from glob import glob
+
 try:
-    import netCDF4
     try:
-        import MFnetCDF4
+        import netCDF4 as netCDF
     except:
-        import MFnetCDF4_classic as MFnetCDF4
+        import netCDF3 as netCDF
     
     def Dataset(ncfile):
         """Return an appropriate netcdf object:
@@ -29,9 +30,9 @@ try:
             
             A netCDF4 or MFnetCDF4 object returns itself."""
         if isinstance(ncfile, str):
-            return netCDF4.Dataset(ncfile, 'r')
+            return netCDF.Dataset(ncfile, 'r')
         elif isinstance(ncfile, list) or isinstance(ncfile, tuple):
-            return MFnetCDF4.Dataset(sorted(ncfile))
+            return netCDF.MFDataset(sorted(ncfile))
         elif hasattr(ncfile, 'variables'):  # accept any oject with a variables attribute
             assert isinstance(ncfile.variables, dict), \
                    'variables attribute must be a dictionary'
@@ -45,9 +46,10 @@ try:
         """Return an MFnetCDF4 object given a string or list.  A string is expanded
            with wildcards using glob.  A netCDF4 or MFnetCDF4 object returns itself."""
         if isinstance(ncfile, str):
-            return MFnetCDF4.Dataset(ncfile)
+            ncfiles = glob(ncfile)
+            return netCDF.MFDataset(sorted(ncfiles))
         elif isinstance(ncfile, list) or isinstance(ncfile, tuple):
-            return MFnetCDF4.Dataset(sorted(ncfile))
+            return netCDF.MFDataset(sorted(ncfile))
         elif hasattr(ncfile, 'variables'):  # accept any oject with a variables attribute
             assert isinstance(ncfile.variables, dict), \
                    'variables attribute must be a dictionary'
@@ -62,7 +64,7 @@ except:
     import octant.extern.pupynere
     import warnings
     
-    warnings.warn('netCDF4 not found -- using pupynere.')
+    warnings.warn('netCDF[3/4] not found -- using pupynere.')
     
     def Dataset(ncfile):
         if isinstance(ncfile, str):
@@ -77,5 +79,5 @@ except:
 
 if __name__ == '__main__':
     pass
-    # need some better testing...
+
         

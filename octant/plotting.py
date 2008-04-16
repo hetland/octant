@@ -19,8 +19,8 @@ layers - a function for plotting vertical transects based on layer heights
 
 """
 
-import pylab as pl
-import datetime as dt
+import matplotlib.pyplot as plt
+from datetime import timedelta
 import numpy as np
 from scipy import interpolate
 
@@ -40,26 +40,26 @@ def sticks(date,u,v,tnorm=0.1,figurewidth=8,pickind=1,color='blue'):
     pickind - plot every "pickind"-vector
     """
     onedt=(date[-1]-date[0])
-    onedt=dt.timedelta(tnorm*onedt.days,tnorm*onedt.seconds)
+    onedt=timedelta(tnorm*onedt.days,tnorm*onedt.seconds)
     daynorm=onedt.days+onedt.seconds/86400.0
 
     u=np.asarray(u)
     v=np.asarray(v)
-    norm=pl.maximum(pl.absolute(u).max(),pl.absolute(v).max())
+    norm=np.maximum(np.absolute(u).max(),np.absolute(v).max())
 
     t=[]
     f=[]
     mask=[]
     fac=pickind
     for i in range(int(len(date)/fac)):
-        t.append(pl.date2num(date[i*fac]))
+        t.append(plt.date2num(date[i*fac]))
         f.append(0.0)
         mask.append(False)
-        t.append(pl.date2num(date[i*fac] \
-                + dt.timedelta(u[i*fac]/norm*onedt.days,u[i*fac]/norm*onedt.seconds)))
+        t.append(plt.date2num(date[i*fac] \
+                + timedelta(u[i*fac]/norm*onedt.days,u[i*fac]/norm*onedt.seconds)))
         f.append(v[i*fac]/norm*daynorm)
         mask.append(False)
-        t.append(pl.date2num(date[i*fac]))
+        t.append(plt.date2num(date[i*fac]))
         f.append(0.0)
         mask.append(True)
     
@@ -68,9 +68,9 @@ def sticks(date,u,v,tnorm=0.1,figurewidth=8,pickind=1,color='blue'):
     mask=np.asarray(mask)
     f=np.ma.masked_array(f,mask=mask)
     
-    pl.figure(figsize=(figurewidth,tnorm*figurewidth))
-    pl.plot_date(t,f,'-',color=color)
-    ax=pl.gca()
+    plt.figure(figsize=(figurewidth,tnorm*figurewidth))
+    plt.plot_date(t,f,'-',color=color)
+    ax=plt.gca()
     ax.set_aspect('equal')
     ax.set_xlim(t[0],t[-1])
     ax.set_ylim(-1.0*daynorm,1.0*daynorm)
@@ -91,9 +91,9 @@ def cmap_discretize(cmap, N):
 
     cdict = cmap._segmentdata.copy()
     # N colors
-    colors_i = pl.linspace(0,1.,N)
+    colors_i = np.linspace(0,1.,N)
     # N+1 indices
-    indices = pl.linspace(0,1.,N+1)
+    indices = np.linspace(0,1.,N+1)
     for key in ('red','green','blue'):
         # Find the N colors
         D = np.array(cdict[key])
@@ -110,7 +110,7 @@ def cmap_discretize(cmap, N):
             L.append(tuple(l))
         cdict[key] = tuple(L)
     # Return colormap object.
-    return pl.matplotlib.colors.LinearSegmentedColormap('colormap',cdict,1024)
+    return plt.matplotlib.colors.LinearSegmentedColormap('colormap',cdict,1024)
 
 def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-9999.0,lw=0.5,**kwargs):
         """
@@ -147,16 +147,16 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
         (kmax,xmax)=field.shape
         
         if xc==None:
-            xc=pl.arange(xmax,dtype='f')
+            xc=np.arange(xmax,dtype='f')
         
         dx2=0.5*(xc[1]-xc[0])
-        xco=np.interp((pl.arange(2*xmax+1)-1)/2.0,pl.arange(xmax),xc,left=xc[0]-dx2,right=xc[-1]+dx2)
+        xco=np.interp((np.arange(2*xmax+1)-1)/2.0,np.arange(xmax),xc,left=xc[0]-dx2,right=xc[-1]+dx2)
         bathd=np.interp(xco,xc,bath,left=bath[0],right=bath[-1])
 
         if h==None:
             h=np.asarray([bath/kmax for k in range(kmax)])
         
-        zi=-bath+pl.cumsum(np.vstack([np.zeros((1,xmax)),h]),axis=0);
+        zi=-bath+np.cumsum(np.vstack([np.zeros((1,xmax)),h]),axis=0);
         zd=np.zeros((kmax+1,2*xmax+1),dtype='f')
         fieldd=np.zeros((kmax+1,2*xmax+1),dtype='f')
         
@@ -192,17 +192,17 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
 
         fmasked=np.ma.masked_where(fieldd==fillvalue,fieldd)
          
-        pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,**kwargs)
+        plt.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,**kwargs)
         
         if lines!=None:
             xi=np.array([xc for k in range(kmax)])
             bathi=np.array([bath for k in range(kmax)])
-            pl.plot(xi.T,np.ma.masked_where(bathi.T<=-10.0,zi[:-1,:].T), \
+            plt.plot(xi.T,np.ma.masked_where(bathi.T<=-10.0,zi[:-1,:].T), \
                     color=lines,lw=lw)
-        pl.axis('tight')
-#        pl.show()
+        plt.axis('tight')
 
-def ztodepth(ax=pl.gca(),ylabelstr='depth [m]'):
+
+def ztodepth(ax=plt.gca(),ylabelstr='depth [m]'):
     """
     ztodepth - change negative z-ax ticklabels 
                  on the y-axis to positive depths
@@ -276,16 +276,16 @@ def drawscale(m,lon,lat,length,yoffset=None,fontsize=8.0,linewidth=0.5):
        m.plot([x4,x4],[ybottom,ytop],color='k',lw=linewidth)
 
        #make a filled black box from left edge to 1/4 way across
-       pl.fill([x1,x2,x2,x1,x1],[ytop,ytop,ybottom,ybottom,ytop], \
+       plt.fill([x1,x2,x2,x1,x1],[ytop,ytop,ybottom,ybottom,ytop], \
                'k',lw=linewidth)
        #make a filled white box from 1/4 way across to 1/2 way across
-       pl.fill([x2,xc,xc,x2,x2],[ytop,ytop,ybottom,ybottom,ytop], \
+       plt.fill([x2,xc,xc,x2,x2],[ytop,ytop,ybottom,ybottom,ytop], \
                'w',lw=linewidth)
        #make a filled white box from 1/2 way across to 3/4 way across
-       pl.fill([xc,x3,x3,xc,xc],[ytop,ytop,ybottom,ybottom,ytop], \
+       plt.fill([xc,x3,x3,xc,xc],[ytop,ytop,ybottom,ybottom,ytop], \
                'k',lw=linewidth)
        #make a filled white box from 3/4 way across to end
-       pl.fill([x3,x4,x4,x3,x3],[ytop,ytop,ybottom,ybottom,ytop], \
+       plt.fill([x3,x4,x4,x3,x3],[ytop,ytop,ybottom,ybottom,ytop], \
                'w',lw=linewidth)
 
        #plot 3 tick marks at left edge, center, and right edge
@@ -294,21 +294,21 @@ def drawscale(m,lon,lat,length,yoffset=None,fontsize=8.0,linewidth=0.5):
        m.plot([x4,x4],[ytick,ybottom],color='k',lw=linewidth)
 
        #label 3 tick marks
-       pl.text(x1,ytext,'%d' % (0),\
+       plt.text(x1,ytext,'%d' % (0),\
             horizontalalignment='center',\
             verticalalignment='top',\
             fontsize=fontsize)
-       pl.text(xc,ytext,'%d' % (round((length/2)/1000)),\
+       plt.text(xc,ytext,'%d' % (round((length/2)/1000)),\
             horizontalalignment='center',\
             verticalalignment='top',\
             fontsize=fontsize)
-       pl.text(x4,ytext,'%d' % (round((length)/1000)),\
+       plt.text(x4,ytext,'%d' % (round((length)/1000)),\
             horizontalalignment='center',\
             verticalalignment='top',\
             fontsize=fontsize)
 
        #put units on top
-       pl.text(xc,ytop+yoffset/2,'km',\
+       plt.text(xc,ytop+yoffset/2,'km',\
             horizontalalignment='center',\
             verticalalignment='bottom',\
             fontsize=fontsize)

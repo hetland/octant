@@ -2,11 +2,14 @@
 
 from datetime import datetime
 
+import numpy as np
 try:
     import netCDF4
 except:
     import netCDF3 as netCDF4
 
+from octant.io import Dataset
+from octant.depths import s_coordinate
 
 def nc_gls_dissipation(nc, tidx):
     '''Return the dissipation, based on tke, gls and the gls scheme parameters 
@@ -86,19 +89,20 @@ def nc_grid(nc):
     information.  The NetCDF file must contain either 'vert' veriables, or the
     verticies will be calculated with 'rho' and angle points.
     '''
-    nc = pyroms.Dataset(nc)
+    nc = Dataset(nc)
     
     varlist = ['h', 'f', 'pm', 'pn', 'angle', 'theta_s', 'theta_b', 'hc']
     variables={}
     for var in varlist:
-        try: variables[var] = nc.variables[var][:]
-        except: variables[var] = None
+        try:
+            variables[var] = nc.variables[var][:]
+        except:
+            variables[var] = None
     
-    try: variables['mask']=nc.variables['mask_rho'][:]
-    except: variables['mask']=None
-    
-    try: variables['N']=len(nc.dimensions['N'])
-    except: variables['N']=None
+    try:
+        variables['mask']=nc.variables['mask_rho'][:]
+    except:
+        variables['mask']=None
     
     if 'x_vert' in nc.variables.keys() and 'y_vert' in nc.variables.keys():
         x = nc.variables['x_vert'][:]
@@ -231,18 +235,94 @@ def write_grd(grd, filename='ocean_grd.nc', full_output=True, verbose=False):
     nc.close()
 
 
-def nc_depths(nc, grid='rho', h=None):
-    nc = Dataset(nc)
+class nc_depths(s_coordinate):
+    def __init__(self, nc, grid='rho', h=None):
+        """docstring for __init__"""
+        self.nc = Dataset(nc)
+        hc = self.nc.variables['hc'][:]
+        if h is None:
+            h = self.nc.variables['h'][:]
+        theta_b = self.nc.variables['theta_b'][:]
+        theta_s = self.nc.variables['theta_s'][:]
+        try:
+            N = len(self.nc.dimensions['N'])
+        except:
+            N = len(self.nc.dimensions['s_rho'])
+        zeta = self.nc.variables['zeta']
+        super(nc_depths, self).__init__(hc, h, theta_b, theta_s, N, \
+                                           grid=grid, zeta=zeta)
+
+
+def zatr(ncfile, time=None):
+    """
+    ZATR finds z at rho points (positive up, zero at rest surface) 
+    If zeta = True for all times with the calculated value of zeta, 
+    otherwise, for one time calculated with zeta = 0 (default)
+    
+    ncfile - NetCDF file to use (a ROMS history file or netcdf object).
+    """
+    warnings.warn('Deprecated -- use Depths class instead.')
+    nc = Dataset(ncfile)
+    h = nc.variables['h'][:]
+    h = atleast_2d(h)
     hc = nc.variables['hc'][:]
-    if h is None:
-        h = nc.variables['h'][:]
-    theta_b = nc.variables['theta_b'][:]
-    theta_s = nc.variables['theta_s'][:]
+    Cs_r = nc.variables['Cs_r'][:]
     try:
-        N = len(nc.dimensions['N'])
+        sc_r = nc.variables['sc_r'][:]  # roms-2.x format
     except:
-        N = len(nc.dimensions['s_rho'])
-    zeta = nc.variables['zeta']
-    return Depths(hc, h, theta_b, theta_s, N, grid=grid, zeta=zeta)
+        sc_r = nc.variables['s_rho'][:]  # roms-3.x format
+    
+    if time is None:
+        zeta = zeros(h.shape, 'd')
+    else:
+        zeta = nc.variables['zeta'][time]
+    
+    if ndim(zeta) == 2:
+        zeta = zeta[newaxis, :]
+    
+    N = len(nc.dimensions['N'])
+    ti = zeta.shape[0]
+    z = empty((ti, N) + h.shape, 'd')
+    for n in arange(ti):
+        for  k in arange(N):
+            z0=(sc_r[k]-Cs_r[k])*hc + Cs_r[k]*h
+            z[n,k,:] = z0 + zeta[n,:]*(1.0 + z0/h)
+    
+    return(squeeze(z))
 
 
+def zatw(ncfile, time=None):
+    """
+    ZATW finds z at w-points (positive up, zero at rest surface) 
+    If zeta = True for all times with the calculated value of zeta, 
+    otherwise, for one time calculated with zeta = 0 (default)
+    
+    ncfile - NetCDF file to use (a ROMS history file or netcdf object).
+    """
+    warnings.warn('Deprecated -- use Depths class instead.')
+    nc = Dataset(ncfile)
+    h = nc.variables['h'][:]
+    hc = nc.variables['hc'][:]
+    Cs_w = nc.variables['Cs_w'][:]
+    try:
+        sc_w = nc.variables['sc_w'][:]  # roms-2.x format
+    except:
+        sc_w = nc.variables['s_w'][:]  # roms-3.x format
+    
+    if time is None:
+        zeta = zeros(h.shape, 'd')
+    else:
+        zeta = nc.variables['zeta'][time]
+    
+    if ndim(zeta) == 2:
+        zeta = zeta[newaxis, :]
+    
+    N = len(nc.dimensions['N']) + 1
+    ti = zeta.shape[0]
+    z = empty((ti, N) + h.shape, 'd')
+    for n in arange(ti):
+        for  k in arange(N):
+            z0=(sc_w[k]-Cs_w[k])*hc + Cs_w[k]*h
+            z[n,k,:] = z0 + zeta[n,:]*(1.0 + z0/h)
+    
+    return(squeeze(z))

@@ -53,14 +53,14 @@ Subpackages:
 '''
 
 #from grid import CGrid, BoundaryInteractor, Focus, FocusPoint
-from cf import CFTime
-from extern import PolygonGeometry, PolygonInteractor, GreatCircle, pupynere, delaunay
+import cf
+import depths
+import extern
 import grid
-from io import MFDataset, Dataset
+import io
 import ocean
-from tools import rot2d, nanmask, shrink
-
-
+import tools
+import sw
 
 __authors__ = ['Robert Hetland <hetland@tamu.edu>',
                'Richard Hofmeister <richard.hofmeister@io-warnemuende.de>']
