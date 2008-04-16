@@ -61,47 +61,4 @@ class s_coordinate(object):
                 z[n,k,:] = z0 + zeta[n,:]*(1.0 + z0/self.h);
         
         return np.squeeze(z[res_index])
-    
-
-# def scoordr(h,hc,theta_b,theta_s,N):
-#     """
-#     z=scoordr(h,hc,theta_b,theta_s,N)
-#     SCOORDR finds z at rho points (positive up, zero at rest surface) 
-#      h = array of depths (e.g., from grd file)
-#      hc = critical depth
-#      theta_b = surface/bottom focusing parameter
-#      theta_s = strength of focusing parameter
-#      N number of vertical rho-points
-#     """
-#     warnings.warn('Deprecated -- use Depths class instead.')
-#     sc_w = arange(-1, 1./N, 1./N, dtype='d')
-#     sc_r = 0.5*(sc_w[1:]+sc_w[:-1])
-#     Cs_r = (1-theta_b)*sinh(theta_s*sc_r)/sinh(theta_s)\
-#           +0.5*theta_b\
-#           *(tanh(theta_s*(sc_r+0.5))-tanh(0.5*theta_s))/tanh(0.5*theta_s)
-#     z_r = empty((N,) + h.shape, dtype='d')
-#     for  k in arange(N):
-#         z_r[k,:]=(sc_r[k]-Cs_r[k])*hc + Cs_r[k]*h
-#     return(squeeze(z_r))
-
-
-# def scoordw(h,hc,theta_b,theta_s,N):
-#     """
-#     z=scoordr(h,hc,theta_b,theta_s,N)
-#     SCOORDW finds z at rho points (positive up, zero at rest surface) 
-#      h = array of depths (e.g., from grd file)
-#      hc = critical depth
-#      theta_b = surface/bottom focusing parameter
-#      theta_s = strength of focusing parameter
-#      N number of vertical w-points (one more than rho-points)
-#     """
-#     warnings.warn('Deprecated -- use Depths class instead.')
-#     sc_w = arange(-1, 1./N, 1./N, dtype='d')
-#     Cs_w = (1-theta_b)*sinh(theta_s*sc_w)/sinh(theta_s)\
-#           +0.5*theta_b\
-#           *(tanh(theta_s*(sc_w+0.5))-tanh(0.5*theta_s))/tanh(0.5*theta_s)
-#     z_w = empty((N,) + h.shape, dtype='d')
-#     for  k in arange(N):
-#         z_w[k,:]=(sc_w[k]-Cs_w[k])*hc + Cs_w[k]*h
-#     return(squeeze(z_w))
 
