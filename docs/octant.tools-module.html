@@ -44,12 +44,6 @@
     <td>
       <table cellpadding="0" cellspacing="0">
         <!-- hide/show private -->
-        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
-    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
-        <tr><td align="right"><span class="options"
-            >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="octant.tools-module.html"
-            target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
@@ -63,17 +57,8 @@ Tools for working with ROMS model input and output.
 <table class="summary" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Classes</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Classes"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Classes</span></td>
 </tr>
 <tr>
     <td class="summary" colspan="2">
@@ -87,128 +72,9 @@ Tools for working with ROMS model input and output.
 <table class="summary" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Functions</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Functions"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Functions</span></td>
 </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="rot2d"></a><span class="summary-sig-name">rot2d</span>(<span class="summary-sig-arg">x</span>,
-        <span class="summary-sig-arg">y</span>,
-        <span class="summary-sig-arg">ang</span>)</span><br />
-      rotate vectors by geometric angle</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.tools-pysrc.html#rot2d">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="nanmask"></a><span class="summary-sig-name">nanmask</span>(<span class="summary-sig-arg">a</span>)</span><br />
-      Return masked array with mask defined by NaNs.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.tools-pysrc.html#nanmask">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="octant.tools-module.html#shrink" class="summary-sig-name">shrink</a>(<span class="summary-sig-arg">a</span>,
-        <span class="summary-sig-arg">b</span>)</span><br />
-      Return array shrunk to fit a specified shape by triming or averaging.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.tools-pysrc.html#shrink">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="octant.tools-module.html#isoslice" class="summary-sig-name">isoslice</a>(<span class="summary-sig-arg">z</span>,
-        <span class="summary-sig-arg">q</span>,
-        <span class="summary-sig-arg">zo</span>=<span class="summary-sig-default">0</span>,
-        <span class="summary-sig-arg">mode</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">spline</code><code class="variable-quote">'</code></span>)</span><br />
-      Return a slice a 3D field along an isosurface.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.tools-pysrc.html#isoslice">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="iso_integrate"></a><span class="summary-sig-name">iso_integrate</span>(<span class="summary-sig-arg">z_w</span>,
-        <span class="summary-sig-arg">q</span>,
-        <span class="summary-sig-arg">z_iso</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.tools-pysrc.html#iso_integrate">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="surface"></a><span class="summary-sig-name">surface</span>(<span class="summary-sig-arg">z</span>,
-        <span class="summary-sig-arg">q</span>,
-        <span class="summary-sig-arg">qo</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.tools-pysrc.html#surface">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
@@ -264,33 +130,130 @@ Tools for working with ROMS model input and output.
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="iso_integrate"></a><span class="summary-sig-name">iso_integrate</span>(<span class="summary-sig-arg">z_w</span>,
+        <span class="summary-sig-arg">q</span>,
+        <span class="summary-sig-arg">z_iso</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.tools-pysrc.html#iso_integrate">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="octant.tools-module.html#isoslice" class="summary-sig-name">isoslice</a>(<span class="summary-sig-arg">z</span>,
+        <span class="summary-sig-arg">q</span>,
+        <span class="summary-sig-arg">zo</span>=<span class="summary-sig-default">0</span>,
+        <span class="summary-sig-arg">mode</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">spline</code><code class="variable-quote">'</code></span>)</span><br />
+      Return a slice a 3D field along an isosurface.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.tools-pysrc.html#isoslice">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="nanmask"></a><span class="summary-sig-name">nanmask</span>(<span class="summary-sig-arg">a</span>)</span><br />
+      Return masked array with mask defined by NaNs.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.tools-pysrc.html#nanmask">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="rot2d"></a><span class="summary-sig-name">rot2d</span>(<span class="summary-sig-arg">x</span>,
+        <span class="summary-sig-arg">y</span>,
+        <span class="summary-sig-arg">ang</span>)</span><br />
+      rotate vectors by geometric angle</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.tools-pysrc.html#rot2d">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="octant.tools-module.html#shrink" class="summary-sig-name">shrink</a>(<span class="summary-sig-arg">a</span>,
+        <span class="summary-sig-arg">b</span>)</span><br />
+      Return array shrunk to fit a specified shape by triming or averaging.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.tools-pysrc.html#shrink">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="surface"></a><span class="summary-sig-name">surface</span>(<span class="summary-sig-arg">z</span>,
+        <span class="summary-sig-arg">q</span>,
+        <span class="summary-sig-arg">qo</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.tools-pysrc.html#surface">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
 </table>
 <!-- ==================== VARIABLES ==================== -->
 <a name="section-Variables"></a>
 <table class="summary" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Variables</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Variables"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Variables</span></td>
 </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="octant.tools-module.html#gc_dist" class="summary-name">gc_dist</a> = <code title="np.vectorize(lambda lon1, lat1, lon2, lat2: GreatCircle(6378137.0, 635\
-6752.3142, lon1, lat1, lon2, lat2).distance, doc= '''
-Usage: dist = roms.gc_dist(lon1, lat1, lon2, lat2)
-       All inputs can be arrays, and obey array broadcasting.
-''')">np.vectorize(lambda lon1, lat1, lon2, lat2: GreatCir<code class="variable-ellipsis">...</code></code>
+        <a name="gc_dist"></a><span class="summary-name">gc_dist</span> = <code title="&lt;numpy.lib.function_base.vectorize object at 0x29a87d0&gt;">&lt;numpy.lib.function_base.vectorize object at 0x29a87d0&gt;</code>
     </td>
   </tr>
 </table>
@@ -299,91 +262,10 @@ Usage: dist = roms.gc_dist(lon1, lat1, lon2, lat2)
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Function Details</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-FunctionDetails"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Function Details</span></td>
 </tr>
 </table>
-<a name="shrink"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">shrink</span>(<span class="sig-arg">a</span>,
-        <span class="sig-arg">b</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.tools-pysrc.html#shrink">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <p>Return array shrunk to fit a specified shape by triming or averaging.</p>
-<p>a = shrink(array, shape)</p>
-<p>array is an numpy ndarray, and shape is a tuple (e.g., from
-array.shape). a is the input array shrunk such that its maximum
-dimensions are given by shape. If shape has more dimensions than
-array, the last dimensions of shape are fit.</p>
-<p>as, bs = shrink(a, b)</p>
-<p>If the second argument is also an array, both a and b are shrunk to
-the dimensions of each other. The input arrays must have the same
-number of dimensions, and the resulting arrays will have the same
-shape.</p>
-<div class="rst-section">
-<h1 class="heading"><a id="rst-example" name="rst-example">Example</a></h1>
-<pre class="py-doctest">
-<span class="py-prompt">&gt;&gt;&gt; </span>shrink(rand(10, 10), (5, 9, 18)).shape
-<span class="py-output">(9, 10)</span>
-<span class="py-output"></span><span class="py-prompt">&gt;&gt;&gt; </span>map(shape, shrink(rand(10, 10, 10), rand(5, 9, 18)))
-<span class="py-output">[(5, 9, 10), (5, 9, 10)]</span></pre>
-</div>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
-<a name="isoslice"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">isoslice</span>(<span class="sig-arg">z</span>,
-        <span class="sig-arg">q</span>,
-        <span class="sig-arg">zo</span>=<span class="sig-default">0</span>,
-        <span class="sig-arg">mode</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">spline</code><code class="variable-quote">'</code></span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.tools-pysrc.html#isoslice">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <p>Return a slice a 3D field along an isosurface.</p>
-<p>result is a a projection of variable at property == isoval in the first
-nonsingleton dimension.  In the case when there is more than one zero
-crossing, the results are averaged.</p>
-<p>EXAMPLE:
-Assume two three dimensional variable, s (salt), z (depth), and
-u (velicity), all on the same 3D grid.  x and y are the horizontal
-positions, with the same horizontal dimensions as z (the 3D depth
-field).  Here, assume the vertical dimension, that will be projected,
-is the first.</p>
-<p>s_at_m5  = isoslice(s,z,-5);        # s at z == -5
-h_at_s30 = isoslice(z,s,30);       # z at s == 30
-u_at_s30 = isoslice(u,s,30);       # u at s == 30</p>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
 <a name="N2"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -464,44 +346,75 @@ closest point to xo</dd>
   </dl>
 </td></tr></table>
 </div>
-<br />
-<!-- ==================== VARIABLES DETAILS ==================== -->
-<a name="section-VariablesDetails"></a>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Variables Details</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-VariablesDetails"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
-</tr>
-</table>
-<a name="gc_dist"></a>
+<a name="isoslice"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
-  <h3 class="epydoc">gc_dist</h3>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">isoslice</span>(<span class="sig-arg">z</span>,
+        <span class="sig-arg">q</span>,
+        <span class="sig-arg">zo</span>=<span class="sig-default">0</span>,
+        <span class="sig-arg">mode</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">spline</code><code class="variable-quote">'</code></span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.tools-pysrc.html#isoslice">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
   
+  <p>Return a slice a 3D field along an isosurface.</p>
+<p>result is a a projection of variable at property == isoval in the first
+nonsingleton dimension.  In the case when there is more than one zero
+crossing, the results are averaged.</p>
+<p>EXAMPLE:
+Assume two three dimensional variable, s (salt), z (depth), and
+u (velicity), all on the same 3D grid.  x and y are the horizontal
+positions, with the same horizontal dimensions as z (the 3D depth
+field).  Here, assume the vertical dimension, that will be projected,
+is the first.</p>
+<p>s_at_m5  = isoslice(s,z,-5);        # s at z == -5
+h_at_s30 = isoslice(z,s,30);       # z at s == 30
+u_at_s30 = isoslice(u,s,30);       # u at s == 30</p>
   <dl class="fields">
   </dl>
+</td></tr></table>
+</div>
+<a name="shrink"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">shrink</span>(<span class="sig-arg">a</span>,
+        <span class="sig-arg">b</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.tools-pysrc.html#shrink">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return array shrunk to fit a specified shape by triming or averaging.</p>
+<p>a = shrink(array, shape)</p>
+<p>array is an numpy ndarray, and shape is a tuple (e.g., from
+array.shape). a is the input array shrunk such that its maximum
+dimensions are given by shape. If shape has more dimensions than
+array, the last dimensions of shape are fit.</p>
+<p>as, bs = shrink(a, b)</p>
+<p>If the second argument is also an array, both a and b are shrunk to
+the dimensions of each other. The input arrays must have the same
+number of dimensions, and the resulting arrays will have the same
+shape.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-example" name="rst-example">Example</a></h1>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>shrink(rand(10, 10), (5, 9, 18)).shape
+<span class="py-output">(9, 10)</span>
+<span class="py-output"></span><span class="py-prompt">&gt;&gt;&gt; </span>map(shape, shrink(rand(10, 10, 10), rand(5, 9, 18)))
+<span class="py-output">[(5, 9, 10), (5, 9, 10)]</span></pre>
+</div>
   <dl class="fields">
-    <dt>Value:</dt>
-      <dd><table><tr><td><pre class="variable">
-np.vectorize(lambda lon1, lat1, lon2, lat2: GreatCircle(6378137.0, 635<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
-6752.3142, lon1, lat1, lon2, lat2).distance, doc= '''
-Usage: dist = roms.gc_dist(lon1, lat1, lon2, lat2)
-       All inputs can be arrays, and obey array broadcasting.
-''')
-</pre></td></tr></table>
-</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -533,7 +446,7 @@ Usage: dist = roms.gc_dist(lon1, lat1, lon2, lat2)
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 11:51:42 2008
+    on Mon Apr 21 12:05:39 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

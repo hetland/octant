@@ -45,12 +45,6 @@
     <td>
       <table cellpadding="0" cellspacing="0">
         <!-- hide/show private -->
-        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
-    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
-        <tr><td align="right"><span class="options"
-            >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="octant.sw.heat-module.html"
-            target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
@@ -69,17 +63,8 @@
 <table class="summary" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Functions</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Functions"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Functions</span></td>
 </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
@@ -87,12 +72,12 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.sw.heat-module.html#heatcap" class="summary-sig-name">heatcap</a>(<span class="summary-sig-arg">S</span>,
+          <td><span class="summary-sig"><a href="octant.sw.heat-module.html#adtgrad" class="summary-sig-name">adtgrad</a>(<span class="summary-sig-arg">S</span>,
         <span class="summary-sig-arg">T</span>,
         <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
-      Compute heat capacity</td>
+      Compute adiabatic temperature gradient</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.heat-pysrc.html#heatcap">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.sw.heat-pysrc.html#adtgrad">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -106,12 +91,12 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.sw.heat-module.html#adtgrad" class="summary-sig-name">adtgrad</a>(<span class="summary-sig-arg">S</span>,
+          <td><span class="summary-sig"><a href="octant.sw.heat-module.html#heatcap" class="summary-sig-name">heatcap</a>(<span class="summary-sig-arg">S</span>,
         <span class="summary-sig-arg">T</span>,
         <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
-      Compute adiabatic temperature gradient</td>
+      Compute heat capacity</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.heat-pysrc.html#adtgrad">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.sw.heat-pysrc.html#heatcap">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -164,56 +149,10 @@
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Function Details</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-FunctionDetails"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Function Details</span></td>
 </tr>
 </table>
-<a name="heatcap"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">heatcap</span>(<span class="sig-arg">S</span>,
-        <span class="sig-arg">T</span>,
-        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.sw.heat-pysrc.html#heatcap">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Compute heat capacity
-
-Usage: heatcap(S, T, [P])
-
-Input:
-    S = Salinity,     [PSS-78]
-    T = Temperature,  [&#176;C]
-    P = Pressure,     [dbar]
-P is optional, with a default value = zero
-
-Output:
-    Heat capacity  [J/(kg*K)]
-
-Algorithm: UNESCO 1983
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
 <a name="adtgrad"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -243,6 +182,43 @@ P is optional, with a default value = zero
 
 Output:
     Adiabatic temperature gradient,  [K/dbar]
+
+Algorithm: UNESCO 1983
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="heatcap"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">heatcap</span>(<span class="sig-arg">S</span>,
+        <span class="sig-arg">T</span>,
+        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.sw.heat-pysrc.html#heatcap">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Compute heat capacity
+
+Usage: heatcap(S, T, [P])
+
+Input:
+    S = Salinity,     [PSS-78]
+    T = Temperature,  [&#176;C]
+    P = Pressure,     [dbar]
+P is optional, with a default value = zero
+
+Output:
+    Heat capacity  [J/(kg*K)]
 
 Algorithm: UNESCO 1983
 
@@ -357,7 +333,7 @@ Note: Due to different algorithms,
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 11:51:42 2008
+    on Mon Apr 21 12:05:39 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

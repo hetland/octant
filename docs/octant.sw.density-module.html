@@ -45,12 +45,6 @@
     <td>
       <table cellpadding="0" cellspacing="0">
         <!-- hide/show private -->
-        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
-    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
-        <tr><td align="right"><span class="options"
-            >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="octant.sw.density-module.html"
-            target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
@@ -70,29 +64,21 @@
 <table class="summary" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Functions</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Functions"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Functions</span></td>
 </tr>
-<tr class="private">
+<tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="_dens0"></a><span class="summary-sig-name">_dens0</span>(<span class="summary-sig-arg">S</span>,
-        <span class="summary-sig-arg">T</span>)</span><br />
-      Density of seawater at zero pressure</td>
+          <td><span class="summary-sig"><a href="octant.sw.density-module.html#alpha" class="summary-sig-name">alpha</a>(<span class="summary-sig-arg">S</span>,
+        <span class="summary-sig-arg">T</span>,
+        <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
+      Compute thermal expansion coefficient</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.density-pysrc.html#_dens0">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.sw.density-pysrc.html#alpha">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -100,18 +86,18 @@
       
     </td>
   </tr>
-<tr class="private">
+<tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="_seck"></a><span class="summary-sig-name">_seck</span>(<span class="summary-sig-arg">S</span>,
+          <td><span class="summary-sig"><a href="octant.sw.density-module.html#beta" class="summary-sig-name">beta</a>(<span class="summary-sig-arg">S</span>,
         <span class="summary-sig-arg">T</span>,
         <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
-      Secant bulk modulus</td>
+      Compute saline expansion coefficient</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.density-pysrc.html#_seck">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.sw.density-pysrc.html#beta">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -144,31 +130,12 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.sw.density-module.html#svan" class="summary-sig-name">svan</a>(<span class="summary-sig-arg">S</span>,
+          <td><span class="summary-sig"><a href="octant.sw.density-module.html#drhods" class="summary-sig-name">drhods</a>(<span class="summary-sig-arg">S</span>,
         <span class="summary-sig-arg">T</span>,
         <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
-      Compute specific volume anomaly</td>
+      Compute salinity derivative of density</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.density-pysrc.html#svan">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="octant.sw.density-module.html#sigma" class="summary-sig-name">sigma</a>(<span class="summary-sig-arg">S</span>,
-        <span class="summary-sig-arg">T</span>,
-        <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
-      Compute density anomaly, sigma-T</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.density-pysrc.html#sigma">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.sw.density-pysrc.html#drhods">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -201,12 +168,12 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.sw.density-module.html#alpha" class="summary-sig-name">alpha</a>(<span class="summary-sig-arg">S</span>,
+          <td><span class="summary-sig"><a href="octant.sw.density-module.html#sigma" class="summary-sig-name">sigma</a>(<span class="summary-sig-arg">S</span>,
         <span class="summary-sig-arg">T</span>,
         <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
-      Compute thermal expansion coefficient</td>
+      Compute density anomaly, sigma-T</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.density-pysrc.html#alpha">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.sw.density-pysrc.html#sigma">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -220,31 +187,12 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.sw.density-module.html#drhods" class="summary-sig-name">drhods</a>(<span class="summary-sig-arg">S</span>,
+          <td><span class="summary-sig"><a href="octant.sw.density-module.html#svan" class="summary-sig-name">svan</a>(<span class="summary-sig-arg">S</span>,
         <span class="summary-sig-arg">T</span>,
         <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
-      Compute salinity derivative of density</td>
+      Compute specific volume anomaly</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.density-pysrc.html#drhods">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="octant.sw.density-module.html#beta" class="summary-sig-name">beta</a>(<span class="summary-sig-arg">S</span>,
-        <span class="summary-sig-arg">T</span>,
-        <span class="summary-sig-arg">P</span>=<span class="summary-sig-default">0</span>)</span><br />
-      Compute saline expansion coefficient</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.sw.density-pysrc.html#beta">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.sw.density-pysrc.html#svan">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -258,161 +206,10 @@
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Function Details</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-FunctionDetails"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Function Details</span></td>
 </tr>
 </table>
-<a name="dens"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">dens</span>(<span class="sig-arg">S</span>,
-        <span class="sig-arg">T</span>,
-        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.sw.density-pysrc.html#dens">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Compute density of seawater from salinity, temperature, and pressure
-
-Usage: dens(S, T, [P])
-
-Input:               
-    S = Salinity,     [PSS-78]
-    T = Temperature,  [&#176;C]
-    P = Pressure,     [dbar = 10**4 Pa]
-P is optional, with default value zero
-
-Output:
-    Density,          [kg/m**3]
-
-Algorithm: UNESCO 1983
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
-<a name="svan"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">svan</span>(<span class="sig-arg">S</span>,
-        <span class="sig-arg">T</span>,
-        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.sw.density-pysrc.html#svan">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Compute specific volume anomaly
-
-Usage: svan(S, T, [P])
-
-Input:
-    S = Salinity,     [PSS-78]
-    T = Temperature,  [&#176;C]
-    P = Pressure,     [dbar]
-P is optional, with a default value = zero
-
-Output:
-    Specific volume anomaly  [m**3/kg]
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
-<a name="sigma"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">sigma</span>(<span class="sig-arg">S</span>,
-        <span class="sig-arg">T</span>,
-        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.sw.density-pysrc.html#sigma">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Compute density anomaly, sigma-T
-
-Usage: sigma(S, T, [P])
-
-Input:
-    S = Salinity,     [PSS-78]
-    T = Temperature,  [&#176;C]
-    P = Pressure,     [dbar]
-P is optional, with a default value = zero
-
-Output:
-   Density anomaly,  [kg/m**3]
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
-<a name="drhodt"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">drhodt</span>(<span class="sig-arg">S</span>,
-        <span class="sig-arg">T</span>,
-        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.sw.density-pysrc.html#drhodt">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Compute temperature derivative of density
-
-Usage: drhodt(S, T, [P])
-
-Input:
-    S = Salinity,     [PSS-78]
-    T = Temperature,  [&#176;C]
-    P = Pressure,     [dbar]
-P is optional, with a default value = zero
-
-Output:
-    Temperature derivative of density  [kg /(K m**3)]
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
 <a name="alpha"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -442,41 +239,6 @@ P is optional, with a default value = zero
 
 Output:
     Thermal expansion coefficient,  [1/K]
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
-<a name="drhods"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">drhods</span>(<span class="sig-arg">S</span>,
-        <span class="sig-arg">T</span>,
-        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.sw.density-pysrc.html#drhods">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-Compute salinity derivative of density
-
-Usage: drhodt(S, T, [P])
-
-Input:
-    S = Salinity,     [PSS-78]
-    T = Temperature,  [&#176;C]
-    P = Pressure,     [dbar]
-P is optional, with a default value = zero
-
-Output:
-    Salinity derivative of density [kg/m**3]
 
 </pre>
   <dl class="fields">
@@ -518,6 +280,183 @@ Output:
   </dl>
 </td></tr></table>
 </div>
+<a name="dens"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">dens</span>(<span class="sig-arg">S</span>,
+        <span class="sig-arg">T</span>,
+        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.sw.density-pysrc.html#dens">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Compute density of seawater from salinity, temperature, and pressure
+
+Usage: dens(S, T, [P])
+
+Input:               
+    S = Salinity,     [PSS-78]
+    T = Temperature,  [&#176;C]
+    P = Pressure,     [dbar = 10**4 Pa]
+P is optional, with default value zero
+
+Output:
+    Density,          [kg/m**3]
+
+Algorithm: UNESCO 1983
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="drhods"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">drhods</span>(<span class="sig-arg">S</span>,
+        <span class="sig-arg">T</span>,
+        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.sw.density-pysrc.html#drhods">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Compute salinity derivative of density
+
+Usage: drhodt(S, T, [P])
+
+Input:
+    S = Salinity,     [PSS-78]
+    T = Temperature,  [&#176;C]
+    P = Pressure,     [dbar]
+P is optional, with a default value = zero
+
+Output:
+    Salinity derivative of density [kg/m**3]
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="drhodt"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">drhodt</span>(<span class="sig-arg">S</span>,
+        <span class="sig-arg">T</span>,
+        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.sw.density-pysrc.html#drhodt">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Compute temperature derivative of density
+
+Usage: drhodt(S, T, [P])
+
+Input:
+    S = Salinity,     [PSS-78]
+    T = Temperature,  [&#176;C]
+    P = Pressure,     [dbar]
+P is optional, with a default value = zero
+
+Output:
+    Temperature derivative of density  [kg /(K m**3)]
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="sigma"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">sigma</span>(<span class="sig-arg">S</span>,
+        <span class="sig-arg">T</span>,
+        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.sw.density-pysrc.html#sigma">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Compute density anomaly, sigma-T
+
+Usage: sigma(S, T, [P])
+
+Input:
+    S = Salinity,     [PSS-78]
+    T = Temperature,  [&#176;C]
+    P = Pressure,     [dbar]
+P is optional, with a default value = zero
+
+Output:
+   Density anomaly,  [kg/m**3]
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="svan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">svan</span>(<span class="sig-arg">S</span>,
+        <span class="sig-arg">T</span>,
+        <span class="sig-arg">P</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.sw.density-pysrc.html#svan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Compute specific volume anomaly
+
+Usage: svan(S, T, [P])
+
+Input:
+    S = Salinity,     [PSS-78]
+    T = Temperature,  [&#176;C]
+    P = Pressure,     [dbar]
+P is optional, with a default value = zero
+
+Output:
+    Specific volume anomaly  [m**3/kg]
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
@@ -546,7 +485,7 @@ Output:
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 11:51:42 2008
+    on Mon Apr 21 12:05:39 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

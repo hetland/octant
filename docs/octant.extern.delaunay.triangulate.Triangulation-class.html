@@ -47,12 +47,6 @@
     <td>
       <table cellpadding="0" cellspacing="0">
         <!-- hide/show private -->
-        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
-    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
-        <tr><td align="right"><span class="options"
-            >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="octant.extern.delaunay.triangulate.Triangulation-class.html"
-            target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
@@ -116,17 +110,8 @@ Attributes: (all should be treated as read-only to maintain consistency)
 <table class="summary" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Instance Methods</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-InstanceMethods"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Instance Methods</span></td>
 </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
@@ -146,16 +131,18 @@ Attributes: (all should be treated as read-only to maintain consistency)
       
     </td>
   </tr>
-<tr class="private">
+<tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.extern.delaunay.triangulate.Triangulation-class.html#_compute_convex_hull" class="summary-sig-name" onclick="show_private();">_compute_convex_hull</a>(<span class="summary-sig-arg">self</span>)</span><br />
-      Extract the convex hull from the triangulation information.</td>
+          <td><span class="summary-sig"><a name="linear_extrapolator"></a><span class="summary-sig-name">linear_extrapolator</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">z</span>,
+        <span class="summary-sig-arg">bbox</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">default_value</span>=<span class="summary-sig-default">nan</span>)</span></td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation._compute_convex_hull">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation.linear_extrapolator">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -189,6 +176,25 @@ assigning a plane to each triangle.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a name="nn_extrapolator"></a><span class="summary-sig-name">nn_extrapolator</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">z</span>,
+        <span class="summary-sig-arg">bbox</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">default_value</span>=<span class="summary-sig-default">nan</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation.nn_extrapolator">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="octant.extern.delaunay.triangulate.Triangulation-class.html#nn_interpolator" class="summary-sig-name">nn_interpolator</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">z</span>,
         <span class="summary-sig-arg">default_value</span>=<span class="summary-sig-default">nan</span>)</span><br />
@@ -196,6 +202,23 @@ assigning a plane to each triangle.</td>
 the natural neighbors method.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation.nn_interpolator">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="octant.extern.delaunay.triangulate.Triangulation-class.html#node_graph" class="summary-sig-name">node_graph</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return a graph of node_id's pointing to node_id's.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation.node_graph">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -221,78 +244,14 @@ the natural neighbors method.</td>
       
     </td>
   </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="nn_extrapolator"></a><span class="summary-sig-name">nn_extrapolator</span>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">z</span>,
-        <span class="summary-sig-arg">bbox</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">default_value</span>=<span class="summary-sig-default">nan</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation.nn_extrapolator">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a name="linear_extrapolator"></a><span class="summary-sig-name">linear_extrapolator</span>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">z</span>,
-        <span class="summary-sig-arg">bbox</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">default_value</span>=<span class="summary-sig-default">nan</span>)</span></td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation.linear_extrapolator">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="octant.extern.delaunay.triangulate.Triangulation-class.html#node_graph" class="summary-sig-name">node_graph</a>(<span class="summary-sig-arg">self</span>)</span><br />
-      Return a graph of node_id's pointing to node_id's.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation.node_graph">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
 </table>
 <!-- ==================== METHOD DETAILS ==================== -->
 <a name="section-MethodDetails"></a>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Method Details</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-MethodDetails"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Method Details</span></td>
 </tr>
 </table>
 <a name="__init__"></a>
@@ -318,27 +277,6 @@ the natural neighbors method.</td>
         object.__init__
         <dd><em class="note">(inherited documentation)</em></dd>
     </dt>
-  </dl>
-</td></tr></table>
-</div>
-<a name="_compute_convex_hull"></a>
-<div class="private">
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">_compute_convex_hull</span>(<span class="sig-arg">self</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.extern.delaunay.triangulate-pysrc.html#Triangulation._compute_convex_hull">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <p>Extract the convex hull from the triangulation information.</p>
-  <p>The output will be a list of point_id's in counter-clockwise order 
-  forming the convex hull of the data set.</p>
-  <dl class="fields">
   </dl>
 </td></tr></table>
 </div>
@@ -448,7 +386,7 @@ z -- an array of floats giving the known function values at each point
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 11:51:42 2008
+    on Mon Apr 21 12:05:39 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

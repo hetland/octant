@@ -45,12 +45,6 @@
     <td>
       <table cellpadding="0" cellspacing="0">
         <!-- hide/show private -->
-        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
-    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
-        <tr><td align="right"><span class="options"
-            >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="octant.extern.poly_editor-pysrc.html"
-            target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
@@ -64,12 +58,14 @@
 <a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
 <a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">matplotlib</tt><tt class="py-op">.</tt><tt class="py-name">artist</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Artist</tt> </tt>
 <a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">matplotlib</tt><tt class="py-op">.</tt><tt class="py-name">patches</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Polygon</tt><tt class="py-op">,</tt> <tt class="py-name">CirclePolygon</tt> </tt>
-<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">numpy</tt> <tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Variable octant.ocean.depths.sqrt=octant.ocean.depths-module.html#sqrt,Variable octant.ocean.sqrt=octant.ocean-module.html#sqrt,Variable octant.ocean.state.sqrt=octant.ocean.state-module.html#sqrt,Variable octant.ocean.step3d_t.sqrt=octant.ocean.step3d_t-module.html#sqrt,Variable octant.ocean.time.sqrt=octant.ocean.time-module.html#sqrt,Variable octant.ocean.velocity.sqrt=octant.ocean.velocity-module.html#sqrt"><a title="octant.ocean.depths.sqrt
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">numpy</tt> <tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Variable octant.extern.poly_editor.sqrt=octant.extern.poly_editor-module.html#sqrt,Variable octant.ocean.depths.sqrt=octant.ocean.depths-module.html#sqrt,Variable octant.ocean.sqrt=octant.ocean-module.html#sqrt,Variable octant.ocean.state.sqrt=octant.ocean.state-module.html#sqrt,Variable octant.ocean.step3d_t.sqrt=octant.ocean.step3d_t-module.html#sqrt,Variable octant.ocean.time.sqrt=octant.ocean.time-module.html#sqrt,Variable octant.ocean.velocity.sqrt=octant.ocean.velocity-module.html#sqrt"><a title="octant.extern.poly_editor.sqrt
+octant.ocean.depths.sqrt
 octant.ocean.sqrt
 octant.ocean.state.sqrt
 octant.ocean.step3d_t.sqrt
 octant.ocean.time.sqrt
-octant.ocean.velocity.sqrt" class="py-name" href="#" onclick="return doclink('link-0', 'sqrt', 'link-0');">sqrt</a></tt><tt class="py-op">,</tt> <tt class="py-name">nonzero</tt><tt class="py-op">,</tt> <tt id="link-1" class="py-name" targets="Variable octant.ocean.depths.equal=octant.ocean.depths-module.html#equal,Variable octant.ocean.equal=octant.ocean-module.html#equal,Variable octant.ocean.state.equal=octant.ocean.state-module.html#equal,Variable octant.ocean.step3d_t.equal=octant.ocean.step3d_t-module.html#equal,Variable octant.ocean.time.equal=octant.ocean.time-module.html#equal,Variable octant.ocean.velocity.equal=octant.ocean.velocity-module.html#equal"><a title="octant.ocean.depths.equal
+octant.ocean.velocity.sqrt" class="py-name" href="#" onclick="return doclink('link-0', 'sqrt', 'link-0');">sqrt</a></tt><tt class="py-op">,</tt> <tt class="py-name">nonzero</tt><tt class="py-op">,</tt> <tt id="link-1" class="py-name" targets="Variable octant.extern.poly_editor.equal=octant.extern.poly_editor-module.html#equal,Variable octant.ocean.depths.equal=octant.ocean.depths-module.html#equal,Variable octant.ocean.equal=octant.ocean-module.html#equal,Variable octant.ocean.state.equal=octant.ocean.state-module.html#equal,Variable octant.ocean.step3d_t.equal=octant.ocean.step3d_t-module.html#equal,Variable octant.ocean.time.equal=octant.ocean.time-module.html#equal,Variable octant.ocean.velocity.equal=octant.ocean.velocity-module.html#equal"><a title="octant.extern.poly_editor.equal
+octant.ocean.depths.equal
 octant.ocean.equal
 octant.ocean.state.equal
 octant.ocean.step3d_t.equal
@@ -145,7 +141,8 @@ octant.grid.CGrid.y" class="py-name" href="#" onclick="return doclink('link-7', 
 <a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">xy</tt> <tt class="py-op">=</tt> <tt class="py-name">npy</tt><tt class="py-op">.</tt><tt class="py-name">asarray</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">poly</tt><tt class="py-op">.</tt><tt class="py-name">xy</tt><tt class="py-op">)</tt> </tt>
 <a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-name">xyt</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">poly</tt><tt class="py-op">.</tt><tt class="py-name">get_transform</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">transform</tt><tt class="py-op">(</tt><tt class="py-name">xy</tt><tt class="py-op">)</tt> </tt>
 <a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-name">xt</tt><tt class="py-op">,</tt> <tt class="py-name">yt</tt> <tt class="py-op">=</tt> <tt class="py-name">xyt</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">xyt</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
-<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-name">d</tt> <tt class="py-op">=</tt> <tt id="link-14" class="py-name"><a title="octant.ocean.depths.sqrt
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-name">d</tt> <tt class="py-op">=</tt> <tt id="link-14" class="py-name"><a title="octant.extern.poly_editor.sqrt
+octant.ocean.depths.sqrt
 octant.ocean.sqrt
 octant.ocean.state.sqrt
 octant.ocean.step3d_t.sqrt
@@ -153,7 +150,8 @@ octant.ocean.time.sqrt
 octant.ocean.velocity.sqrt" class="py-name" href="#" onclick="return doclink('link-14', 'sqrt', 'link-0');">sqrt</a></tt><tt class="py-op">(</tt><tt class="py-op">(</tt><tt class="py-name">xt</tt><tt class="py-op">-</tt><tt class="py-name">event</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name"><a title="octant.grid.BoundaryInteractor.x
 octant.grid.CGrid.x" class="py-name" href="#" onclick="return doclink('link-15', 'x', 'link-4');">x</a></tt><tt class="py-op">)</tt><tt class="py-op">**</tt><tt class="py-number">2</tt> <tt class="py-op">+</tt> <tt class="py-op">(</tt><tt class="py-name">yt</tt><tt class="py-op">-</tt><tt class="py-name">event</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name"><a title="octant.grid.BoundaryInteractor.y
 octant.grid.CGrid.y" class="py-name" href="#" onclick="return doclink('link-16', 'y', 'link-5');">y</a></tt><tt class="py-op">)</tt><tt class="py-op">**</tt><tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
-<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-name">indseq</tt> <tt class="py-op">=</tt> <tt class="py-name">nonzero</tt><tt class="py-op">(</tt><tt id="link-17" class="py-name"><a title="octant.ocean.depths.equal
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-name">indseq</tt> <tt class="py-op">=</tt> <tt class="py-name">nonzero</tt><tt class="py-op">(</tt><tt id="link-17" class="py-name"><a title="octant.extern.poly_editor.equal
+octant.ocean.depths.equal
 octant.ocean.equal
 octant.ocean.state.equal
 octant.ocean.step3d_t.equal
@@ -303,7 +301,7 @@ expandto(location.href);
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 11:51:44 2008
+    on Mon Apr 21 12:05:40 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

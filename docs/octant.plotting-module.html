@@ -44,12 +44,6 @@
     <td>
       <table cellpadding="0" cellspacing="0">
         <!-- hide/show private -->
-        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
-    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
-        <tr><td align="right"><span class="options"
-            >[<a href="frames.html" target="_top">frames</a
-            >]&nbsp;|&nbsp;<a href="octant.plotting-module.html"
-            target="_top">no&nbsp;frames</a>]</span></td></tr>
       </table>
     </td>
   </tr>
@@ -83,17 +77,8 @@ layers - a function for plotting vertical transects based on layer heights
 <table class="summary" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Functions</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-Functions"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Functions</span></td>
 </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
@@ -101,16 +86,11 @@ layers - a function for plotting vertical transects based on layer heights
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.plotting-module.html#sticks" class="summary-sig-name">sticks</a>(<span class="summary-sig-arg">date</span>,
-        <span class="summary-sig-arg">u</span>,
-        <span class="summary-sig-arg">v</span>,
-        <span class="summary-sig-arg">tnorm</span>=<span class="summary-sig-default">0.1</span>,
-        <span class="summary-sig-arg">figurewidth</span>=<span class="summary-sig-default">8</span>,
-        <span class="summary-sig-arg">pickind</span>=<span class="summary-sig-default">1</span>,
-        <span class="summary-sig-arg">color</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">blue</code><code class="variable-quote">'</code></span>)</span><br />
-      sticks - create velocity stick plot</td>
+          <td><span class="summary-sig"><a href="octant.plotting-module.html#cmap_discretize" class="summary-sig-name">cmap_discretize</a>(<span class="summary-sig-arg">cmap</span>,
+        <span class="summary-sig-arg">N</span>)</span><br />
+      Return a discrete colormap from the continuous colormap cmap.</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.plotting-pysrc.html#sticks">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.plotting-pysrc.html#cmap_discretize">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -124,11 +104,17 @@ layers - a function for plotting vertical transects based on layer heights
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.plotting-module.html#cmap_discretize" class="summary-sig-name">cmap_discretize</a>(<span class="summary-sig-arg">cmap</span>,
-        <span class="summary-sig-arg">N</span>)</span><br />
-      Return a discrete colormap from the continuous colormap cmap.</td>
+          <td><span class="summary-sig"><a href="octant.plotting-module.html#drawscale" class="summary-sig-name">drawscale</a>(<span class="summary-sig-arg">m</span>,
+        <span class="summary-sig-arg">lon</span>,
+        <span class="summary-sig-arg">lat</span>,
+        <span class="summary-sig-arg">length</span>,
+        <span class="summary-sig-arg">yoffset</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">fontsize</span>=<span class="summary-sig-default">8.0</span>,
+        <span class="summary-sig-arg">linewidth</span>=<span class="summary-sig-default">0.5</span>)</span><br />
+      draw a fancy map scale from lon-length/2,lat-yoffset to
+lon-length/2,lat-yoffset, label it with actual distance in km</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.plotting-pysrc.html#cmap_discretize">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.plotting-pysrc.html#drawscale">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -167,12 +153,16 @@ layers - a function for plotting vertical transects based on layer heights
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.plotting-module.html#ztodepth" class="summary-sig-name">ztodepth</a>(<span class="summary-sig-arg">ax</span>=<span class="summary-sig-default">plt.gca()</span>,
-        <span class="summary-sig-arg">ylabelstr</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">depth [m]</code><code class="variable-quote">'</code></span>)</span><br />
-      ztodepth - change negative z-ax ticklabels 
-             on the y-axis to positive depths</td>
+          <td><span class="summary-sig"><a href="octant.plotting-module.html#sticks" class="summary-sig-name">sticks</a>(<span class="summary-sig-arg">date</span>,
+        <span class="summary-sig-arg">u</span>,
+        <span class="summary-sig-arg">v</span>,
+        <span class="summary-sig-arg">tnorm</span>=<span class="summary-sig-default">0.1</span>,
+        <span class="summary-sig-arg">figurewidth</span>=<span class="summary-sig-default">8</span>,
+        <span class="summary-sig-arg">pickind</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">color</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">blue</code><code class="variable-quote">'</code></span>)</span><br />
+      sticks - create velocity stick plot</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.plotting-pysrc.html#ztodepth">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.plotting-pysrc.html#sticks">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -186,17 +176,12 @@ layers - a function for plotting vertical transects based on layer heights
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.plotting-module.html#drawscale" class="summary-sig-name">drawscale</a>(<span class="summary-sig-arg">m</span>,
-        <span class="summary-sig-arg">lon</span>,
-        <span class="summary-sig-arg">lat</span>,
-        <span class="summary-sig-arg">length</span>,
-        <span class="summary-sig-arg">yoffset</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">fontsize</span>=<span class="summary-sig-default">8.0</span>,
-        <span class="summary-sig-arg">linewidth</span>=<span class="summary-sig-default">0.5</span>)</span><br />
-      draw a fancy map scale from lon-length/2,lat-yoffset to
-lon-length/2,lat-yoffset, label it with actual distance in km</td>
+          <td><span class="summary-sig"><a href="octant.plotting-module.html#ztodepth" class="summary-sig-name">ztodepth</a>(<span class="summary-sig-arg">ax</span>=<span class="summary-sig-default">&lt;matplotlib.axes.AxesSubplot object at 0x2e128f0&gt;</span>,
+        <span class="summary-sig-arg">ylabelstr</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">depth [m]</code><code class="variable-quote">'</code></span>)</span><br />
+      ztodepth - change negative z-ax ticklabels 
+             on the y-axis to positive depths</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.plotting-pysrc.html#drawscale">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.plotting-pysrc.html#ztodepth">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -210,51 +195,10 @@ lon-length/2,lat-yoffset, label it with actual distance in km</td>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr bgcolor="#70b0f0" class="table-header">
-  <td colspan="2" class="table-header">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr valign="top">
-        <td align="left"><span class="table-header">Function Details</span></td>
-        <td align="right" valign="top"
-         ><span class="options">[<a href="#section-FunctionDetails"
-         class="privatelink" onclick="toggle_private();"
-         >hide private</a>]</span></td>
-      </tr>
-    </table>
-  </td>
+  <td align="left" colspan="2" class="table-header">
+    <span class="table-header">Function Details</span></td>
 </tr>
 </table>
-<a name="sticks"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">sticks</span>(<span class="sig-arg">date</span>,
-        <span class="sig-arg">u</span>,
-        <span class="sig-arg">v</span>,
-        <span class="sig-arg">tnorm</span>=<span class="sig-default">0.1</span>,
-        <span class="sig-arg">figurewidth</span>=<span class="sig-default">8</span>,
-        <span class="sig-arg">pickind</span>=<span class="sig-default">1</span>,
-        <span class="sig-arg">color</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">blue</code><code class="variable-quote">'</code></span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.plotting-pysrc.html#sticks">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <p>sticks - create velocity stick plot</p>
-  <p>sticks(date, u, v, tnorm=0.1, color='blue'             figurewidth=8, 
-  pickind=1)</p>
-  <p>date - list/array of datetime elements u - list/array of velocity in 
-  eastern direction v - list/array of velocity in northern direction tnorm 
-  - length of a u=max(u,v) as part of the time axis color - color of sticks
-  figurewidth - width of the figure in inch pickind - plot every 
-  &quot;pickind&quot;-vector</p>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
 <a name="cmap_discretize"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -280,6 +224,43 @@ Example
     x = resize(arange(100), (5,100))
     djet = cmap_discretize(cm.jet, 5)
     imshow(x, cmap=djet)
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="drawscale"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">drawscale</span>(<span class="sig-arg">m</span>,
+        <span class="sig-arg">lon</span>,
+        <span class="sig-arg">lat</span>,
+        <span class="sig-arg">length</span>,
+        <span class="sig-arg">yoffset</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">fontsize</span>=<span class="sig-default">8.0</span>,
+        <span class="sig-arg">linewidth</span>=<span class="sig-default">0.5</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.plotting-pysrc.html#drawscale">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+draw a fancy map scale from lon-length/2,lat-yoffset to
+lon-length/2,lat-yoffset, label it with actual distance in km
+
+usage drawscale(m - mapping object,
+                lon - lon value of center of scale
+                lat - lat value of center of scale
+                length - maximum length shown by scale in km
+                yoffset - height of scale in &quot;km&quot;
+                fontsize - fontsize of ticklabels
+                linewidth - width of used lines)
 
 </pre>
   <dl class="fields">
@@ -344,6 +325,38 @@ plotted as lines in color e.g. lines='black'
   </dl>
 </td></tr></table>
 </div>
+<a name="sticks"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">sticks</span>(<span class="sig-arg">date</span>,
+        <span class="sig-arg">u</span>,
+        <span class="sig-arg">v</span>,
+        <span class="sig-arg">tnorm</span>=<span class="sig-default">0.1</span>,
+        <span class="sig-arg">figurewidth</span>=<span class="sig-default">8</span>,
+        <span class="sig-arg">pickind</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">color</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">blue</code><code class="variable-quote">'</code></span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.plotting-pysrc.html#sticks">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>sticks - create velocity stick plot</p>
+  <p>sticks(date, u, v, tnorm=0.1, color='blue'             figurewidth=8, 
+  pickind=1)</p>
+  <p>date - list/array of datetime elements u - list/array of velocity in 
+  eastern direction v - list/array of velocity in northern direction tnorm 
+  - length of a u=max(u,v) as part of the time axis color - color of sticks
+  figurewidth - width of the figure in inch pickind - plot every 
+  &quot;pickind&quot;-vector</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="ztodepth"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -351,7 +364,7 @@ plotted as lines in color e.g. lines='black'
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">ztodepth</span>(<span class="sig-arg">ax</span>=<span class="sig-default">plt.gca()</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">ztodepth</span>(<span class="sig-arg">ax</span>=<span class="sig-default">&lt;matplotlib.axes.AxesSubplot object at 0x2e128f0&gt;</span>,
         <span class="sig-arg">ylabelstr</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">depth [m]</code><code class="variable-quote">'</code></span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -374,43 +387,6 @@ running ztodepth.
 
 If ylabelstr is not set to &quot;None&quot;, then the y-axis gets
 the label &quot;depth [m]&quot; or other specified with ylabelstr.
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
-<a name="drawscale"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">drawscale</span>(<span class="sig-arg">m</span>,
-        <span class="sig-arg">lon</span>,
-        <span class="sig-arg">lat</span>,
-        <span class="sig-arg">length</span>,
-        <span class="sig-arg">yoffset</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">fontsize</span>=<span class="sig-default">8.0</span>,
-        <span class="sig-arg">linewidth</span>=<span class="sig-default">0.5</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="octant.plotting-pysrc.html#drawscale">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-draw a fancy map scale from lon-length/2,lat-yoffset to
-lon-length/2,lat-yoffset, label it with actual distance in km
-
-usage drawscale(m - mapping object,
-                lon - lon value of center of scale
-                lat - lat value of center of scale
-                length - maximum length shown by scale in km
-                yoffset - height of scale in &quot;km&quot;
-                fontsize - fontsize of ticklabels
-                linewidth - width of used lines)
 
 </pre>
   <dl class="fields">
@@ -445,7 +421,7 @@ usage drawscale(m - mapping object,
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 11:51:42 2008
+    on Mon Apr 21 12:05:39 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
