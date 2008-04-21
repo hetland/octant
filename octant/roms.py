@@ -1,3 +1,4 @@
+# encoding: utf-8
 "Tools specific for the Regional Ocean Modeling System"
 
 from datetime import datetime

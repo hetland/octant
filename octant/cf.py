@@ -16,10 +16,33 @@ netcdftime (packaged in netcdf4-python)
 """
 
 import numpy as np
-from octant.io import Dataset
+
 import netcdftime
 
+import octant.io
+
 class time (np.ndarray):
+    """Return time object from netCDF file
+    
+    Parameters
+    ----------
+    nc : netCDF3/4 object or filename
+        Time information will be read from this netCDF3/4 file.
+    name : string, optional
+        The name of the the variable.
+    units : string, optional
+        The name of the variable units.
+    calendar : string, optional
+        A string representing the calandar to use. See netcdftime
+        documentation for possible values.
+    
+    Returns
+    -------
+    nctime : ndarray
+        A subclass of numpy.ndarray with values equal to the time variable in
+        the netCDF file referenced with nc.
+    
+    """
     
     _unit2sec={'seconds' : 1.0,
                'minutes' : 60.0,
@@ -34,7 +57,7 @@ class time (np.ndarray):
                'days'    : 1.0/(24.0*3600.0)}
 
     def __new__(self, ncfile, name='time', units=None, calendar='standard'):
-        self._nc = Dataset(ncfile)
+        self._nc = octant.io.Dataset(ncfile)
         data = self._nc.variables[name][:]
         data = data.view(time)
         if units == None:
@@ -46,27 +69,83 @@ class time (np.ndarray):
         self.utime = getattr(obj, 'utime', {})
     
     def arg_nearest_date(self, dateo):
+        """Return index of date nearest to query date.
+        
+        Prameters
+        ---------
+        dateo : datetime object
+            The query date
+        
+        Returns
+        -------
+        idx : integer
+            The index of the date closest to dateo. If two dates are
+            equidistant, the smaller is returned.
+        
+        """
         to = self.utime.date2num(dateo)
-        return np.min(np.where(np.abs(self-to) == np.min(np.abs(self-to)))[0])
+        return np.min(np.where(np.abs(self-to) == \
+                np.min(np.abs(self-to)))[0])
     
     def nearest_date(self, dateo):
+        """Return the nearest date to query date.
+        
+        Prameters
+        ---------
+        dateo : datetime object
+            The query date
+        
+        Returns
+        -------
+        nearest_date : datetime object
+            A datetime object of the date closest to dateo. If two dates are
+            equidistant, the smaller is returned.
+        
         """
-        find nearest model timestep,
-        input and output are datetime objects
-        """
-        idx = np.where(np.abs(self.dates-dateo) == np.min(np.abs(self.dates-dateo)))[0]
+        idx = np.where(np.abs(self.dates-dateo) == \
+                np.min(np.abs(self.dates-dateo)))[0]
         idx = np.min(idx)
         return self.dates[idx]
     
     def arg_nearest(self, to, units=None):
+        """Return index of time nearest to query time.
+        
+        Prameters
+        ---------
+        to : float
+            The query time.
+        units : string, optional
+            The units of the reference time. Defaults to the reference time
+            string 'units' in the netcdf oject.
+        
+        Returns
+        -------
+        idx : integer
+            The index of the date closest to to. If two times are equidistant,
+            the smaller is returned.
+        
+        """
         if units is not None:
             to *= self._unit2sec[units] * self._sec2unit[self.utime.units]
         return np.min(np.where(np.abs(self-to) == np.min(np.abs(self-to)))[0])
     
     def nearest(self, to, units=None):
-        """
-        find nearest model timestep,
-        input and output are datetime objects
+        """Return time nearest to time query.
+        
+        Prameters
+        ---------
+        to : float
+            The query time.
+        units : string, optional
+            The units of the reference time. Defaults to the reference time
+            string 'units' in the netcdf oject.
+        
+        Returns
+        -------
+        idx : integer
+            The index of the date closest to to. If two times are equidistant,
+            the smaller is returned.
+        
         """
         if units is not None:
             to *= self._unit2sec[units] * self._sec2unit[self.utime.units]
@@ -91,8 +170,9 @@ class time (np.ndarray):
         return np.asarray(self,dtype='float64')*fac
     
     def get_jd(self):
-        fac = self._unit2sec[self.utime.units] * self._sec2unit['days']
-        return self.utime.date2num(self.utime.origin)*fac+self.days
+        utime = netcdftime.utime('days since 01-01-01 00:00:00', \
+                                 calendar='proleptic_gregorian')
+        return utime.date2num(self.dates)
 
     def get_dates(self):
         return self.utime.num2date(self)
@@ -106,56 +186,5 @@ class time (np.ndarray):
 
 
 if __name__ == '__main__':
-
-    def time_test():
-        import netCDF4
-        import os
-        from datetime import datetime, timedelta
-    
-        t_test = 432.0*np.arange(10000.0)
-    
-        # pathological start date
-        nc = netCDF4.Dataset('test.nc', 'w')
-        nc.createDimension('time', 10000)
-        nc.createVariable('time', 'f8', ('time',))
-        nc.variables['time'].units = 'seconds since 0000-01-01 00:00:00'
-        nc.variables['time'][:] = t_test
-        nc.close()
-    
-        t = time('test.nc')
-        assert np.allclose(t.days, t_test/86400.0)
-        print t.jd
-        print t.dates
-        print t.utime.calendar
-        os.remove('test.nc')
-    
-        # normal start date
-        nc = netCDF4.Dataset('test.nc', 'w')
-        nc.createDimension('time', 10000)
-        nc.createVariable('time', 'f8', ('time',))
-        nc.variables['time'].units = 'seconds since 1970-01-01 00:00:00'
-        nc.variables['time'][:] = t_test
-        nc.close()
-    
-        t = time('test.nc')
-        assert np.allclose(t.days, t_test/86400.0)
-        print t.jd
-        print t.dates
-        print t.utime.calendar
-    
-        do = datetime(1970,1,1,23,3,3)
-        dtest = t.nearest_date(do)
-        print do, dtest
-        itest = t.arg_nearest_date(do)
-        print itest
-        print do, t.dates[itest-1:itest+2]
-    
-        ttest = t.nearest(t_test[50]+1.0)
-        print ttest, t_test[50]
-    
-        itest = t.arg_nearest(t_test[50]+1)
-        print 50, itest
-    
-        os.remove('test.nc')
-
-    time_test()
+    import octant.test
+    octant.test.cf_test()

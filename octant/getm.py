@@ -1,3 +1,4 @@
+# encoding: utf-8
 """
 octant/getm - octant tools for GETM
 

@@ -1,3 +1,4 @@
+# encoding: utf-8
 'Interactive boundary generation for use with gridgen.'
 
 # Created by Rob Hetland on 2007-01-21.

@@ -2,8 +2,37 @@
 import numpy as np
 
 class s_coordinate(object):
-    """docstring for Depths"""
-    def __init__(self, hc, h, theta_b, theta_s, N, grid='rho', zeta=None):
+    """return an object that can be indexed to return depths
+    
+    Parameters
+    ----------
+    h : array_like
+        An array of depths, either one- or two-dimensional.
+    hc : float
+        The critical depth.  Presently hc < h.min() must be true.
+    theta_b : float
+        A parameter (0.0 < theta_b < 1.0) that says whether the coordinate
+        will be focused at the surface (theta_b -> 1.0) or split evenly
+        between surface and bottom (theta_b -> 0).
+    theta_s : float
+        A parameter (typically 0.0 <= theta_s < 5.0) that defines the amount
+        of grid focising. A higher value for theta_s will focus the grid more.
+    N : int
+        The number of rho/tracer-points in the vertical.
+    zeta: array_like, optional
+        The free surface, must be the same size as h.
+    
+    Returns
+    -------
+    z : object
+        z is an scoord object that contains as attributes all of the input
+        values. The actual depths may be retreived by indexing z. Note that
+        the values of zeta are not calculated until z is indexed, so a netCDF
+        variable for zeta may be passed, even if the file is large, as only
+        the values that are required will be retrieved from the file.
+    
+    """
+    def __init__(self, h, hc, theta_b, theta_s, N, grid='rho', zeta=None):
         self.hc = hc
         self.h = np.asarray(h)
         self.theta_b = theta_b

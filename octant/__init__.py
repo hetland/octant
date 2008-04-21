@@ -1,3 +1,4 @@
+# encoding: utf-8
 ''' 
 Ocemopy is a toolkit for working with ocean models on a C-Grid
 
@@ -16,39 +17,25 @@ Subpackages:
       Focus
       Gridgen
 
-    extern -  External, but useful tools.
+    extern -  Packages from other places.
       PolygonGeometry
       PolygonInteractor
       GreatCircle
       pupynere
-
-    io
+    
+    io - wrappers around netCDF4 with pass-through of netCDF4 objects
       Dataset
       MFDataset
      
     cf
-      CFTime
+      time
     
-    tools
+    tools - Miscilanious useful tools
       rot2d
       nanmask
       shrink
     
-    
-    Things to be implemented in the future:
-    # ocean
-    #   depths
-    #   velocity
-    #   time
-    # 
-    # roms -  Tools specific to the Regional Ocean Modeling System
-    #   nc_variables
-    #   write_roms_grid
-    # 
-    # getm - Tools specific to the General Estuarine Transport Model
-    #   nc_variables
-    #   write_getm_grid
-
+    sw - UNESCO seawater tools (seawater 1.1 by Bjørn Ådlandsvik)
 
 '''
 
