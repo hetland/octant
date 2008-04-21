@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>octant.slice</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="octant-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="octant-module.html">Package&nbsp;octant</a> ::
+        Module&nbsp;slice
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="octant.slice-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="octant.slice-module.html">Module octant.slice</a></h1>
+<pre class="py-src">
+<a name="isoslice"></a><div id="isoslice-def"><a name="L1"></a><tt class="py-lineno">  1</tt> <a class="py-toggle" href="#" id="isoslice-toggle" onclick="return toggle('isoslice');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="octant.slice-module.html#isoslice">isoslice</a><tt class="py-op">(</tt><tt class="py-param">var</tt><tt class="py-op">,</tt><tt class="py-param">prop</tt><tt class="py-op">,</tt><tt class="py-param">isoval</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-param">axis</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-param">masking</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="isoslice-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="isoslice-expanded"><a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring">    result = isoslice(variable,property[,isoval=0])</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring">    result is a a projection of variable at property == isoval in the first</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-docstring">    nonsingleton dimension.  In the case when there is more than one zero</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-docstring">    crossing, the results are averaged.</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-docstring">    EXAMPLE:</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-docstring">    Assume two three dimensional variable, s (salt), z (depth), and</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-docstring">    u (velicity), all on the same 3D grid.  x and y are the horizontal </tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-docstring">    positions, with the same horizontal dimensions as z (the 3D depth </tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-docstring">    field).  Here, assume the vertical dimension, that will be projected,</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-docstring">    is the first.  </tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-docstring">    s_at_m5  = isoslice(s,z,-5);        # s at z == -5</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-docstring">    h_at_s30 = isoslice(z,s,30);       # z at s == 30</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-docstring">    u_at_s30 = isoslice(u,s,30);       # u at s == 30</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">var</tt><tt class="py-op">.</tt><tt class="py-name">squeeze</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">)</tt><tt class="py-op">&lt;=</tt><tt class="py-number">2</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">        <tt class="py-keyword">raise</tt> <tt class="py-name">ValueError</tt><tt class="py-op">,</tt> <tt class="py-string">'variable must have at least two dimensions'</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">prop</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt> <tt class="py-op">==</tt> <tt class="py-name">var</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">:</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">        <tt class="py-keyword">raise</tt> <tt class="py-name">ValueError</tt><tt class="py-op">,</tt> <tt class="py-string">'dimension of var and prop must be identical'</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">    <tt class="py-name">var</tt> <tt class="py-op">=</tt> <tt class="py-name">var</tt><tt class="py-op">.</tt><tt class="py-name">swapaxes</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">axis</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">    <tt class="py-name">prop</tt> <tt class="py-op">=</tt> <tt class="py-name">prop</tt><tt class="py-op">.</tt><tt class="py-name">swapaxes</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">axis</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">    <tt class="py-name">prop</tt><tt class="py-op">=</tt><tt class="py-name">prop</tt><tt class="py-op">-</tt><tt class="py-name">isoval</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">    <tt class="py-name">sz</tt> <tt class="py-op">=</tt> <tt class="py-name">shape</tt><tt class="py-op">(</tt><tt class="py-name">var</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">    <tt class="py-name">var</tt> <tt class="py-op">=</tt> <tt class="py-name">var</tt><tt class="py-op">.</tt><tt class="py-name">reshape</tt><tt class="py-op">(</tt><tt class="py-name">sz</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">    <tt class="py-name">prop</tt> <tt class="py-op">=</tt> <tt class="py-name">prop</tt><tt class="py-op">.</tt><tt class="py-name">reshape</tt><tt class="py-op">(</tt><tt class="py-name">sz</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">    <tt class="py-comment">#find zero-crossings (zc == 1)</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">zc</tt> <tt class="py-op">=</tt>  <tt class="py-name">where</tt><tt class="py-op">(</tt> <tt class="py-op">(</tt><tt class="py-name">prop</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">*</tt><tt class="py-name">prop</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">,</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">&lt;</tt><tt class="py-number">0</tt> <tt class="py-op">,</tt><tt class="py-number">1.</tt><tt class="py-op">,</tt> <tt class="py-number">0.</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">    <tt class="py-name">varl</tt> <tt class="py-op">=</tt> <tt class="py-name">var</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">*</tt><tt class="py-name">zc</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">    <tt class="py-name">varh</tt> <tt class="py-op">=</tt> <tt class="py-name">var</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">,</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">*</tt><tt class="py-name">zc</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">    <tt class="py-name">propl</tt> <tt class="py-op">=</tt> <tt class="py-name">prop</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">*</tt><tt class="py-name">zc</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">    <tt class="py-name">proph</tt> <tt class="py-op">=</tt> <tt class="py-name">prop</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">,</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">*</tt><tt class="py-name">zc</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">    <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">varl</tt> <tt class="py-op">-</tt> <tt class="py-name">propl</tt><tt class="py-op">*</tt><tt class="py-op">(</tt><tt class="py-name">varh</tt><tt class="py-op">-</tt><tt class="py-name">varl</tt><tt class="py-op">)</tt><tt class="py-op">/</tt><tt class="py-op">(</tt><tt class="py-name">proph</tt><tt class="py-op">-</tt><tt class="py-name">propl</tt><tt class="py-op">)</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">    <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">where</tt><tt class="py-op">(</tt><tt class="py-name">zc</tt><tt class="py-op">==</tt><tt class="py-number">1.</tt><tt class="py-op">,</tt> <tt class="py-name">result</tt><tt class="py-op">,</tt> <tt class="py-number">0.</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">    <tt class="py-name">szc</tt> <tt class="py-op">=</tt> <tt class="py-name">zc</tt><tt class="py-op">.</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-name">axis</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">    <tt class="py-name">szc</tt> <tt class="py-op">=</tt> <tt class="py-name">where</tt><tt class="py-op">(</tt><tt class="py-name">szc</tt><tt class="py-op">==</tt><tt class="py-number">0.</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-name">szc</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">    <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">result</tt><tt class="py-op">.</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-name">axis</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">/</tt><tt class="py-name">szc</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">masking</tt><tt class="py-op">:</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">        <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">ma</tt><tt class="py-op">.</tt><tt class="py-name">masked_where</tt><tt class="py-op">(</tt><tt class="py-name">zc</tt><tt class="py-op">.</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-name">axis</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">==</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">result</tt><tt class="py-op">)</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">all</tt><tt class="py-op">(</tt><tt class="py-name">result</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Variable octant.grid.CGrid.mask=octant.grid.CGrid-class.html#mask"><a title="octant.grid.CGrid.mask" class="py-name" href="#" onclick="return doclink('link-0', 'mask', 'link-0');">mask</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">            <tt class="py-keyword">raise</tt> <tt class="py-name">Warning</tt><tt class="py-op">,</tt> <tt class="py-string">'property==%f out of range (%f, %f)'</tt> <tt class="py-op">%</tt> \ </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">                           <tt class="py-op">(</tt><tt class="py-name">isoval</tt><tt class="py-op">,</tt> <tt class="py-op">(</tt><tt class="py-name">prop</tt><tt class="py-op">+</tt><tt class="py-name">isoval</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">min</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-op">(</tt><tt class="py-name">prop</tt><tt class="py-op">+</tt><tt class="py-name">isoval</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">max</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">    <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">result</tt><tt class="py-op">.</tt><tt class="py-name">reshape</tt><tt class="py-op">(</tt><tt class="py-name">sz</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt><tt class="py-op">(</tt><tt class="py-name">result</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"> </tt>
+<a name="zslice"></a><div id="zslice-def"><a name="L49"></a><tt class="py-lineno"> 49</tt> <a class="py-toggle" href="#" id="zslice-toggle" onclick="return toggle('zslice');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="octant.slice-module.html#zslice">zslice</a><tt class="py-op">(</tt><tt class="py-param">z</tt><tt class="py-op">,</tt> <tt class="py-param">q</tt><tt class="py-op">,</tt> <tt class="py-param">qo</tt><tt class="py-op">,</tt> <tt class="py-param">mode</tt><tt class="py-op">=</tt><tt class="py-string">'spline'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="zslice-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="zslice-expanded"><a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">     </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">mode</tt><tt class="py-op">==</tt><tt class="py-string">'linear'</tt><tt class="py-op">:</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-name">imode</tt><tt class="py-op">=</tt><tt class="py-number">0</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">mode</tt><tt class="py-op">==</tt><tt class="py-string">'spline'</tt><tt class="py-op">:</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-name">imode</tt><tt class="py-op">=</tt><tt class="py-number">1</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">        <tt class="py-name">imode</tt><tt class="py-op">=</tt><tt class="py-number">1</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">mode</tt><tt class="py-op">,</tt> <tt class="py-string">' not supported, defaulting to splines'</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">     </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">    <tt class="py-name">z</tt> <tt class="py-op">=</tt> <tt class="py-name">atleast_3d</tt><tt class="py-op">(</tt><tt class="py-name">z</tt><tt class="py-op">)</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">    <tt class="py-name">q</tt> <tt class="py-op">=</tt> <tt class="py-name">atleast_3d</tt><tt class="py-op">(</tt><tt class="py-name">q</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt class="py-name">z</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt> <tt class="py-op">==</tt> <tt class="py-name">q</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">,</tt> <tt class="py-string">'z and q must be the same shape'</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">     </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">    <tt class="py-name">qo</tt> <tt class="py-op">*=</tt> <tt class="py-name">ones</tt><tt class="py-op">(</tt><tt class="py-name">q</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">     </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">    <tt class="py-name">q2d</tt> <tt class="py-op">=</tt> <tt class="py-name">_iso</tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Function octant.slice.zslice()=octant.slice-module.html#zslice"><a title="octant.slice.zslice" class="py-name" href="#" onclick="return doclink('link-1', 'zslice', 'link-1');">zslice</a></tt><tt class="py-op">(</tt><tt class="py-name">z</tt><tt class="py-op">,</tt> <tt class="py-name">q</tt><tt class="py-op">,</tt> <tt class="py-name">qo</tt><tt class="py-op">,</tt> <tt class="py-name">imode</tt><tt class="py-op">)</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">any</tt><tt class="py-op">(</tt><tt class="py-name">q2d</tt><tt class="py-op">==</tt><tt class="py-number">1e20</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">        <tt class="py-name">q2d</tt> <tt class="py-op">=</tt> <tt class="py-name">ma</tt><tt class="py-op">.</tt><tt class="py-name">masked_where</tt><tt class="py-op">(</tt><tt class="py-name">q2d</tt><tt class="py-op">==</tt><tt class="py-number">1e20</tt><tt class="py-op">,</tt> <tt class="py-name">q2d</tt><tt class="py-op">)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">     </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">q2d</tt> </tt>
+</div><a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"> </tt>
+<a name="iso_integrate"></a><div id="iso_integrate-def"><a name="L71"></a><tt class="py-lineno"> 71</tt> <a class="py-toggle" href="#" id="iso_integrate-toggle" onclick="return toggle('iso_integrate');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="octant.slice-module.html#iso_integrate">iso_integrate</a><tt class="py-op">(</tt><tt class="py-param">z_w</tt><tt class="py-op">,</tt> <tt class="py-param">q</tt><tt class="py-op">,</tt> <tt class="py-param">z_iso</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="iso_integrate-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="iso_integrate-expanded"><a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">    <tt class="py-name">z_w</tt> <tt class="py-op">=</tt> <tt class="py-name">atleast_3d</tt><tt class="py-op">(</tt><tt class="py-name">z_w</tt><tt class="py-op">)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">    <tt class="py-name">q</tt> <tt class="py-op">=</tt> <tt class="py-name">atleast_3d</tt><tt class="py-op">(</tt><tt class="py-name">q</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">z_iso</tt><tt class="py-op">,</tt> <tt class="py-name">ma</tt><tt class="py-op">.</tt><tt class="py-name">MaskedArray</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-name">z_iso</tt> <tt class="py-op">=</tt> <tt class="py-name">z_iso</tt><tt class="py-op">.</tt><tt class="py-name">filled</tt><tt class="py-op">(</tt><tt class="py-number">1e20</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">    <tt class="py-name">z_iso</tt> <tt class="py-op">*=</tt> <tt class="py-name">ones</tt><tt class="py-op">(</tt><tt class="py-name">q</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">_iso</tt><tt class="py-op">.</tt><tt class="py-name">integrate</tt><tt class="py-op">(</tt><tt class="py-name">z_w</tt><tt class="py-op">,</tt> <tt class="py-name">q</tt><tt class="py-op">,</tt> <tt class="py-name">z_iso</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line"> </tt>
+<a name="surface"></a><div id="surface-def"><a name="L79"></a><tt class="py-lineno"> 79</tt> <a class="py-toggle" href="#" id="surface-toggle" onclick="return toggle('surface');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="octant.slice-module.html#surface">surface</a><tt class="py-op">(</tt><tt class="py-param">z</tt><tt class="py-op">,</tt> <tt class="py-param">q</tt><tt class="py-op">,</tt> <tt class="py-param">qo</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="surface-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="surface-expanded"><a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">z</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-string">'z must be 3D'</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">q</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">3</tt><tt class="py-op">,</tt> <tt class="py-string">'q must be 3D'</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">    <tt class="py-keyword">assert</tt> <tt class="py-name">z</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt> <tt class="py-op">==</tt> <tt class="py-name">q</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">,</tt> <tt class="py-string">'z and q must be the same size'</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">    <tt class="py-name">qo</tt> <tt class="py-op">=</tt> <tt class="py-name">qo</tt> <tt class="py-op">*</tt> <tt class="py-name">ones</tt><tt class="py-op">(</tt><tt class="py-name">q</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">    <tt class="py-name">z_iso</tt> <tt class="py-op">=</tt> <tt class="py-name">_iso</tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Function octant.slice.surface()=octant.slice-module.html#surface,Function octant.tools.surface()=octant.tools-module.html#surface"><a title="octant.slice.surface
+octant.tools.surface" class="py-name" href="#" onclick="return doclink('link-2', 'surface', 'link-2');">surface</a></tt><tt class="py-op">(</tt><tt class="py-name">z</tt><tt class="py-op">,</tt> <tt class="py-name">q</tt><tt class="py-op">,</tt> <tt class="py-name">qo</tt><tt class="py-op">)</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">any</tt><tt class="py-op">(</tt><tt class="py-name">z_iso</tt><tt class="py-op">==</tt><tt class="py-number">1e20</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">ma</tt><tt class="py-op">.</tt><tt class="py-name">masked_where</tt><tt class="py-op">(</tt><tt class="py-name">z_iso</tt><tt class="py-op">==</tt><tt class="py-number">1e20</tt><tt class="py-op">,</tt> <tt class="py-name">z_iso</tt><tt class="py-op">)</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">z_iso</tt> </tt>
+</div><a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line"> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line"><tt class="py-comment"># def transect(x, y, xi, yi, prop):</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     '''propi = transect(x, y, xi, yi, prop)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     </tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#        Interpolates property prop on a horizontal grid x, y to a</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#        transect given by the points in arrays xi, yi.  prop may be</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#        two- or more dimensional, but the two rightmost dimensions must</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#        match those of x and y (which must both be two dimensional).  The</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#        grid x, y may be given as a masked array.'''</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     if ma.isMaskedArray(x) and ma.isMaskedArray(y):</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         mask = ~x.mask &amp; ~y.mask</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     else:</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         mask = ones(x.shape, dtype='bool')</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     x = x[mask]</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     y = y[mask]</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     tri = delaunay.Triangulation(x, y)</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     if prop.ndim == 2:</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         return tri.nn_interpolator(prop[mask])(xi, yi)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     propi = empty(prop.shape[:-2]+(len(xi),), 'd')</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     for idx in zip(*indices(prop.shape[:-2])):</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         propi[idx, :] = tri.nn_interpolator(prop[idx, mask].flat)(xi, yi)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     return propi</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="octant-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1
+    on Mon Apr 21 11:51:45 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>octant.ocean.velocity</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="octant-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="octant-module.html">Package&nbsp;octant</a> ::
+        <a href="octant.ocean-module.html">Package&nbsp;ocean</a> ::
+        Module&nbsp;velocity
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="octant.ocean.velocity-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="octant.ocean.velocity-module.html">Module octant.ocean.velocity</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># encoding: utf-8</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-docstring">"""</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring">velocity class.py</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">Created by Rob Hetland on 2007-01-13.</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring">Copyright (c) 2007 Texas A&amp;M Univsersity. All rights reserved.</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">pyroms</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">numpy</tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">warnings</tt> <tt class="py-keyword">import</tt> <tt class="py-name">warn</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"> </tt>
+<a name="nc_velocity"></a><div id="nc_velocity-def"><a name="L14"></a><tt class="py-lineno">14</tt> <a class="py-toggle" href="#" id="nc_velocity-toggle" onclick="return toggle('nc_velocity');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="octant.ocean.velocity.nc_velocity-class.html">nc_velocity</a> <tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="nc_velocity-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="nc_velocity-expanded"><a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line">     </tt>
+<a name="nc_velocity.__init__"></a><div id="nc_velocity.__init__-def"><a name="L16"></a><tt class="py-lineno">16</tt> <a class="py-toggle" href="#" id="nc_velocity.__init__-toggle" onclick="return toggle('nc_velocity.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="octant.ocean.velocity.nc_velocity-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">nc</tt><tt class="py-op">,</tt> <tt class="py-param">grid</tt><tt class="py-op">=</tt><tt class="py-string">'rho'</tt><tt class="py-op">,</tt> <tt class="py-param">angle</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="nc_velocity.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="nc_velocity.__init__-expanded"><a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nc</tt> <tt class="py-op">=</tt> <tt class="py-name">pyroms</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Function octant.io.Dataset()=octant.io-module.html#Dataset"><a title="octant.io.Dataset" class="py-name" href="#" onclick="return doclink('link-0', 'Dataset', 'link-0');">Dataset</a></tt><tt class="py-op">(</tt><tt class="py-name">nc</tt><tt class="py-op">)</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Module octant.grid=octant.grid-module.html"><a title="octant.grid" class="py-name" href="#" onclick="return doclink('link-1', 'grid', 'link-1');">grid</a></tt> <tt class="py-op">=</tt> <tt id="link-2" class="py-name"><a title="octant.grid" class="py-name" href="#" onclick="return doclink('link-2', 'grid', 'link-1');">grid</a></tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">u</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nc</tt><tt class="py-op">.</tt><tt class="py-name">variables</tt><tt class="py-op">[</tt><tt class="py-string">'u'</tt><tt class="py-op">]</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">v</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nc</tt><tt class="py-op">.</tt><tt class="py-name">variables</tt><tt class="py-op">[</tt><tt class="py-string">'v'</tt><tt class="py-op">]</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">angle</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">            <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ang</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nc</tt><tt class="py-op">.</tt><tt class="py-name">variables</tt><tt class="py-op">[</tt><tt class="py-string">'angle'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">,</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">            <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">                <tt class="py-name">warn</tt><tt class="py-op">(</tt><tt class="py-string">"'angle' not found in netcdf object."</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ang</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ang</tt> <tt class="py-op">=</tt> <tt class="py-name">angle</tt> </tt>
+</div><a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">     </tt>
+<a name="nc_velocity.__getitem__"></a><div id="nc_velocity.__getitem__-def"><a name="L30"></a><tt class="py-lineno">30</tt> <a class="py-toggle" href="#" id="nc_velocity.__getitem__-toggle" onclick="return toggle('nc_velocity.__getitem__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="octant.ocean.velocity.nc_velocity-class.html#__getitem__">__getitem__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">elem</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="nc_velocity.__getitem__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="nc_velocity.__getitem__-expanded"><a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">elem</tt><tt class="py-op">,</tt> <tt class="py-name">int</tt><tt class="py-op">)</tt> <tt class="py-keyword">or</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">elem</tt><tt class="py-op">,</tt> <tt class="py-name">float</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">            <tt class="py-name">u</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">u</tt><tt class="py-op">[</tt><tt class="py-name">elem</tt><tt class="py-op">]</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">            <tt class="py-name">v</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">v</tt><tt class="py-op">[</tt><tt class="py-name">elem</tt><tt class="py-op">]</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">            <tt class="py-name">returnindex</tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">            <tt class="py-name">u</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">u</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">            <tt class="py-name">v</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">v</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">            <tt class="py-name">returnindex</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">         </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-3" class="py-name"><a title="octant.grid" class="py-name" href="#" onclick="return doclink('link-3', 'grid', 'link-1');">grid</a></tt> <tt class="py-op">==</tt> <tt class="py-string">'rho'</tt><tt class="py-op">:</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">            <tt class="py-name">shp</tt> <tt class="py-op">=</tt> <tt class="py-name">list</tt><tt class="py-op">(</tt><tt class="py-name">u</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">            <tt class="py-name">shp</tt><tt class="py-op">[</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">-=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">            <tt class="py-name">shp</tt><tt class="py-op">[</tt><tt class="py-op">-</tt><tt class="py-number">2</tt><tt class="py-op">]</tt> <tt class="py-op">-=</tt> <tt class="py-number">2</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">            <tt class="py-name">shpr</tt> <tt class="py-op">=</tt> <tt class="py-name">list</tt><tt class="py-op">(</tt><tt class="py-name">u</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">)</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">            <tt class="py-name">shpr</tt><tt class="py-op">[</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">            <tt class="py-name">ur</tt> <tt class="py-op">=</tt> <tt class="py-name">zeros</tt><tt class="py-op">(</tt><tt class="py-name">shpr</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line">            <tt class="py-name">vr</tt> <tt class="py-op">=</tt> <tt class="py-name">zeros</tt><tt class="py-op">(</tt><tt class="py-name">shpr</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line">            <tt class="py-name">ur</tt><tt class="py-op">[</tt><tt class="py-op">.</tt><tt class="py-op">.</tt><tt class="py-op">.</tt><tt class="py-op">,</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">pyroms</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Function octant.tools.shrink()=octant.tools-module.html#shrink"><a title="octant.tools.shrink" class="py-name" href="#" onclick="return doclink('link-4', 'shrink', 'link-4');">shrink</a></tt><tt class="py-op">(</tt><tt class="py-name">u</tt><tt class="py-op">,</tt> <tt class="py-name">shp</tt><tt class="py-op">)</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">            <tt class="py-name">vr</tt><tt class="py-op">[</tt><tt class="py-op">.</tt><tt class="py-op">.</tt><tt class="py-op">.</tt><tt class="py-op">,</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">pyroms</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name"><a title="octant.tools.shrink" class="py-name" href="#" onclick="return doclink('link-5', 'shrink', 'link-4');">shrink</a></tt><tt class="py-op">(</tt><tt class="py-name">v</tt><tt class="py-op">,</tt> <tt class="py-name">shp</tt><tt class="py-op">)</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">            <tt class="py-name">u</tt> <tt class="py-op">=</tt> <tt class="py-name">ur</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">            <tt class="py-name">v</tt> <tt class="py-op">=</tt> <tt class="py-name">vr</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line">            <tt class="py-name">u</tt><tt class="py-op">,</tt> <tt class="py-name">v</tt> <tt class="py-op">=</tt> <tt class="py-name">pyroms</tt><tt class="py-op">.</tt><tt id="link-6" class="py-name"><a title="octant.tools.shrink" class="py-name" href="#" onclick="return doclink('link-6', 'shrink', 'link-4');">shrink</a></tt><tt class="py-op">(</tt><tt class="py-name">u</tt><tt class="py-op">,</tt> <tt class="py-name">v</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">         </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ang</tt><tt class="py-op">,</tt> <tt class="py-name">ndarray</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">            <tt class="py-name">ang</tt> <tt class="py-op">=</tt> <tt class="py-name">pyroms</tt><tt class="py-op">.</tt><tt id="link-7" class="py-name"><a title="octant.tools.shrink" class="py-name" href="#" onclick="return doclink('link-7', 'shrink', 'link-4');">shrink</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ang</tt><tt class="py-op">,</tt> <tt class="py-name">u</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line">            <tt class="py-name">ang</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ang</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">         </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ang</tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">            <tt class="py-name">u</tt><tt class="py-op">,</tt> <tt class="py-name">v</tt> <tt class="py-op">=</tt> <tt class="py-name">pyroms</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Function octant.tools.rot2d()=octant.tools-module.html#rot2d"><a title="octant.tools.rot2d" class="py-name" href="#" onclick="return doclink('link-8', 'rot2d', 'link-8');">rot2d</a></tt><tt class="py-op">(</tt><tt class="py-name">u</tt><tt class="py-op">,</tt> <tt class="py-name">v</tt><tt class="py-op">,</tt> <tt class="py-name">ang</tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line">         </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">returnindex</tt><tt class="py-op">:</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">u</tt><tt class="py-op">[</tt><tt class="py-name">elem</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">v</tt><tt class="py-op">[</tt><tt class="py-name">elem</tt><tt class="py-op">]</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">u</tt><tt class="py-op">,</tt> <tt class="py-name">v</tt> </tt>
+</div></div><a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line"> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line"> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line">    <tt class="py-name">nc</tt> <tt class="py-op">=</tt> <tt class="py-name">pyroms</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name"><a title="octant.io.Dataset" class="py-name" href="#" onclick="return doclink('link-9', 'Dataset', 'link-0');">Dataset</a></tt><tt class="py-op">(</tt><tt class="py-string">'/Users/rob/Models/roms/inertial/ocean_his.nc'</tt><tt class="py-op">)</tt> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line">    <tt class="py-name">vel</tt> <tt class="py-op">=</tt> <tt id="link-10" class="py-name" targets="Module octant.ocean.velocity=octant.ocean.velocity-module.html"><a title="octant.ocean.velocity" class="py-name" href="#" onclick="return doclink('link-10', 'velocity', 'link-10');">velocity</a></tt><tt class="py-op">(</tt><tt class="py-name">nc</tt><tt class="py-op">)</tt> </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line">    <tt class="py-name">u</tt><tt class="py-op">,</tt> <tt class="py-name">v</tt> <tt class="py-op">=</tt> <tt class="py-name">vel</tt><tt class="py-op">[</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="rot2d"></a><div id="rot2d-def"><a name="L73"></a><tt class="py-lineno">73</tt> <a class="py-toggle" href="#" id="rot2d-toggle" onclick="return toggle('rot2d');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="octant.ocean.velocity-module.html#rot2d">rot2d</a><tt class="py-op">(</tt><tt class="py-param">x</tt><tt class="py-op">,</tt> <tt class="py-param">y</tt><tt class="py-op">,</tt> <tt class="py-param">ang</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="rot2d-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="rot2d-expanded"><a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line">        <tt class="py-docstring">'rotate vectors by geometric angle'</tt> </tt>
+<a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line">        <tt class="py-name">xr</tt> <tt class="py-op">=</tt> <tt id="link-11" class="py-name" targets="Variable octant.grid.BoundaryInteractor.x=octant.grid.BoundaryInteractor-class.html#x,Variable octant.grid.CGrid.x=octant.grid.CGrid-class.html#x"><a title="octant.grid.BoundaryInteractor.x
+octant.grid.CGrid.x" class="py-name" href="#" onclick="return doclink('link-11', 'x', 'link-11');">x</a></tt><tt class="py-op">*</tt><tt id="link-12" class="py-name" targets="Variable octant.ocean.cos=octant.ocean-module.html#cos,Variable octant.ocean.depths.cos=octant.ocean.depths-module.html#cos,Variable octant.ocean.state.cos=octant.ocean.state-module.html#cos,Variable octant.ocean.step3d_t.cos=octant.ocean.step3d_t-module.html#cos,Variable octant.ocean.time.cos=octant.ocean.time-module.html#cos,Variable octant.ocean.velocity.cos=octant.ocean.velocity-module.html#cos"><a title="octant.ocean.cos
+octant.ocean.depths.cos
+octant.ocean.state.cos
+octant.ocean.step3d_t.cos
+octant.ocean.time.cos
+octant.ocean.velocity.cos" class="py-name" href="#" onclick="return doclink('link-12', 'cos', 'link-12');">cos</a></tt><tt class="py-op">(</tt><tt class="py-name">ang</tt><tt class="py-op">)</tt> <tt class="py-op">-</tt> <tt id="link-13" class="py-name" targets="Variable octant.grid.BoundaryInteractor.y=octant.grid.BoundaryInteractor-class.html#y,Variable octant.grid.CGrid.y=octant.grid.CGrid-class.html#y"><a title="octant.grid.BoundaryInteractor.y
+octant.grid.CGrid.y" class="py-name" href="#" onclick="return doclink('link-13', 'y', 'link-13');">y</a></tt><tt class="py-op">*</tt><tt id="link-14" class="py-name" targets="Variable octant.ocean.depths.sin=octant.ocean.depths-module.html#sin,Variable octant.ocean.sin=octant.ocean-module.html#sin,Variable octant.ocean.state.sin=octant.ocean.state-module.html#sin,Variable octant.ocean.step3d_t.sin=octant.ocean.step3d_t-module.html#sin,Variable octant.ocean.time.sin=octant.ocean.time-module.html#sin,Variable octant.ocean.velocity.sin=octant.ocean.velocity-module.html#sin"><a title="octant.ocean.depths.sin
+octant.ocean.sin
+octant.ocean.state.sin
+octant.ocean.step3d_t.sin
+octant.ocean.time.sin
+octant.ocean.velocity.sin" class="py-name" href="#" onclick="return doclink('link-14', 'sin', 'link-14');">sin</a></tt><tt class="py-op">(</tt><tt class="py-name">ang</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line">        <tt class="py-name">yr</tt> <tt class="py-op">=</tt> <tt id="link-15" class="py-name"><a title="octant.grid.BoundaryInteractor.x
+octant.grid.CGrid.x" class="py-name" href="#" onclick="return doclink('link-15', 'x', 'link-11');">x</a></tt><tt class="py-op">*</tt><tt id="link-16" class="py-name"><a title="octant.ocean.depths.sin
+octant.ocean.sin
+octant.ocean.state.sin
+octant.ocean.step3d_t.sin
+octant.ocean.time.sin
+octant.ocean.velocity.sin" class="py-name" href="#" onclick="return doclink('link-16', 'sin', 'link-14');">sin</a></tt><tt class="py-op">(</tt><tt class="py-name">ang</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt id="link-17" class="py-name"><a title="octant.grid.BoundaryInteractor.y
+octant.grid.CGrid.y" class="py-name" href="#" onclick="return doclink('link-17', 'y', 'link-13');">y</a></tt><tt class="py-op">*</tt><tt id="link-18" class="py-name"><a title="octant.ocean.cos
+octant.ocean.depths.cos
+octant.ocean.state.cos
+octant.ocean.step3d_t.cos
+octant.ocean.time.cos
+octant.ocean.velocity.cos" class="py-name" href="#" onclick="return doclink('link-18', 'cos', 'link-12');">cos</a></tt><tt class="py-op">(</tt><tt class="py-name">ang</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">xr</tt><tt class="py-op">,</tt> <tt class="py-name">yr</tt> </tt>
+</div><a name="L78"></a><tt class="py-lineno">78</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="octant-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1
+    on Mon Apr 21 11:51:44 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
