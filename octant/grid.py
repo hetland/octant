@@ -13,6 +13,7 @@ import cPickle
 from warnings import warn
 import ctypes
 import os
+import sys
 
 import numpy as np
 import pylab as pl
@@ -716,16 +717,21 @@ class CGrid(object):
 class Gridgen(CGrid):
     """docstring for Gridgen"""
     
-    # for directory in sys.path:
-    #     if directory.endswith('site-packages'):
-    #         print os.path.join(directory, '_gridgen.so')
-    #         try:
-    #             _libgridgen = CDLL(os.path.join(directory, '_gridgen.so'))
-    #             break
-    #         except:
-    #             pass
+    for directory in sys.path:
+        if directory.endswith('site-packages'):
+            print os.path.join(directory, '_gridgen.so')
+            try:
+                _libgridgen = ctypes.pydll.LoadLibrary(os.path.join(directory, '_gridgen.so'))
+                break
+            except:
+                pass
     
-    _libgridgen = ctypes.pydll.LoadLibrary("libgridgen.dylib")
+#    try:
+#        # Mac OSX
+#        _libgridgen = ctypes.pydll.LoadLibrary("libgridgen.dylib")
+#    except:
+#        # Linux
+#        _libgridgen = ctypes.pydll.LoadLibrary("_gridgen.so")
     
     _libgridgen.gridgen_generategrid2.restype = ctypes.c_void_p
     _libgridgen.gridnodes_getx.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
