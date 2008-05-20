@@ -18,6 +18,7 @@ ztodepth - change negative z-ax ticklabels to positive depths
 layers - a function for plotting vertical transects based on layer heights
 
 """
+__docformat__ = "restructuredtext en"
 
 import matplotlib.pyplot as plt
 from datetime import timedelta
@@ -202,7 +203,7 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
         plt.axis('tight')
 
 
-def ztodepth(ax=plt.gca(),ylabelstr='depth [m]'):
+def ztodepth(ax=None,ylabelstr='depth [m]'):
     """
     ztodepth - change negative z-ax ticklabels 
                  on the y-axis to positive depths
@@ -219,7 +220,10 @@ def ztodepth(ax=plt.gca(),ylabelstr='depth [m]'):
     the label "depth [m]" or other specified with ylabelstr.
 
     """
-
+    
+    if ax is None
+        ax = plt.gca()
+    
     yt = ax.get_yticks()
     dtl = [str(y*-1.0) for y in yt]
     ax.set_yticklabels(dtl)

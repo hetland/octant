@@ -1,12 +1,6 @@
 # encoding: utf-8
-'Interactive boundary generation for use with gridgen.'
-
-# Created by Rob Hetland on 2007-01-21.
-# Copyright (c) 2007 Texas A&M Univsersity. All rights reserved.
-
-# Version 1.0.0 on 2007-11-25
-#   Removed second BoundaryInteractor class, and added interative gridgen
-#   capabilities.
+'''Tools for creating and working with Arikawa C-Grids'''
+__docformat__ = "restructuredtext en"
 
 from copy import deepcopy
 import cPickle
@@ -717,21 +711,16 @@ class CGrid(object):
 class Gridgen(CGrid):
     """docstring for Gridgen"""
     
-    for directory in sys.path:
-        if directory.endswith('site-packages'):
-            print os.path.join(directory, '_gridgen.so')
-            try:
-                _libgridgen = ctypes.pydll.LoadLibrary(os.path.join(directory, '_gridgen.so'))
-                break
-            except:
-                pass
+    # for directory in sys.path:
+    #     if directory.endswith('site-packages'):
+    #         print os.path.join(directory, '_gridgen.so')
+    #         try:
+    #             _libgridgen = ctypes.pydll.LoadLibrary(os.path.join(directory, '_gridgen.so'))
+    #             break
+    #         except:
+    #             pass
     
-#    try:
-#        # Mac OSX
-#        _libgridgen = ctypes.pydll.LoadLibrary("libgridgen.dylib")
-#    except:
-#        # Linux
-#        _libgridgen = ctypes.pydll.LoadLibrary("_gridgen.so")
+    _libgridgen = ctypes.pydll.LoadLibrary("libgridgen.dylib")
     
     _libgridgen.gridgen_generategrid2.restype = ctypes.c_void_p
     _libgridgen.gridnodes_getx.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))

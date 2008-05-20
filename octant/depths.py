@@ -1,3 +1,11 @@
+# encoding: utf-8
+'''Various vertical coordinates
+
+Presently, only ocean s-coordinates are supported. Future plans will be to
+include all of the vertical coordinate systems defined by the CF conventions.
+
+'''
+__docformat__ = "restructuredtext en"
 
 import numpy as np
 

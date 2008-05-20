@@ -60,28 +60,29 @@ numpy.ndarray --+
 </pre>
 
 <hr />
-<pre class="literalblock">
-Return time object from netCDF file
-
-Parameters
-----------
-nc : netCDF3/4 object or filename
-    Time information will be read from this netCDF3/4 file.
-name : string, optional
-    The name of the the variable.
-units : string, optional
-    The name of the variable units.
-calendar : string, optional
-    A string representing the calandar to use. See netcdftime
-    documentation for possible values.
-
-Returns
--------
-nctime : ndarray
-    A subclass of numpy.ndarray with values equal to the time variable in
-    the netCDF file referenced with nc.
-
-</pre>
+<p>Return time object from netCDF file</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-parameters" name="rst-parameters">Parameters</a></h1>
+<dl class="rst-docutils">
+<dt>nc <span class="classifier-delimiter">:</span> <span class="rst-classifier">netCDF3/4 object or filename</span></dt>
+<dd>Time information will be read from this netCDF3/4 file.</dd>
+<dt>name <span class="classifier-delimiter">:</span> <span class="rst-classifier">string, optional</span></dt>
+<dd>The name of the the variable.</dd>
+<dt>units <span class="classifier-delimiter">:</span> <span class="rst-classifier">string, optional</span></dt>
+<dd>The name of the variable units.</dd>
+<dt>calendar <span class="classifier-delimiter">:</span> <span class="rst-classifier">string, optional</span></dt>
+<dd>A string representing the calandar to use. See netcdftime
+documentation for possible values.</dd>
+</dl>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-returns" name="rst-returns">Returns</a></h1>
+<dl class="rst-docutils">
+<dt>nctime <span class="classifier-delimiter">:</span> <span class="rst-classifier">ndarray</span></dt>
+<dd>A subclass of numpy.ndarray with values equal to the time variable in
+the netCDF file referenced with nc.</dd>
+</dl>
+</div>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -601,24 +602,25 @@ nctime : ndarray
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-Return index of time nearest to query time.
-
-Prameters
----------
-to : float
-    The query time.
-units : string, optional
-    The units of the reference time. Defaults to the reference time
-    string 'units' in the netcdf oject.
-
-Returns
--------
-idx : integer
-    The index of the date closest to to. If two times are equidistant,
-    the smaller is returned.
-
-</pre>
+  <p>Return index of time nearest to query time.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-prameters" name="rst-prameters">Prameters</a></h1>
+<dl class="rst-docutils">
+<dt>to <span class="classifier-delimiter">:</span> <span class="rst-classifier">float</span></dt>
+<dd>The query time.</dd>
+<dt>units <span class="classifier-delimiter">:</span> <span class="rst-classifier">string, optional</span></dt>
+<dd>The units of the reference time. Defaults to the reference time
+string 'units' in the netcdf oject.</dd>
+</dl>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-returns" name="rst-returns">Returns</a></h1>
+<dl class="rst-docutils">
+<dt>idx <span class="classifier-delimiter">:</span> <span class="rst-classifier">integer</span></dt>
+<dd>The index of the date closest to to. If two times are equidistant,
+the smaller is returned.</dd>
+</dl>
+</div>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -638,21 +640,22 @@ idx : integer
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-Return index of date nearest to query date.
-
-Prameters
----------
-dateo : datetime object
-    The query date
-
-Returns
--------
-idx : integer
-    The index of the date closest to dateo. If two dates are
-    equidistant, the smaller is returned.
-
-</pre>
+  <p>Return index of date nearest to query date.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-prameters" name="rst-prameters">Prameters</a></h1>
+<dl class="rst-docutils">
+<dt>dateo <span class="classifier-delimiter">:</span> <span class="rst-classifier">datetime object</span></dt>
+<dd>The query date</dd>
+</dl>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-returns" name="rst-returns">Returns</a></h1>
+<dl class="rst-docutils">
+<dt>idx <span class="classifier-delimiter">:</span> <span class="rst-classifier">integer</span></dt>
+<dd>The index of the date closest to dateo. If two dates are
+equidistant, the smaller is returned.</dd>
+</dl>
+</div>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -673,24 +676,25 @@ idx : integer
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-Return time nearest to time query.
-
-Prameters
----------
-to : float
-    The query time.
-units : string, optional
-    The units of the reference time. Defaults to the reference time
-    string 'units' in the netcdf oject.
-
-Returns
--------
-idx : integer
-    The index of the date closest to to. If two times are equidistant,
-    the smaller is returned.
-
-</pre>
+  <p>Return time nearest to time query.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-prameters" name="rst-prameters">Prameters</a></h1>
+<dl class="rst-docutils">
+<dt>to <span class="classifier-delimiter">:</span> <span class="rst-classifier">float</span></dt>
+<dd>The query time.</dd>
+<dt>units <span class="classifier-delimiter">:</span> <span class="rst-classifier">string, optional</span></dt>
+<dd>The units of the reference time. Defaults to the reference time
+string 'units' in the netcdf oject.</dd>
+</dl>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-returns" name="rst-returns">Returns</a></h1>
+<dl class="rst-docutils">
+<dt>idx <span class="classifier-delimiter">:</span> <span class="rst-classifier">integer</span></dt>
+<dd>The index of the date closest to to. If two times are equidistant,
+the smaller is returned.</dd>
+</dl>
+</div>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -710,21 +714,22 @@ idx : integer
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-Return the nearest date to query date.
-
-Prameters
----------
-dateo : datetime object
-    The query date
-
-Returns
--------
-nearest_date : datetime object
-    A datetime object of the date closest to dateo. If two dates are
-    equidistant, the smaller is returned.
-
-</pre>
+  <p>Return the nearest date to query date.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-prameters" name="rst-prameters">Prameters</a></h1>
+<dl class="rst-docutils">
+<dt>dateo <span class="classifier-delimiter">:</span> <span class="rst-classifier">datetime object</span></dt>
+<dd>The query date</dd>
+</dl>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-returns" name="rst-returns">Returns</a></h1>
+<dl class="rst-docutils">
+<dt>nearest_date <span class="classifier-delimiter">:</span> <span class="rst-classifier">datetime object</span></dt>
+<dd>A datetime object of the date closest to dateo. If two dates are
+equidistant, the smaller is returned.</dd>
+</dl>
+</div>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -745,7 +750,7 @@ nearest_date : datetime object
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">dates</h3>
-  <p>datetime objects</p>
+  datetime objects
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.cf.time-class.html#get_dates" class="summary-sig-name">get_dates</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -759,7 +764,7 @@ nearest_date : datetime object
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">days</h3>
-  <p>days</p>
+  days
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.cf.time-class.html#get_days" class="summary-sig-name">get_days</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -773,7 +778,7 @@ nearest_date : datetime object
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">hours</h3>
-  <p>hours</p>
+  hours
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.cf.time-class.html#get_hours" class="summary-sig-name">get_hours</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -787,7 +792,7 @@ nearest_date : datetime object
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">jd</h3>
-  <p>Julian day, for plotting in pylab</p>
+  Julian day, for plotting in pylab
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.cf.time-class.html#get_jd" class="summary-sig-name">get_jd</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -801,7 +806,7 @@ nearest_date : datetime object
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">minutes</h3>
-  <p>minutes</p>
+  minutes
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.cf.time-class.html#get_minutes" class="summary-sig-name">get_minutes</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -815,7 +820,7 @@ nearest_date : datetime object
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">seconds</h3>
-  <p>seconds</p>
+  seconds
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.cf.time-class.html#get_seconds" class="summary-sig-name">get_seconds</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -851,7 +856,7 @@ nearest_date : datetime object
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 12:05:39 2008
+    on Tue May 20 16:56:04 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

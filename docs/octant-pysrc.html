@@ -51,61 +51,40 @@
 <pre class="py-src">
 <a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># encoding: utf-8</tt> </tt>
 <a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-docstring">''' </tt> </tt>
-<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">Ocemopy is a toolkit for working with ocean models on a C-Grid</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">OCTANT is a toolkit for working with ocean models on a C-Grid</tt> </tt>
 <a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">Ocemopy is based on the python/numpy/matplotlib scientific python suite.</tt> </tt>
-<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">NetCDF I/O is based on the NetCDF4-python package.</tt> </tt>
-<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">The toolkit contains general modeling tools for dealing with arrays,</tt> </tt>
-<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-docstring">diagnosing standard properties, curvilinear grid generation, and</tt> </tt>
-<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-docstring">interpolation. Specific tools are also included for ROMS and GETM.</tt> </tt>
-<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-docstring">Subpackages:</tt> </tt>
-<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-docstring">    grid  -  Tools for dealing with curvilinear grids</tt> </tt>
-<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-docstring">      BoundaryInteractor</tt> </tt>
-<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-docstring">      CGrid</tt> </tt>
-<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-docstring">      Focus</tt> </tt>
-<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-docstring">      Gridgen</tt> </tt>
-<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-docstring">    extern -  Packages from other places.</tt> </tt>
-<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-docstring">      PolygonGeometry</tt> </tt>
-<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt class="py-docstring">      PolygonInteractor</tt> </tt>
-<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-docstring">      GreatCircle</tt> </tt>
-<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-docstring">      pupynere</tt> </tt>
-<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
-<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-docstring">    io - wrappers around netCDF4 with pass-through of netCDF4 objects</tt> </tt>
-<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-docstring">      Dataset</tt> </tt>
-<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"><tt class="py-docstring">      MFDataset</tt> </tt>
-<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt class="py-docstring">     </tt> </tt>
-<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"><tt class="py-docstring">    cf</tt> </tt>
-<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"><tt class="py-docstring">      time</tt> </tt>
-<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
-<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt class="py-docstring">    tools - Miscilanious useful tools</tt> </tt>
-<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"><tt class="py-docstring">      rot2d</tt> </tt>
-<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"><tt class="py-docstring">      nanmask</tt> </tt>
-<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"><tt class="py-docstring">      shrink</tt> </tt>
-<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
-<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line"><tt class="py-docstring">    sw - UNESCO seawater tools (seawater 1.1 by Bj&#248;rn &#197;dlandsvik)</tt> </tt>
-<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"><tt class="py-docstring">'''</tt> </tt>
-<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line"> </tt>
-<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line"><tt class="py-comment">#from grid import CGrid, BoundaryInteractor, Focus, FocusPoint</tt> </tt>
-<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Module octant.cf=octant.cf-module.html"><a title="octant.cf" class="py-name" href="#" onclick="return doclink('link-0', 'cf', 'link-0');">cf</a></tt> </tt>
-<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Module octant.depths=octant.depths-module.html,Module octant.ocean.depths=octant.ocean.depths-module.html"><a title="octant.depths
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">Octant (Ocean C-grid model seTup and Analysis Toolkit) is based on the</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">python/numpy/matplotlib scientific python suite. NetCDF I/O is based on the</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring">NetCDF4-python package. The toolkit contains general modeling tools for dealing</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">with arrays, diagnosing standard properties, curvilinear grid generation, and</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-docstring">interpolation. Specific tools are also included for ROMS and GETM.</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-docstring">External tools included for convinience include:</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-docstring">    delaunay : Delaunay interpolation</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-docstring">        Available at http://scipy.org/scipy/scikits</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-docstring">    sw : UNESCO seawater tools (seawater 1.1 by Bj&#248;rn &#197;dlandsvik)</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-docstring">        Available at http://www.imr.no/~bjorn/python/seawater/index.html</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-docstring">'''</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-comment">#from grid import CGrid, BoundaryInteractor, Focus, FocusPoint</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Module octant.cf=octant.cf-module.html"><a title="octant.cf" class="py-name" href="#" onclick="return doclink('link-0', 'cf', 'link-0');">cf</a></tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Module octant.depths=octant.depths-module.html,Module octant.ocean.depths=octant.ocean.depths-module.html"><a title="octant.depths
 octant.ocean.depths" class="py-name" href="#" onclick="return doclink('link-1', 'depths', 'link-1');">depths</a></tt> </tt>
-<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Package octant.extern=octant.extern-module.html"><a title="octant.extern" class="py-name" href="#" onclick="return doclink('link-2', 'extern', 'link-2');">extern</a></tt> </tt>
-<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Module octant.grid=octant.grid-module.html"><a title="octant.grid" class="py-name" href="#" onclick="return doclink('link-3', 'grid', 'link-3');">grid</a></tt> </tt>
-<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-4" class="py-name" targets="Module octant.io=octant.io-module.html"><a title="octant.io" class="py-name" href="#" onclick="return doclink('link-4', 'io', 'link-4');">io</a></tt> </tt>
-<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Package octant.ocean=octant.ocean-module.html"><a title="octant.ocean" class="py-name" href="#" onclick="return doclink('link-5', 'ocean', 'link-5');">ocean</a></tt> </tt>
-<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-6" class="py-name" targets="Module octant.tools=octant.tools-module.html"><a title="octant.tools" class="py-name" href="#" onclick="return doclink('link-6', 'tools', 'link-6');">tools</a></tt> </tt>
-<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-7" class="py-name" targets="Package octant.sw=octant.sw-module.html"><a title="octant.sw" class="py-name" href="#" onclick="return doclink('link-7', 'sw', 'link-7');">sw</a></tt> </tt>
-<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line"> </tt>
-<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line"><tt class="py-name">__authors__</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Robert Hetland &lt;hetland@tamu.edu&gt;'</tt><tt class="py-op">,</tt> </tt>
-<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line">               <tt class="py-string">'Richard Hofmeister &lt;richard.hofmeister@io-warnemuende.de&gt;'</tt><tt class="py-op">]</tt> </tt>
-<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">                </tt>
-<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line"><tt class="py-name">__version__</tt> <tt class="py-op">=</tt> <tt class="py-string">'0.1.0'</tt> </tt>
-<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Package octant.extern=octant.extern-module.html"><a title="octant.extern" class="py-name" href="#" onclick="return doclink('link-2', 'extern', 'link-2');">extern</a></tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Module octant.grid=octant.grid-module.html"><a title="octant.grid" class="py-name" href="#" onclick="return doclink('link-3', 'grid', 'link-3');">grid</a></tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-4" class="py-name" targets="Module octant.io=octant.io-module.html"><a title="octant.io" class="py-name" href="#" onclick="return doclink('link-4', 'io', 'link-4');">io</a></tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Package octant.ocean=octant.ocean-module.html"><a title="octant.ocean" class="py-name" href="#" onclick="return doclink('link-5', 'ocean', 'link-5');">ocean</a></tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-6" class="py-name" targets="Module octant.tools=octant.tools-module.html"><a title="octant.tools" class="py-name" href="#" onclick="return doclink('link-6', 'tools', 'link-6');">tools</a></tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-7" class="py-name" targets="Package octant.sw=octant.sw-module.html"><a title="octant.sw" class="py-name" href="#" onclick="return doclink('link-7', 'sw', 'link-7');">sw</a></tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"><tt class="py-name">__authors__</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Robert Hetland &lt;hetland@tamu.edu&gt;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">               <tt class="py-string">'Richard Hofmeister &lt;richard.hofmeister@io-warnemuende.de&gt;'</tt><tt class="py-op">]</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">                </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"><tt class="py-name">__version__</tt> <tt class="py-op">=</tt> <tt class="py-string">'0.2.0'</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"> </tt><script type="text/javascript">
 <!--
 expandto(location.href);
 // -->
@@ -139,7 +118,7 @@ expandto(location.href);
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 12:05:42 2008
+    on Tue May 20 16:56:07 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

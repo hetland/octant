@@ -1,7 +1,7 @@
 # encoding: utf-8
-"""
-Tools for working with oceanic data
-"""
+"""Tools for working with seawater data."""
+__docformat__ = "restructuredtext en"
+
 import numpy as np
 
 def psu2reference_salinity(psu):

@@ -1,4 +1,5 @@
-'''A wrapper for netCDF4.Dataset and MFnetCDF4.Dataset
+# encoding: utf-8
+'''A wrapper for netCDF4.Dataset and netCDF4.MFDataset
 
 possible uses include:
 
@@ -14,6 +15,7 @@ with an input of a netCDF4.Dataset or MFnetCDF4.Dataset object:
   nc = pyroms.Dataset(nc) # passes through netCDF4.Dataset or MFnetCDF4.Dataset object
   nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on file (with wildcard chars)
 '''
+__docformat__ = "restructuredtext en"
 
 from glob import glob
 

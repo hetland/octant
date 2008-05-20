@@ -65,7 +65,7 @@ def shrink(a,b):
        
     """
     
-    if isinstance(b, ndarray):
+    if isinstance(b, np.ndarray):
         if not len(a.shape) == len(b.shape):
             raise Exception, \
                   'input arrays must have the same number of dimensions'

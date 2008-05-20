@@ -829,12 +829,6 @@ octant.ocean.velocity.ALLOW_THREADS	octant.ocean.velocity-module.html#ALLOW_THRE
 octant.ocean.velocity.isinf	octant.ocean.velocity-module.html#isinf
 octant.ocean.velocity.e	octant.ocean.velocity-module.html#e
 octant.ocean.velocity.ERR_IGNORE	octant.ocean.velocity-module.html#ERR_IGNORE
-octant.plotting	octant.plotting-module.html
-octant.plotting.layers	octant.plotting-module.html#layers
-octant.plotting.drawscale	octant.plotting-module.html#drawscale
-octant.plotting.sticks	octant.plotting-module.html#sticks
-octant.plotting.cmap_discretize	octant.plotting-module.html#cmap_discretize
-octant.plotting.ztodepth	octant.plotting-module.html#ztodepth
 octant.roms	octant.roms-module.html
 octant.roms.nc_div	octant.roms-module.html#nc_div
 octant.roms.nc_curl	octant.roms-module.html#nc_curl

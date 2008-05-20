@@ -51,48 +51,27 @@
 <h1 class="epydoc">Package octant</h1><p class="nomargin-top"><span class="codelink"><a href="octant-pysrc.html">source&nbsp;code</a></span></p>
 <pre class="literalblock">
 
-Ocemopy is a toolkit for working with ocean models on a C-Grid
+OCTANT is a toolkit for working with ocean models on a C-Grid
 
-Ocemopy is based on the python/numpy/matplotlib scientific python suite.
-NetCDF I/O is based on the NetCDF4-python package.
-
-The toolkit contains general modeling tools for dealing with arrays,
-diagnosing standard properties, curvilinear grid generation, and
+Octant (Ocean C-grid model seTup and Analysis Toolkit) is based on the
+python/numpy/matplotlib scientific python suite. NetCDF I/O is based on the
+NetCDF4-python package. The toolkit contains general modeling tools for dealing
+with arrays, diagnosing standard properties, curvilinear grid generation, and
 interpolation. Specific tools are also included for ROMS and GETM.
 
-Subpackages:
-
-    grid  -  Tools for dealing with curvilinear grids
-      BoundaryInteractor
-      CGrid
-      Focus
-      Gridgen
-
-    extern -  Packages from other places.
-      PolygonGeometry
-      PolygonInteractor
-      GreatCircle
-      pupynere
+External tools included for convinience include:
     
-    io - wrappers around netCDF4 with pass-through of netCDF4 objects
-      Dataset
-      MFDataset
-     
-    cf
-      time
+    delaunay : Delaunay interpolation
+        Available at http://scipy.org/scipy/scikits
     
-    tools - Miscilanious useful tools
-      rot2d
-      nanmask
-      shrink
-    
-    sw - UNESCO seawater tools (seawater 1.1 by Bj&#248;rn &#197;dlandsvik)
+    sw : UNESCO seawater tools (seawater 1.1 by Bj&#248;rn &#197;dlandsvik)
+        Available at http://www.imr.no/~bjorn/python/seawater/index.html
 
 </pre>
 
 <hr />
 <div class="fields">      <p><strong>Version:</strong>
-        0.1.0
+        0.2.0
       </p>
       <dl><dt>Authors:</dt>
         <dd>
@@ -111,7 +90,7 @@ Subpackages:
   <tr><td class="summary">
   <ul class="nomargin">
     <li> <strong class="uidlink"><a href="octant.cf-module.html">octant.cf</a></strong>: <em class="summary">cf.py - classes around CF compliant files</em>    </li>
-    <li> <strong class="uidlink"><a href="octant.depths-module.html">octant.depths</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="octant.depths-module.html">octant.depths</a></strong>: <em class="summary">Various vertical coordinates</em>    </li>
     <li> <strong class="uidlink"><a href="octant.extern-module.html">octant.extern</a></strong>: <em class="summary">External packages</em>
     <ul>
     <li> <strong class="uidlink"><a href="octant.extern.delaunay-module.html">octant.extern.delaunay</a></strong>: <em class="summary">Delaunay triangulation and interpolation tools.</em>
@@ -131,8 +110,8 @@ Subpackages:
     </ul>
     </li>
     <li> <strong class="uidlink"><a href="octant.getm-module.html">octant.getm</a></strong>: <em class="summary">octant/getm - octant tools for GETM</em>    </li>
-    <li> <strong class="uidlink"><a href="octant.grid-module.html">octant.grid</a></strong>: <em class="summary">Interactive boundary generation for use with gridgen.</em>    </li>
-    <li> <strong class="uidlink"><a href="octant.io-module.html">octant.io</a></strong>: <em class="summary">A wrapper for netCDF4.Dataset and MFnetCDF4.Dataset</em>    </li>
+    <li> <strong class="uidlink"><a href="octant.grid-module.html">octant.grid</a></strong>: <em class="summary">Tools for creating and working with Arikawa C-Grids</em>    </li>
+    <li> <strong class="uidlink"><a href="octant.io-module.html">octant.io</a></strong>: <em class="summary">A wrapper for netCDF4.Dataset and netCDF4.MFDataset</em>    </li>
     <li> <strong class="uidlink"><a href="octant.ocean-module.html">octant.ocean</a></strong>: <em class="summary">Model agnostic ocean tools</em>
     <ul>
     <li> <strong class="uidlink"><a href="octant.ocean.depths-module.html">octant.ocean.depths</a></strong>: <em class="summary">depths.py</em>    </li>
@@ -142,10 +121,9 @@ Subpackages:
     <li> <strong class="uidlink"><a href="octant.ocean.velocity-module.html">octant.ocean.velocity</a></strong>: <em class="summary">velocity class.py</em>    </li>
     </ul>
     </li>
-    <li> <strong class="uidlink"><a href="octant.plotting-module.html">octant.plotting</a></strong>: <em class="summary">octant.plotting - some plotting functions</em>    </li>
     <li> <strong class="uidlink"><a href="octant.roms-module.html">octant.roms</a></strong>: <em class="summary">Tools specific for the Regional Ocean Modeling System</em>    </li>
-    <li> <strong class="uidlink"><a href="octant.seawater-module.html">octant.seawater</a></strong>: <em class="summary">Tools for working with oceanic data</em>    </li>
-    <li> <strong class="uidlink"><a href="octant.slice-module.html">octant.slice</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="octant.seawater-module.html">octant.seawater</a></strong>: <em class="summary">Tools for working with seawater data.</em>    </li>
+    <li> <strong class="uidlink"><a href="octant.slice-module.html">octant.slice</a></strong>: <em class="summary">Tools for slicing model fields.</em>    </li>
     <li> <strong class="uidlink"><a href="octant.sw-module.html">octant.sw</a></strong>: <em class="summary">Seawater -- Python functions for properties of sea water
    Bj&#248;rn &#197;dlandsvik &lt;bjorn@imr.no&gt;,
    Institute of Marine Research,
@@ -190,7 +168,7 @@ Subpackages:
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 12:05:38 2008
+    on Tue May 20 16:56:03 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

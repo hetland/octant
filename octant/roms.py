@@ -1,5 +1,6 @@
 # encoding: utf-8
 "Tools specific for the Regional Ocean Modeling System"
+__docformat__ = "restructuredtext en"
 
 from datetime import datetime
 

@@ -1,3 +1,4 @@
+# encoding: utf-8
 """
 cf.py - classes around CF compliant files
 
@@ -5,15 +6,12 @@ The cf module is made for reading CF-compliant datasets,
 knowing data, its structure, units and conversions
 between units afterwards.
 
-Classes:
-========
-time - getting a datetime array from a CF-compl. netCDF Dataset
-
 Dependencies:
 =============
 numpy
 netcdftime (packaged in netcdf4-python)
 """
+__docformat__ = "restructuredtext en"
 
 import numpy as np
 

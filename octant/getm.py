@@ -17,6 +17,8 @@ netCDF4 (as it is now, the only included netCDF library)
 numpy
 
 """
+__docformat__ = "restructuredtext en"
+
 import numpy as np
 import netCDF4
 from octant.tools import Transect_extrapolator,shrink

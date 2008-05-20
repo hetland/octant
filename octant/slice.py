@@ -1,3 +1,7 @@
+# encoding: utf-8
+"""Tools for slicing model fields."""
+__docformat__ = "restructuredtext en"
+
 def isoslice(var,prop,isoval=0,axis=0,masking=True):
     """
     result = isoslice(variable,property[,isoval=0])

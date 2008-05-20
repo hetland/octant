@@ -64,10 +64,8 @@ object --+
 </dd></dl>
 
 <hr />
-<pre class="literalblock">
-A class for a curvilinear Arikawa C-Grid.
- 
-The basis for the CGrid class are two arrays defining the verticies of
+<p>A class for a curvilinear Arikawa C-Grid.</p>
+<p>The basis for the CGrid class are two arrays defining the verticies of
 the grid in either Cartesian or geographic coordinates and an optional
 mask defined on the cell centers. Other grid properties, such as the
 locations of the cell centers (rho-points), cell edges (u- and
@@ -75,35 +73,31 @@ v-points), cell widths (dx and dy) and other metrics (angle, dmde, and
 dndx) are all calculated internally from the vertex points. All
 calculations are done at the time the attribute is requested, so
 changes to the verticies (or mask) are instantly recognized by the
-derived grid properties.
-
- For a geographic grid, a projection may be specified, or The default
-projection for will be defined by the matplotlib.toolkits.Basemap
-projection:
-
- proj = Basemap(projection='merc', resolution=None, lat_ts=0.0)
-
- For a geographic grid, the cell widths are determined by the great
-circle distances. Angles, however, are defined using the projected
+derived grid properties.</p>
+<blockquote>
+For a geographic grid, a projection may be specified, or The default</blockquote>
+<p>projection for will be defined by the matplotlib.toolkits.Basemap
+projection:</p>
+<blockquote>
+<p>proj = Basemap(projection='merc', resolution=None, lat_ts=0.0)</p>
+<p>For a geographic grid, the cell widths are determined by the great</p>
+</blockquote>
+<p>circle distances. Angles, however, are defined using the projected
 coordinates, so a projection that conserves angles must be used. This
 means typically either Mercator (projection='merc') or Lambert
-Conformal Conic (projection='lcc').
-
- For a grid in Cartesian coordinates:
-
- grd = CGrid(x, y, mask=None, f=None, h=None)
-
- For a grid in geographic coordinates:
-
- grd = CGrid(lon, lat, proj=&lt;Basemap Mercator projection&gt;, 
-             mask=None, f=None, h=None)
-
- Input vertex arrays may be either numpy arrays or MaskedArrays. If
-masked arrays are used, the mask will be a combination of the specified
-mask (if given) and the masked locations.
- 
-
-</pre>
+Conformal Conic (projection='lcc').</p>
+<blockquote>
+<p>For a grid in Cartesian coordinates:</p>
+<p>grd = CGrid(x, y, mask=None, f=None, h=None)</p>
+<p>For a grid in geographic coordinates:</p>
+<dl class="rst-docutils">
+<dt>grd = CGrid(lon, lat, proj=&lt;Basemap Mercator projection&gt;,</dt>
+<dd>mask=None, f=None, h=None)</dd>
+</dl>
+<p>Input vertex arrays may be either numpy arrays or MaskedArrays. If</p>
+</blockquote>
+<p>masked arrays are used, the mask will be a combination of the specified
+mask (if given) and the masked locations.</p>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -161,8 +155,7 @@ mask (if given) and the masked locations.
           <td><span class="summary-sig"><a href="octant.grid.CGrid-class.html#mask_polygon" class="summary-sig-name">mask_polygon</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">polyverts</span>,
         <span class="summary-sig-arg">mask_value</span>=<span class="summary-sig-default">0.0</span>)</span><br />
-      Mask Cartesian points contained within the polygon defined by 
-      polyverts</td>
+      Mask Cartesian points contained within the polygon defined by polyverts</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.grid-pysrc.html#CGrid.mask_polygon">source&nbsp;code</a></span>
             
@@ -298,13 +291,12 @@ mask (if given) and the masked locations.
     </td>
   </tr></table>
   
-  <p>Mask Cartesian points contained within the polygon defined by 
-  polyverts</p>
-  <p>A cell is masked if the cell center (x_rho, y_rho) is within the 
-  polygon. Other sub-masks (mask_u, mask_v, and mask_psi) are updated 
-  automatically.</p>
-  <p>mask_value [=0.0] may be specified to alter the value of the mask set 
-  within the polygon.  E.g., mask_value=1 for water points.</p>
+  <p>Mask Cartesian points contained within the polygon defined by polyverts</p>
+<p>A cell is masked if the cell center (x_rho, y_rho) is within the
+polygon. Other sub-masks (mask_u, mask_v, and mask_psi) are updated
+automatically.</p>
+<p>mask_value [=0.0] may be specified to alter the value of the mask set
+within the polygon.  E.g., mask_value=1 for water points.</p>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -325,7 +317,7 @@ mask (if given) and the masked locations.
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">lat</h3>
-  <p>Shorthand for lat_vert</p>
+  Shorthand for lat_vert
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -336,7 +328,7 @@ mask (if given) and the masked locations.
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">lon</h3>
-  <p>Shorthand for lon_vert</p>
+  Shorthand for lon_vert
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -347,7 +339,7 @@ mask (if given) and the masked locations.
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">mask</h3>
-  <p>Shorthand for mask_vert</p>
+  Shorthand for mask_vert
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -400,7 +392,7 @@ mask (if given) and the masked locations.
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">x</h3>
-  <p>Shorthand for x_vert</p>
+  Shorthand for x_vert
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -411,7 +403,7 @@ mask (if given) and the masked locations.
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">y</h3>
-  <p>Shorthand for x_vert</p>
+  Shorthand for x_vert
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -444,7 +436,7 @@ mask (if given) and the masked locations.
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 12:05:39 2008
+    on Tue May 20 16:56:04 2008
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -1,41 +1,20 @@
 # encoding: utf-8
 ''' 
-Ocemopy is a toolkit for working with ocean models on a C-Grid
+OCTANT is a toolkit for working with ocean models on a C-Grid
 
-Ocemopy is based on the python/numpy/matplotlib scientific python suite.
-NetCDF I/O is based on the NetCDF4-python package.
-
-The toolkit contains general modeling tools for dealing with arrays,
-diagnosing standard properties, curvilinear grid generation, and
+Octant (Ocean C-grid model seTup and Analysis Toolkit) is based on the
+python/numpy/matplotlib scientific python suite. NetCDF I/O is based on the
+NetCDF4-python package. The toolkit contains general modeling tools for dealing
+with arrays, diagnosing standard properties, curvilinear grid generation, and
 interpolation. Specific tools are also included for ROMS and GETM.
 
-Subpackages:
-
-    grid  -  Tools for dealing with curvilinear grids
-      BoundaryInteractor
-      CGrid
-      Focus
-      Gridgen
-
-    extern -  Packages from other places.
-      PolygonGeometry
-      PolygonInteractor
-      GreatCircle
-      pupynere
+External tools included for convinience include:
     
-    io - wrappers around netCDF4 with pass-through of netCDF4 objects
-      Dataset
-      MFDataset
-     
-    cf
-      time
+    delaunay : Delaunay interpolation
+        Available at http://scipy.org/scipy/scikits
     
-    tools - Miscilanious useful tools
-      rot2d
-      nanmask
-      shrink
-    
-    sw - UNESCO seawater tools (seawater 1.1 by Bjørn Ådlandsvik)
+    sw : UNESCO seawater tools (seawater 1.1 by Bjørn Ådlandsvik)
+        Available at http://www.imr.no/~bjorn/python/seawater/index.html
 
 '''
 
@@ -52,4 +31,4 @@ import sw
 __authors__ = ['Robert Hetland <hetland@tamu.edu>',
                'Richard Hofmeister <richard.hofmeister@io-warnemuende.de>']
                
-__version__ = '0.1.0'
+__version__ = '0.2.0'
