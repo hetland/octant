@@ -221,7 +221,7 @@ def ztodepth(ax=None,ylabelstr='depth [m]'):
 
     """
     
-    if ax is None
+    if ax is None:
         ax = plt.gca()
     
     yt = ax.get_yticks()
