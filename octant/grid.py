@@ -25,29 +25,23 @@ from octant.extern import GreatCircle
 
 class BoundaryInteractor(object):
     """
+    Interactive grid creation
+        
     bry = BoundaryClick(x=[], y=[], beta=None, ax=gca(), **gridgen_options)
     
-    If x, y and beta are not given, and interactive polygon creation session is
-    started. The initial boundary is sketched out by clicking the points (in a
-    counterclockwise manner, usually starting in the upper lefthand corner of the
-    boundary). At this point the verticies are marked by orange circles.
-    
-    Switch to editing mode by hitting return. This changes the vertecies to black. At
-    this point, beta values may be created to define the corners of the grid (see
-    below). Current data are always available in bry.x, bry.y (combined in p.verts)
-    and bry.beta attributes.
+    The initial boundary polygon points (x and y) are
+    counterclockwise, starting in the upper left corner of the
+    boundary. 
     
     Key commands:
-        
-        enter : switch to grid editing mode
         
         t : toggle visibility of verticies
         d : delete a vertex
         i : insert a vertex at a point on the polygon line
         
-        p : define vertex as beta=1 (a Positive turn, marked with green triangle)
-        m : define vertex as beta=1 (a Negative turn, marked with red triangle)
-        z : define vertex as beta=0 (no corner, marked with a black dot)
+        p : set vertex as beta=1 (a Positive turn, marked with green triangle)
+        m : set vertex as beta=1 (a Negative turn, marked with red triangle)
+        z : set vertex as beta=0 (no corner, marked with a black dot)
         
         G : generate grid from the current boundary using gridgen
         T : toggle visability of the current grid
@@ -55,14 +49,21 @@ class BoundaryInteractor(object):
     Methods:
     
         bry.dump(bry_file)
-            Write the current boundary informtion (bry.x, bry.y, bry.beta) to a cPickle
-            file bry_file.
+            Write the current boundary informtion (bry.x, bry.y, bry.beta) to
+            a cPickle file bry_file.
         
         bry.load(bry_file)
-            Read in boundary informtion (x, y, beta) from the cPickle file bry_file.
+            Read in boundary informtion (x, y, beta) from the cPickle file
+            bry_file.
         
         bry.remove_grid()  
             Remove gridlines from axes.
+    
+    Attributes:
+        bry.x : the X boundary points
+        bry.y : the Y boundary points
+        bry.verts : the verticies of the grid
+        bry.grd : the CGrid object
         
     """
     
@@ -72,20 +73,20 @@ class BoundaryInteractor(object):
     _epsilon = 5  # max pixel distance to count as a vertex hit
     
     def _update_beta_lines(self):
-        """Update the m/pline by finding the (x,y) points where self.beta== -/+ 1"""
-        x = self._line.get_xdata()
-        y = self._line.get_ydata()
+        """Update m/pline by finding the points where self.beta== -/+ 1"""
+        x, y = zip(*self._poly.xy)
+        num_points = len(x)-1  # the first and last point are repeated
         
-        xp = [x[n] for n in range(len(x)) if self.beta[n]==1]
-        yp = [y[n] for n in range(len(y)) if self.beta[n]==1]
+        xp = [x[n] for n in range(num_points) if self.beta[n]==1]
+        yp = [y[n] for n in range(num_points) if self.beta[n]==1]
         self._pline.set_data(xp, yp)
         
-        xm = [x[n] for n in range(len(x)) if self.beta[n]==-1]
-        ym = [y[n] for n in range(len(y)) if self.beta[n]==-1]
+        xm = [x[n] for n in range(num_points) if self.beta[n]==-1]
+        ym = [y[n] for n in range(num_points) if self.beta[n]==-1]
         self._mline.set_data(xm, ym)
         
-        xz = [x[n] for n in range(len(x)) if self.beta[n]==0]
-        yz = [y[n] for n in range(len(y)) if self.beta[n]==0]
+        xz = [x[n] for n in range(num_points) if self.beta[n]==0]
+        yz = [y[n] for n in range(num_points) if self.beta[n]==0]
         self._zline.set_data(xz, yz)
         
         if len(x)-1 < self.gridgen_options['ul_idx']:
@@ -226,19 +227,21 @@ class BoundaryInteractor(object):
             if self.proj is None:
                 x = self.x
                 y = self.y
-                self.grd = Gridgen(x, y, self.beta, shp, proj=self.proj, **options)
+                self.grd = Gridgen(x, y, self.beta, shp,
+                                   proj=self.proj, **options)
             else:
                 lon, lat = self.proj(self.x, self.y, inverse=True)
-                self.grd = Gridgen(lon, lat, self.beta, shp, proj=self.proj, **options)
+                self.grd = Gridgen(lon, lat, self.beta, shp, 
+                                   proj=self.proj, **options)
             self.remove_grid()
             self._showgrid = True
             gridlineprops = {'linestyle':'-', 'color':'k', 'lw':0.2}
             self._gridlines = []
-            for line in self._ax._get_lines(*(self.grd.x, self.grd.y),\
+            for line in self._ax._get_lines(*(self.grd.x, self.grd.y),
                                             **gridlineprops):
                 self._ax.add_line(line)
                 self._gridlines.append(line)
-            for line in self._ax._get_lines(*(self.grd.x.T, self.grd.y.T),\
+            for line in self._ax._get_lines(*(self.grd.x.T, self.grd.y.T),
                                             **gridlineprops):
                 self._ax.add_line(line)
                 self._gridlines.append(line)
@@ -262,7 +265,7 @@ class BoundaryInteractor(object):
         self._poly.xy[self._ind] = x,y
         
         x, y = zip(*self._poly.xy)
-        self._line.set_data(x, y)
+        self._line.set_data(x[:-1], y[:-1])
         self._update_beta_lines()
         
         self._canvas.restore_region(self._background)
@@ -307,7 +310,8 @@ class BoundaryInteractor(object):
             assert len(x)==len(beta), 'beta must have same length as x and y'
             self.beta = list(beta)
         
-        self._line = Line2D(x, y, animated=True, ls='-', color='k', alpha=0.5, lw=1)
+        self._line = Line2D(x, y, animated=True, 
+                            ls='-', color='k', alpha=0.5, lw=1)
         self._ax.add_line(self._line)
         
         self._canvas = self._line.figure.canvas        
@@ -315,8 +319,9 @@ class BoundaryInteractor(object):
         self._poly = Polygon(self.verts, alpha=0.1, fc='k', animated=True)
         self._ax.add_patch(self._poly)
         
-        # Link in the two lines that will show the beta values
-        # pline for positive turns, mline for negative (minus) turns.
+        # Link in the lines that will show the beta values
+        # pline for positive turns, mline for negative (minus) turns
+        # otherwize zline (zero) for straight sections
         self._pline = Line2D([], [], marker='^', ms=12, mfc='g',\
                              animated=True, lw=0)
         self._mline = Line2D([], [], marker='v', ms=12, mfc='r',\
@@ -937,9 +942,9 @@ class edit_mask_mesh(object):
 
 
 if __name__ == '__main__':
-    geographic = True
+    geographic = False
     if geographic:
-        from matplotlib.toolkits.basemap import Basemap
+        from mpl_toolkits.basemap import Basemap
         proj = Basemap(projection='lcc',
                        resolution='i',
                        llcrnrlon=-72.0,

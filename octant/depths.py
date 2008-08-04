@@ -87,7 +87,7 @@ class s_coordinate(object):
             zeta = self.zeta
             res_index = key
         
-        if len(self.h.shape) == len(zeta.shape):       # Assure a time-dimension exists
+        if self.h.ndim == zeta.ndim:       # Assure a time-dimension exists
             zeta = zeta[np.newaxis, :]
         
         ti = zeta.shape[0]

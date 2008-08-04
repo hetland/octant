@@ -251,6 +251,6 @@ class nc_depths(s_coordinate):
         except:
             N = len(self.nc.dimensions['s_rho'])
         zeta = self.nc.variables['zeta']
-        super(nc_depths, self).__init__(hc, h, theta_b, theta_s, N, \
+        super(nc_depths, self).__init__(h, hc, theta_b, theta_s, N, \
                                            grid=grid, zeta=zeta)
 

@@ -131,7 +131,7 @@ def isoslice(z, q, zo=0, mode='spline'):
     qo *= np.ones(q.shape[1:])
     
     q2d = _iso.zslice(z, q, zo, imode)
-    if any(q2d==1e20):
+    if np.any(q2d==1e20):
         q2d = np.ma.masked_where(q2d==1e20, q2d)
     
     return q2d
@@ -140,9 +140,9 @@ def isoslice(z, q, zo=0, mode='spline'):
 def iso_integrate(z_w, q, z_iso):
     z_w = np.atleast_3d(z_w)
     q = np.atleast_3d(q)
-    if isinstance(z_iso, ma.MaskedArray):
+    if isinstance(z_iso, np.ma.MaskedArray):
         z_iso = z_iso.filled(1e20)
-    z_iso *= ones(q.shape[1:])
+    z_iso *= np.ones(q.shape[1:])
     return _iso.integrate(z_w, q, z_iso)
 
 
@@ -152,7 +152,7 @@ def surface(z, q, qo):
     assert z.shape == q.shape, 'z and q must be the same size'
     qo = qo * np.ones(q.shape[1:])
     z_iso = _iso.surface(z, q, qo)
-    if any(z_iso==1e20):
+    if np.any(z_iso==1e20):
         return np.ma.masked_where(z_iso==1e20, z_iso)
     else:
         return z_iso
@@ -222,12 +222,12 @@ def arg_nearest(x, xo, scale=None):
 
 
 def extrapolate_mask(a, mask=None):
-    if mask is None and not isinstance(a, ma.MaskedArray): 
+    if mask is None and not isinstance(a, np.ma.MaskedArray): 
         return a
     if mask is None:
         mask = a.mask
     else:
-        if isinstance(a, ma.MaskedArray):
+        if isinstance(a, np.ma.MaskedArray):
             mask = mask | a.mask
     a = a[:]    # make a copy of array a
     jj, ii = indices(a.shape)
