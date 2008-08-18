@@ -264,7 +264,10 @@ def drawscale(m,lon,lat,length,yoffset=None,fontsize=8.0,linewidth=0.5):
        lon4,lat4 = m(xc+length/2,yc,inverse=True)
        x4,y4 = m(lon4,lat4)
 
-       if yoffset is None: yoffset = 0.05*length
+       if yoffset is None:
+           yoffset = 0.05*length
+       else:
+           yoffset = 1000.0*yoffset
 
        #plot top line
        ytop = yc+yoffset/2
