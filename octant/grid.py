@@ -725,7 +725,7 @@ class Gridgen(CGrid):
     #         except:
     #             pass
     
-    _libgridgen = ctypes.pydll.LoadLibrary("libgridgen.dylib")
+    _libgridgen = np.ctypeslib.load_library('libgridgen',__file__)
     
     _libgridgen.gridgen_generategrid2.restype = ctypes.c_void_p
     _libgridgen.gridnodes_getx.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
@@ -898,7 +898,7 @@ class edit_mask_mesh(object):
         x, y = event.xdata, event.ydata
         if event.button==1 and event.inaxes is not None and self._clicking == True:
             d = (x-self._xc)**2 + (y-self._yc)**2
-            if isinstance(self.xv, ma.MaskedArray):
+            if isinstance(self.xv, np.ma.MaskedArray):
                 idx = np.argwhere(d[~self._xc.mask] == d.min())
             else:
                 idx = np.argwhere(d.flatten() == d.min())
@@ -929,7 +929,7 @@ class edit_mask_mesh(object):
         self._xc = 0.25*(xv[1:,1:]+xv[1:,:-1]+xv[:-1,1:]+xv[:-1,:-1])
         self._yc = 0.25*(yv[1:,1:]+yv[1:,:-1]+yv[:-1,1:]+yv[:-1,:-1])
         
-        if isinstance(self.xv, ma.MaskedArray):
+        if isinstance(self.xv, np.ma.MaskedArray):
             self._mask = mask[~self._xc.mask]
         else:
             self._mask = mask.flatten()
