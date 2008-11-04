@@ -23,7 +23,9 @@ __docformat__ = "restructuredtext en"
 import matplotlib.pyplot as plt
 from datetime import timedelta
 import numpy as np
-from scipy import interpolate
+#from scipy import interpolate
+from pylab import interp
+import pylab as pl
 
 def sticks(date,u,v,tnorm=0.1,figurewidth=8,pickind=1,color='blue'):
     """
@@ -98,8 +100,9 @@ def cmap_discretize(cmap, N):
     for key in ('red','green','blue'):
         # Find the N colors
         D = np.array(cdict[key])
-        I = interpolate.interp1d(D[:,0], D[:,1])
-        colors = I(colors_i)
+        #I = interpolate.interp1d(D[:,0], D[:,1])
+        #I = interpolate.interp1d(D[:,0],D[:,1])
+        colors = interp(colors_i,D[:,0],D[:,1])
         # Place these colors at the correct indices.
         A = np.zeros((N+1,3), float)
         A[:,0] = indices
@@ -161,15 +164,19 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
         zd=np.zeros((kmax+1,2*xmax+1),dtype='f')
         fieldd=np.zeros((kmax+1,2*xmax+1),dtype='f')
         
-        for k in range(kmax):
+        for k in range(kmax+1):
             for x in range(xmax):
                 
+                if k==kmax:
+                    kf=kmax-1
+                else:
+                    kf=k
 
                 if (x == 0):
                     zd[k,0]=zi[k,x]
                     zd[k,1]=zi[k,x]
-                    fieldd[k,0]=field[k,x]
-                    fieldd[k,1]=field[k,x]
+                    fieldd[k,0]=field[kf,x]
+                    fieldd[k,1]=field[kf,x]
                 elif (bath[x]<=missingbath):
                     zd[k,2*x+1]=fillvalue
                     fieldd[k,2*x+1]=fillvalue
@@ -180,8 +187,8 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
                         zd[k,2*x]=zi[k,x-1]
                 else:
                     zd[k,2*x+1]=zi[k,x]
-                    fieldd[k,2*x+1]=field[k,x]
-                    fieldd[k,2*x]=field[k,x]
+                    fieldd[k,2*x+1]=field[kf,x]
+                    fieldd[k,2*x]=field[kf,x]
                     if (bath[x-1]<=missingbath):
                         zd[k,2*x]=zi[k,x]
                     else:
@@ -189,11 +196,11 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
                 
                 if x == xmax-1:
                     zd[k,-1]=zi[k,x]
-                    fieldd[k,-1]=field[k,x]
+                    fieldd[k,-1]=field[kf,x]
 
         fmasked=np.ma.masked_where(fieldd==fillvalue,fieldd)
          
-        plt.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,**kwargs)
+        pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,*kwargs)
         
         if lines!=None:
             xi=np.array([xc for k in range(kmax)])
