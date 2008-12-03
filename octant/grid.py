@@ -262,7 +262,9 @@ class BoundaryInteractor(object):
         if event.inaxes is None: return
         if event.button != 1: return
         x,y = event.xdata, event.ydata
-        self._poly.xy[self._ind] = x,y
+        self._poly.xy[self._ind] = x, y
+        if self._ind == 0:
+            self._poly.xy[-1] = x, y
         
         x, y = zip(*self._poly.xy)
         self._line.set_data(x[:-1], y[:-1])
