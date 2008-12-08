@@ -168,12 +168,12 @@ class time (np.ndarray):
         return np.asarray(self,dtype='float64')*fac
     
     def get_jd(self):
-        utime = netcdftime.utime('days since 01-01-01 00:00:00', \
+        utime = netcdftime.utime('days since 0001-01-01 00:00:00', \
                                  calendar='proleptic_gregorian')
         return utime.date2num(self.dates)
 
     def get_dates(self):
-        return self.utime.num2date(self)
+        return np.array([self.utime.num2date(tval) for tval in self])
         
     jd = property(get_jd, None, doc="Julian day, for plotting in pylab")
     seconds = property(get_seconds, None, doc="seconds")
