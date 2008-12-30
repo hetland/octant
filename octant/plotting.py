@@ -200,7 +200,7 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
 
         fmasked=np.ma.masked_where(fieldd==fillvalue,fieldd)
          
-        pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,*kwargs)
+        pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,**kwargs)
         
         if lines!=None:
             xi=np.array([xc for k in range(kmax)])
