@@ -236,7 +236,7 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
 
         fmasked=np.ma.masked_where(fieldd==fillvalue,fieldd)
          
-        pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,**kwargs)
+        ret=pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,**kwargs)
         
         if lines!=None:
             xi=np.array([xc for k in range(kmax)])
@@ -244,6 +244,7 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
             plt.plot(xi.T,np.ma.masked_where(bathi.T<=-10.0,zi[:-1,:].T), \
                     color=lines,lw=lw)
         plt.axis('tight')
+        return ret
 
 
 def ztodepth(ax=None,ylabelstr='depth [m]'):
