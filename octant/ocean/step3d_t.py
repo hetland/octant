@@ -10,25 +10,27 @@ Release under MIT license.
 
 from numpy import *
 import pylab as pl
-import pyroms
 from scipy.interpolate import interp1d
+
+import octant
+import octant.roms
 
 import _step3d_t
 
 class Step3d_t(object):
     """docstring for Step3d_t"""
     def __init__(self, nc, grd=None, AKt_bak=1e-5):
-        self.nc = pyroms.Dataset(nc)
+        self.nc = octant.io.Dataset(nc)
         self.dt = nc.variables['dt'][:]
         if grd is None:
-            self.grd = pyroms.nc_grid(nc)
+            self.grd = octant.roms.nc_grid(nc)
         else:
             self.grd = grd
         self.rmask = self.grd.mask
         self.pm = self.grd.pm
         self.pn = self.grd.pn
-        self._ocean_time = pyroms.ocean_time(nc)
-        self.z_w = pyroms.nc_depths(nc, grid='w')
+        self._ocean_time = octant.cf.time(nc, name='ocean_time')
+        self.z_w = octant.roms.nc_depths(nc, grid='w')
         self.time = self._ocean_time[0]
         self._lidx = -999
         if 'AKt' not in nc.variables:
@@ -73,7 +75,7 @@ class Step3d_t(object):
             self.time = self.time + self.dt
         
 if __name__ == '__main__':
-    nc = pyroms.MFDataset('/Volumes/Hetland_merrimack/field_2007/steady/ocean_1750*.nc')
+    nc = octant.io.MFDataset('/Volumes/Hetland_merrimack/field_2007/steady/ocean_1750*.nc')
     step = Step3d_t(nc)
     step.dt=5.0
     y, x = mgrid[0:258, 0:514]

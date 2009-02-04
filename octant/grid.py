@@ -383,31 +383,37 @@ class BoundaryInteractor(object):
     
 
 
-class FocusPoint(object):
-    """A class for creating focus elements for use with gridgen
+class _Focus_x(object):
+    """Return a transformed, uniform grid, focused in the x-direction
     
-    Return a transformed, uniform grid, focused around point xo, yo, with a
-    focusing factor of focus, and x and y extent given by Rx and Ry. The
-    region of focusing will be approximately Gausian, and the resolution will
-    be increased by approximately the value of factor. To achive focusing on a
-    line in the x- or y-direction, use a large value for R in the desired
-    direction; typically a value of 10.0 is good enough to have focusing only
-    in one direction.
+    This class may be called with a uniform grid, with limits from [0, 1], to create a focused
+    grid in the x-directions centered about xo. The output grid is also uniform from [0, 1] in
+    both x and y.
     
+    Parameters
+    ----------
+    xo : float
+        Location about which to focus grid
+    factor : float
+        amount to focus grid. Creates cell sizes that are factor smaller in the focused
+        region.
+    Rx : float
+        Lateral extent of focused region, similar to a lateral spatial scale for the focusing
+        region.
+    
+    Returns
+    -------
+    foc : class
+        The class may be called with arguments of a grid. The returned transformed grid (x, y)
+        will be focused as per the parameters above.
     """
     
-    def __init__(self, xo, yo, factor=2.0, Rx=0.1, Ry=None):
-        
-        if Ry is None: Ry = Rx
-        
+    def __init__(self, xo, factor=2.0, Rx=0.1):
         self.xo = xo
-        self.yo = yo
         self.factor = factor
         self.Rx = Rx
-        self.Ry = Ry
     
     def __call__(self, x, y):
-        
         x = np.asarray(x)
         y = np.asarray(y)
         assert not np.any(x>1.0) or not np.any(x<0.0)  \
@@ -415,20 +421,61 @@ class FocusPoint(object):
                 'x and y must both be within the range [0, 1].'
         
         alpha = 1.0 - 1.0/self.factor
-        def xf(x, y):
-            return x - 0.5*np.sqrt(np.pi)*self.Rx*alpha \
-                          *np.exp(-(y-self.yo)**2/self.Ry**2) \
-                          *erf((x-self.xo)/self.Rx)
+        def xf(x):
+            return x - 0.5*( np.sqrt(np.pi)*self.Rx*alpha
+                            *erf((x-self.xo)/self.Rx) )
         
-        def yf(x, y):
-            return y - 0.5*np.sqrt(np.pi)*self.Ry*alpha \
-                          *np.exp(-(x-self.xo)**2/self.Rx**2) \
-                          *erf((y-self.yo)/self.Ry)
+        xf0 = xf(0.0); xf1 = xf(1.0)
         
-        xf0 = xf(0.0, y); xf1 = xf(1.0, y)
-        yf0 = yf(x, 0.0); yf1 = yf(x, 1.0)
+        return (xf(x)-xf0)/(xf1-xf0), y
+
+class _Focus_y(object):
+    """Return a transformed, uniform grid, focused in the y-direction
+    
+    This class may be called with a uniform grid, with limits from [0, 1], to create a focused
+    grid in the y-directions centered about yo. The output grid is also uniform from [0, 1] in
+    both x and y.
+    
+    Parameters
+    ----------
+    yo : float
+        Location about which to focus grid
+    factor : float
+        amount to focus grid. Creates cell sizes that are factor smaller in the focused
+        region.
+    Ry : float
+        Lateral extent of focused region, similar to a lateral spatial scale for the focusing
+        region.
+    
+    Returns
+    -------
+    foc : class
+        The class may be called with arguments of a grid. The returned transformed grid (x, y)
+        will be focused as per the parameters above.
+    
+    """
+    
+    def __init__(self, yo, factor=2.0, Ry=0.1):
+        self.yo = yo
+        self.factor = factor
+        self.Ry = Ry
+    
+    def __call__(self, x, y):
+        x = np.asarray(x)
+        y = np.asarray(y)
+        assert not np.any(x>1.0) or not np.any(x<0.0)  \
+            or not np.any(y>1.0) or not np.any(x<0.0), \
+                'x and y must both be within the range [0, 1].'
         
-        return (xf(x, y)-xf0)/(xf1-xf0), (yf(x, y)-yf0)/(yf1-yf0)
+        alpha = 1.0 - 1.0/self.factor
+        
+        def yf(y):
+            return y - 0.5*( np.sqrt(np.pi)*self.Ry*alpha 
+                            *erf((y-self.yo)/self.Ry) )
+        
+        yf0 = yf(0.0); yf1 = yf(1.0)
+        
+        return x, (yf(y)-yf0)/(yf1-yf0)
 
 
 class Focus(object):
@@ -460,13 +507,16 @@ class Focus(object):
     xf, yf = foc(x, y)
     
     """
-    def __init__(self, xo, yo, factor=2.0, Rx=0.1, Ry=None):
+    def __init__(self):
         self._focuspoints = []
-        self.add_focus_point(xo, yo, factor, Rx, Ry)
     
-    def add_focus_point(self, xo, yo, factor=2.0, Rx=0.1, Ry=None):
+    def add_focus_x(self, xo, factor=2.0, Rx=0.1):
         """docstring for add_point"""
-        self._focuspoints.append(FocusPoint(xo, yo, factor, Rx, Ry))
+        self._focuspoints.append(_Focus_x(xo, factor, Rx))
+    
+    def add_focus_y(self, yo, factor=2.0, Ry=0.1):
+        """docstring for add_point"""
+        self._focuspoints.append(_Focus_y(yo, factor, Ry))
     
     def __call__(self, x, y):
         """docstring for __call__"""
@@ -515,14 +565,8 @@ class CGrid(object):
         
     """
     
-    def __init__(self, x, y, proj=None, mask=None, f=None, h=None):
+    def __init__(self, x, y):
                 
-        # self.proj is used to determine if the grid is geographic.
-        # self.proj is None for Cartesian grids
-        # proj is a Basemap instance otherwise.
-        
-        self.proj = proj
-        
         assert np.ndim(x)==2 and np.ndim(y)==2 and np.shape(x)==np.shape(y), \
             'x and y must be 2D arrays of the same size.'
         
@@ -530,22 +574,11 @@ class CGrid(object):
             x = np.ma.masked_where(isnan(x), x)
             y = np.ma.masked_where(isnan(y), y)
             
-        if self.proj is not None:
-            self.lon_vert = x
-            self.lat_vert = y
-            self.x_vert, self.y_vert = self.proj(x, y)
-        else:
-            self.x_vert = x
-            self.y_vert = y
-            self.lon_vert = None
-            self.lat_vert = None
+        self.x_vert = x
+        self.y_vert = y
         
-        # Generate the grid mask
-        if mask is None:
-            mask_shape = tuple([n-1 for n in self.x_vert.shape])
-            self.mask_rho = np.ones(mask_shape, dtype='d')
-        else:
-            self.mask_rho = mask
+        mask_shape = tuple([n-1 for n in self.x_vert.shape])
+        self.mask_rho = np.ones(mask_shape, dtype='d')
         
         # If maskedarray is given for verticies, modify the mask such that 
         # non-existant grid points are masked.  A cell requires all four
@@ -560,25 +593,9 @@ class CGrid(object):
                     self.y_vert.mask[:-1,1:] | self.y_vert.mask[1:,1:])
             self.mask_rho = np.asarray(~(~np.bool_(self.mask_rho) | mask), dtype='d')
         
-        if isinstance(self.lon_vert, np.ma.MaskedArray):
-            mask = (self.lon_vert.mask[:-1,:-1] | self.lon_vert.mask[1:,:-1] | \
-                    self.lon_vert.mask[:-1,1:] | self.lon_vert.mask[1:,1:])
-            self.mask_rho = np.asarray(~(~np.bool_(self.mask_rho) | mask), dtype='d')
-        
-        if isinstance(self.lat_vert, np.ma.MaskedArray):
-            mask = (self.lat_vert.mask[:-1,:-1] | self.lat_vert.mask[1:,:-1] | \
-                    self.lat_vert.mask[:-1,1:] | self.lat_vert.mask[1:,1:])
-            self.mask_rho = np.asarray(~(~np.bool_(self.mask_rho) | mask), dtype='d')
-        
         self._calculate_subgrids()
         self._calculate_metrics()        
-        if self.proj is not None and f is None:
-            self.f = 2 * 7.29e-5 * np.cos(self.lat_rho * np.pi / 180.)
-        else:
-            self.f = np.asarray(f, dtype='d')
-            
-        self.h = h
-        
+    
     def _calculate_subgrids(self):
         self.x_rho = 0.25*(self.x_vert[1:,1:]+self.x_vert[1:,:-1]+ \
                            self.x_vert[:-1,1:]+self.x_vert[:-1,:-1])
@@ -590,34 +607,15 @@ class CGrid(object):
         self.y_v = 0.5*(self.y_vert[1:-1,:-1] + self.y_vert[1:-1,1:])
         self.x_psi = self.x_vert[1:-1,1:-1]
         self.y_psi = self.y_vert[1:-1,1:-1]
-        
-        if self.proj is not None:
-            self.lon_rho, self.lat_rho = self.proj(self.x_rho, self.y_rho, inverse=True)
-            self.lon_u, self.lat_u = self.proj(self.x_u, self.y_u, inverse=True)
-            self.lon_v, self.lat_v = self.proj(self.x_v, self.y_v, inverse=True)
-            self.lon_psi, self.lat_psi = self.proj(self.x_psi, self.y_psi, inverse=True)
     
     def _calculate_metrics(self):
         'Calculates pm, pn, dndx, dmde, and angle from x_vert and y_vert'
-        if self.proj is not None:
-            gc_dist = np.vectorize(lambda lon1, lat1, lon2, lat2: \
-                         GreatCircle(6378137.0, 6356752.3142, \
-                                          lon1, lat1, lon2, lat2).distance)
-            dx = gc_dist(self.lon[:,1:],  self.lat[:,1:], \
-                         self.lon[:,:-1], self.lat[:,:-1])
-            self.dx = 0.5*(dx[1:,:]+dx[:-1,:])
-            self.pm = 1.0/self.dx
-            dy = gc_dist(self.lon[1:,:],  self.lat[1:,:], \
-                         self.lon[:-1,:], self.lat[:-1,:])
-            self.dy = 0.5*(dy[:,1:]+dy[:,:-1])
-            self.pn = 1.0/self.dy
-        else:
-            x_temp = 0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])
-            y_temp = 0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])
-            self.dx = np.sqrt(np.diff(x_temp, axis=1)**2 + np.diff(y_temp, axis=1)**2)
-            x_temp = 0.5*(self.x_vert[:,1:]+self.x_vert[:,:-1])
-            y_temp = 0.5*(self.y_vert[:,1:]+self.y_vert[:,:-1])
-            self.dy = np.sqrt(np.diff(x_temp, axis=0)**2 + np.diff(y_temp, axis=0)**2)
+        x_temp = 0.5*(self.x_vert[1:,:]+self.x_vert[:-1,:])
+        y_temp = 0.5*(self.y_vert[1:,:]+self.y_vert[:-1,:])
+        self.dx = np.sqrt(np.diff(x_temp, axis=1)**2 + np.diff(y_temp, axis=1)**2)
+        x_temp = 0.5*(self.x_vert[:,1:]+self.x_vert[:,:-1])
+        y_temp = 0.5*(self.y_vert[:,1:]+self.y_vert[:,:-1])
+        self.dy = np.sqrt(np.diff(x_temp, axis=0)**2 + np.diff(y_temp, axis=0)**2)
         
         if isinstance(self.dy, np.ma.MaskedArray):
             self.dndx = np.ma.zeros(self.x_rho.shape, dtype='d')
@@ -706,13 +704,51 @@ class CGrid(object):
     
     x = property(lambda self: self.x_vert, None, None, 'Shorthand for x_vert')
     y = property(lambda self: self.y_vert, None, None, 'Shorthand for x_vert')
-    lon = property(lambda self: self.lon_vert, None, None, 'Shorthand for lon_vert')
-    lat = property(lambda self: self.lat_vert, None, None, 'Shorthand for lat_vert')
     mask = property(lambda self: self.mask_rho, None, None, 'Shorthand for mask_vert')
     mask_u   = property(_get_mask_u)
     mask_v   = property(_get_mask_v)
     mask_psi = property(_get_mask_psi)
 
+
+class CGrid_geo(CGrid):
+    """A geographic c-grid, based on latitute, longitude, and a Basemap projection
+    
+    """
+    def _calculate_metrics(self):
+        gc_dist = np.vectorize(lambda lon1, lat1, lon2, lat2: \
+                     GreatCircle(6378137.0, 6356752.3142, \
+                                      lon1, lat1, lon2, lat2).distance)
+        dx = gc_dist(self.lon[:,1:],  self.lat[:,1:], \
+                     self.lon[:,:-1], self.lat[:,:-1])
+        self.dx = 0.5*(dx[1:,:]+dx[:-1,:])
+        self.pm = 1.0/self.dx
+        dy = gc_dist(self.lon[1:,:],  self.lat[1:,:], \
+                     self.lon[:-1,:], self.lat[:-1,:])
+        self.dy = 0.5*(dy[:,1:]+dy[:,:-1])
+        self.pn = 1.0/self.dy
+    
+    def __init__(self, lon, lat, proj):
+        x, y = proj(lon, lat)
+        self.lon_vert = lon
+        self.lat_vert = lat
+        self.proj = proj
+        
+        super(CGrid_geo, self).__init__(x, y)
+        
+        self.lon_rho, self.lat_rho = self.proj(self.x_rho, self.y_rho, inverse=True)
+        self.lon_u, self.lat_u = self.proj(self.x_u, self.y_u, inverse=True)
+        self.lon_v, self.lat_v = self.proj(self.x_v, self.y_v, inverse=True)
+        self.lon_psi, self.lat_psi = self.proj(self.x_psi, self.y_psi, inverse=True)
+        
+        self.f = 2 * 7.29e-5 * np.cos(self.lat_rho * np.pi / 180.)
+        
+    def mask_polygon_geo(lonlat_verts, mask_value=0.0):
+        lon, lat = zip(*lonlat_verts)
+        x, y = proj(lon, lat, inverse=True)
+        self.mask_polygon(zip(x, y), mask_value)
+    
+    lon = property(lambda self: self.lon_vert, None, None, 'Shorthand for lon_vert')
+    lat = property(lambda self: self.lat_vert, None, None, 'Shorthand for lat_vert')
 
 
 class Gridgen(CGrid):
@@ -798,11 +834,12 @@ class Gridgen(CGrid):
             x = np.ma.masked_where(np.isnan(x), x)
             y = np.ma.masked_where(np.isnan(y), y)
         
-        if self.proj is not None:
-            lon, lat = self.proj(x, y, inverse=True)
-            super(Gridgen, self).__init__(lon, lat, proj=self.proj)
-        else:
-            super(Gridgen, self).__init__(x, y)
+        # if self.proj is not None:
+        #     lon, lat = self.proj(x, y, inverse=True)
+        #     super(Gridgen, self).__init__(lon, lat, proj=self.proj)
+        # else:
+        super(Gridgen, self).__init__(x, y)
+        
         
     
     def __init__(self, xbry, ybry, beta, shape, ul_idx=0, \
