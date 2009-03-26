@@ -152,7 +152,7 @@ def cmap_brightened(cmap,factor=0.5):
     """
     return cmap_map(lambda x: (1.-factor) + factor*x, cmap)
 
-def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-9999.0,lw=0.5,**kwargs):
+def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-9999.0,lw=0.5,plotsurface=False,**kwargs):
         """
         plot 2d field as layers with pcolor based on layer heights.
                   (perfect for GETM results)
@@ -239,9 +239,13 @@ def layers(field,bath,h=None,xc=None,lines=None,missingbath=-10.0,fillvalue=-999
         ret=pl.pcolor(xco,np.ma.array(zd,mask=fmasked.mask),fmasked,**kwargs)
         
         if lines!=None:
-            xi=np.array([xc for k in range(kmax)])
-            bathi=np.array([bath for k in range(kmax)])
-            plt.plot(xi.T,np.ma.masked_where(bathi.T<=-10.0,zi[:-1,:].T), \
+            if plotsurface:
+                lastind=kmax+1
+            else:
+                lastind=kmax
+            xi=np.array([xc for k in range(lastind)])
+            bathi=np.array([bath for k in range(lastind)])
+            plt.plot(xi.T,np.ma.masked_where(bathi.T<=-10.0,zi[:lastind,:].T), \
                     color=lines,lw=lw)
         plt.axis('tight')
         return ret
