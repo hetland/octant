@@ -118,7 +118,8 @@ def cmap_discretize(cmap, N):
 
 def cmap_map(function,cmap):
     """ Applies function (which should operate on vectors of shape 3:
-    [r, g, b], on colormap cmap. This routine will break any discontinuous     points in a colormap.
+    [r, g, b], on colormap cmap. This routine will break any discontinuous
+    points in a colormap.
     """
     cdict = cmap._segmentdata
     step_dict = {}

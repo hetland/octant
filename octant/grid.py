@@ -10,9 +10,7 @@ import os
 import sys
 
 import numpy as np
-import pylab as pl
-
-from scipy.special import erf
+import matplotlib.pyplot as plt
 
 from matplotlib.artist import Artist
 from matplotlib.patches import Polygon, CirclePolygon
@@ -280,7 +278,8 @@ class BoundaryInteractor(object):
         self._canvas.blit(self._ax.bbox)
     
     
-    def __init__(self, x, y=None, beta=None, ax=None, proj=None, **gridgen_options):
+    def __init__(self, x, y=None, beta=None, ax=None, proj=None, 
+                 **gridgen_options):
         
         if isinstance(x, str):
             bry_dict = np.load(x)
@@ -291,7 +290,7 @@ class BoundaryInteractor(object):
         assert len(x) >= 4, 'Boundary must have at least four points.'
         
         if ax is None: 
-            ax = pl.gca()
+            ax = plt.gca()
         
         self._ax = ax
         
@@ -350,7 +349,6 @@ class BoundaryInteractor(object):
         self._canvas.mpl_connect('motion_notify_event',\
                                  self._motion_notify_callback)
     
-    
     def save_bry(self, bry_file='bry.pickle'):
         f = open(bry_file, 'wb')
         bry_dict = {'x': self.x, 'y': self.y, 'beta': self.beta}
@@ -382,30 +380,40 @@ class BoundaryInteractor(object):
     y = property(get_ydata)
     
 
+def _approximate_erf(x):
+    '''Return approximate solution to error function
+    
+    see http://en.wikipedia.org/wiki/Error_function
+    '''
+    a = -(8*(np.pi-3.0)/(3.0*np.pi*(np.pi-4.0)))
+    return np.sign(x) * \
+           np.sqrt(1.0 - np.exp( -x**2*(4.0/np.pi+a*x*x)/(1.0+a*x*x) ))
+    
 
 class _Focus_x(object):
     """Return a transformed, uniform grid, focused in the x-direction
     
-    This class may be called with a uniform grid, with limits from [0, 1], to create a focused
-    grid in the x-directions centered about xo. The output grid is also uniform from [0, 1] in
-    both x and y.
+    This class may be called with a uniform grid, with limits from [0, 1], to
+    create a focused grid in the x-directions centered about xo. The output
+    grid is also uniform from [0, 1] in both x and y.
     
     Parameters
     ----------
     xo : float
         Location about which to focus grid
     factor : float
-        amount to focus grid. Creates cell sizes that are factor smaller in the focused
+        amount to focus grid. Creates cell sizes that are factor smaller in
+        the focused
         region.
     Rx : float
-        Lateral extent of focused region, similar to a lateral spatial scale for the focusing
-        region.
+        Lateral extent of focused region, similar to a lateral spatial scale
+        for the focusing region.
     
     Returns
     -------
     foc : class
-        The class may be called with arguments of a grid. The returned transformed grid (x, y)
-        will be focused as per the parameters above.
+        The class may be called with arguments of a grid. The returned
+        transformed grid (x, y) will be focused as per the parameters above.
     """
     
     def __init__(self, xo, factor=2.0, Rx=0.1):
@@ -423,7 +431,7 @@ class _Focus_x(object):
         alpha = 1.0 - 1.0/self.factor
         def xf(x):
             return x - 0.5*( np.sqrt(np.pi)*self.Rx*alpha
-                            *erf((x-self.xo)/self.Rx) )
+                            *_approximate_erf((x-self.xo)/self.Rx) )
         
         xf0 = xf(0.0); xf1 = xf(1.0)
         
@@ -471,7 +479,7 @@ class _Focus_y(object):
         
         def yf(y):
             return y - 0.5*( np.sqrt(np.pi)*self.Ry*alpha 
-                            *erf((y-self.yo)/self.Ry) )
+                            *_approximate_erf((y-self.yo)/self.Ry) )
         
         yf0 = yf(0.0); yf1 = yf(1.0)
         
@@ -480,31 +488,46 @@ class _Focus_y(object):
 
 class Focus(object):
     """
-    foc = Focus(xo, yo, factor=2.0, Rx=0.1, Ry=Rx)
+    Return a container for a sequence of Focus objects
     
-    Return a transformed, uniform grid, focused around point xo, yo, with a focusing
-    factor of focus, and x and y extent given by Rx and Ry.  The region of focusing
-    will be approximately Gausian, and the resolution will be increased by approximately
-    the value of factor.  To achive focusing on a line in the x- or y-direction, use a
-    large value for R in the desired direction; typically a value of 10.0 is good enough
-    to have focusing only in one direction.
+    foc = Focus()
+    
+    The sequence is populated by using the 'add_focus_x' and 'add_focus_y'
+    methods. These methods define a point ('xo' or 'yo'), around witch to
+    focus, a focusing factor of 'focus', and x and y extent of focusing given
+    by Rx or Ry. The region of focusing will be approximately Gausian, and the
+    resolution will be increased by approximately the value of factor.
+    
+    Methods
+    -------
+    foc.add_focus_x(xo, factor=2.0, Rx=0.1)
+    foc.add_focus_y(yo, factor=2.0, Ry=0.1)
     
     Calls to the object return transformed coordinates:
         xf, yf = foc(x, y)
-    where x and y must be within [0, 1], and are typically a uniform, normalized grid.
+    where x and y must be within [0, 1], and are typically a uniform,
+    normalized grid. The focused grid will be the result of applying each of
+    the focus elements in the sequence they are added to the series.
     
-    Additional focus points may be added with the add_focus_point method:
-        foc.add_focus_point(xo, yo, factor=2.0, Rx=0.1, Ry=Rx)
-    subsequent calls to foc will result in a transformed grid with all the focus points
-    applied in sequence.
     
-    EXAMPLE:
+    EXAMPLES
+    --------
     
-    foc = Focus(0.7, 0.0, factor=2.0, Rx=0.2, Ry=10)
-    foc.add_focus_point(0.2, 0.7, factor=3.0, Rx=0.2)
+    >>> foc = octant.grid.Focus()
+    >>> foc.add_focus_x(0.2, factor=3.0, Rx=0.2)
+    >>> foc.add_focus_y(0.6, factor=5.0, Ry=0.35)
     
-    y, x = mgrid[0:1:50j, 0:1:70j]
-    xf, yf = foc(x, y)
+    >>> x, y = np.mgrid[0:1:3j,0:1:3j]
+    >>> xf, yf = foc(x, y)
+    
+    >>> print xf
+    [[ 0.          0.          0.        ]
+     [ 0.36594617  0.36594617  0.36594617]
+     [ 1.          1.          1.        ]]
+    >>> print yf
+    [[ 0.          0.62479833  1.        ]
+     [ 0.          0.62479833  1.        ]
+     [ 0.          0.62479833  1.        ]]
     
     """
     def __init__(self):
@@ -526,43 +549,41 @@ class Focus(object):
 
 
 class CGrid(object):
-    """A class for a curvilinear Arikawa C-Grid.
-        
-       The basis for the CGrid class are two arrays defining the verticies of
-       the grid in either Cartesian or geographic coordinates and an optional
-       mask defined on the cell centers. Other grid properties, such as the
-       locations of the cell centers (rho-points), cell edges (u- and
-       v-points), cell widths (dx and dy) and other metrics (angle, dmde, and
-       dndx) are all calculated internally from the vertex points. All
-       calculations are done at the time the attribute is requested, so
-       changes to the verticies (or mask) are instantly recognized by the
-       derived grid properties.
-       
-        For a geographic grid, a projection may be specified, or The default
-       projection for will be defined by the matplotlib.toolkits.Basemap
-       projection:
-       
-        proj = Basemap(projection='merc', resolution=None, lat_ts=0.0)
-       
-        For a geographic grid, the cell widths are determined by the great
-       circle distances. Angles, however, are defined using the projected
-       coordinates, so a projection that conserves angles must be used. This
-       means typically either Mercator (projection='merc') or Lambert
-       Conformal Conic (projection='lcc').
-       
-        For a grid in Cartesian coordinates:
-       
-        grd = CGrid(x, y, mask=None, f=None, h=None)
-       
-        For a grid in geographic coordinates:
-       
-        grd = CGrid(lon, lat, proj=<Basemap Mercator projection>, 
-                    mask=None, f=None, h=None)
-       
-        Input vertex arrays may be either numpy arrays or MaskedArrays. If
-       masked arrays are used, the mask will be a combination of the specified
-       mask (if given) and the masked locations.
-        
+    """Curvilinear Arakawa C-Grid
+     
+    The basis for the CGrid class are two arrays defining the verticies of the
+    grid in Cartesian (for geographic coordinates, see CGrid_geo). An optional
+    mask may be defined on the cell centers. Other Arakawa C-grid properties,
+    such as the locations of the cell centers (rho-points), cell edges (u and
+    v velocity points), cell widths (dx and dy) and other metrics (angle,
+    dmde, and dndx) are all calculated internally from the vertex points.
+     
+    Input vertex arrays may be either type np.array or np.ma.MaskedArray. If
+    masked arrays are used, the mask will be a combination of the specified
+    mask (if given) and the masked locations.
+     
+    EXAMPLES:
+    --------
+     
+    >>> x, y = mgrid[0.0:7.0, 0.0:8.0]
+    >>> x = np.ma.masked_where( (x<3) & (y<3), x)
+    >>> y = np.ma.MaskedArray(y, x.mask)
+    >>> grd = octant.grid.CGrid(x, y)
+    >>> print grd.x_rho
+    [[-- -- -- 0.5 0.5 0.5 0.5]
+     [-- -- -- 1.5 1.5 1.5 1.5]
+     [-- -- -- 2.5 2.5 2.5 2.5]
+     [3.5 3.5 3.5 3.5 3.5 3.5 3.5]
+     [4.5 4.5 4.5 4.5 4.5 4.5 4.5]
+     [5.5 5.5 5.5 5.5 5.5 5.5 5.5]]
+    >>> print grd.mask
+    [[ 0.  0.  0.  1.  1.  1.  1.]
+     [ 0.  0.  0.  1.  1.  1.  1.]
+     [ 0.  0.  0.  1.  1.  1.  1.]
+     [ 1.  1.  1.  1.  1.  1.  1.]
+     [ 1.  1.  1.  1.  1.  1.  1.]
+     [ 1.  1.  1.  1.  1.  1.  1.]]
+    
     """
     
     def __init__(self, x, y):
@@ -571,8 +592,8 @@ class CGrid(object):
             'x and y must be 2D arrays of the same size.'
         
         if np.any(np.isnan(x)) or np.any(np.isnan(y)):
-            x = np.ma.masked_where(isnan(x), x)
-            y = np.ma.masked_where(isnan(y), y)
+            x = np.ma.masked_where( (isnan(x)) | (isnan(y)) , x)
+            y = np.ma.masked_where( (isnan(x)) | (isnan(y)) , y)
             
         self.x_vert = x
         self.y_vert = y
@@ -702,16 +723,29 @@ class CGrid(object):
         return self.mask_rho[1:,1:]*self.mask_rho[:-1,1:]* \
                self.mask_rho[1:,:-1]*self.mask_rho[:-1,:-1]
     
-    x = property(lambda self: self.x_vert, None, None, 'Shorthand for x_vert')
-    y = property(lambda self: self.y_vert, None, None, 'Shorthand for x_vert')
-    mask = property(lambda self: self.mask_rho, None, None, 'Shorthand for mask_vert')
-    mask_u   = property(_get_mask_u)
-    mask_v   = property(_get_mask_v)
-    mask_psi = property(_get_mask_psi)
+    x = property(lambda self: self.x_vert, None, None, 'Return x_vert')
+    y = property(lambda self: self.y_vert, None, None, 'Return x_vert')
+    mask = property(lambda self: self.mask_rho, None, None, 'Return mask_rho')
+    mask_u   = property(_get_mask_u, None, None, 'Return mask_u')
+    mask_v   = property(_get_mask_v, None, None, 'Return mask_v')
+    mask_psi = property(_get_mask_psi, None, None, 'Return mask_psi')
 
 
 class CGrid_geo(CGrid):
-    """A geographic c-grid, based on latitute, longitude, and a Basemap projection
+    """Curvilinear Arakawa C-grid defined in geographic coordinates
+    
+    For a geographic grid, a projection may be specified, or The default
+    projection for will be defined by the matplotlib.toolkits.Basemap
+    projection:
+    
+    proj = Basemap(projection='merc', resolution=None, lat_ts=0.0)
+    
+    For a geographic grid, the cell widths are determined by the great
+    circle distances. Angles, however, are defined using the projected
+    coordinates, so a projection that conserves angles must be used. This
+    means typically either Mercator (projection='merc') or Lambert
+    Conformal Conic (projection='lcc').
+    
     
     """
     def _calculate_metrics(self):
@@ -735,12 +769,14 @@ class CGrid_geo(CGrid):
         
         super(CGrid_geo, self).__init__(x, y)
         
-        self.lon_rho, self.lat_rho = self.proj(self.x_rho, self.y_rho, inverse=True)
+        self.lon_rho, self.lat_rho = self.proj(self.x_rho, self.y_rho,
+                                               inverse=True)
         self.lon_u, self.lat_u = self.proj(self.x_u, self.y_u, inverse=True)
         self.lon_v, self.lat_v = self.proj(self.x_v, self.y_v, inverse=True)
-        self.lon_psi, self.lat_psi = self.proj(self.x_psi, self.y_psi, inverse=True)
+        self.lon_psi, self.lat_psi = self.proj(self.x_psi, self.y_psi,
+                                               inverse=True)
         
-        self.f = 2 * 7.29e-5 * np.cos(self.lat_rho * np.pi / 180.)
+        self.f = 2.0 * 7.29e-5 * np.cos(self.lat_rho * np.pi / 180.0)
         
     def mask_polygon_geo(lonlat_verts, mask_value=0.0):
         lon, lat = zip(*lonlat_verts)
@@ -930,8 +966,8 @@ class edit_mask_mesh(object):
     def _on_key(self, event):
         if event.key == 'e':
             self._clicking = not self._clicking
-            pl.title('Editing %s -- click "e" to toggle' % self._clicking)
-            pl.draw()
+            plt.title('Editing %s -- click "e" to toggle' % self._clicking)
+            plt.draw()
     
     def _on_click(self, event):
         x, y = event.xdata, event.ydata
@@ -946,13 +982,14 @@ class edit_mask_mesh(object):
             self.mask[i, j] = float(not self.mask[i, j])
             self._pc.set_array(self._mask)
             self._pc.changed()
-            pl.draw()
+            plt.draw()
     
     def __init__(self, xv, yv, mask, **kwargs):
         assert xv.shape == yv.shape, 'xv and yv must have the same shape'
         for dx, dq in zip(xv.shape, mask.shape):
              assert dx==dq+1, \
-             'xv and yv must be cell verticies (i.e., one cell bigger in each dimension)'
+             '''xv and yv must be cell verticies
+             (i.e., one cell bigger in each dimension)'''
         
         self.xv = xv
         self.yv = yv
@@ -962,9 +999,9 @@ class edit_mask_mesh(object):
         land_color = kwargs.pop('land_color', (0.6, 1.0, 0.6))
         sea_color = kwargs.pop('sea_color', (0.6, 0.6, 1.0))
         
-        cm = pl.matplotlib.colors.ListedColormap([land_color, sea_color], 
+        cm = plt.matplotlib.colors.ListedColormap([land_color, sea_color], 
                                                  name='land/sea')
-        self._pc = pl.pcolor(xv, yv, mask, cmap=cm, vmin=0, vmax=1, **kwargs)
+        self._pc = plt.pcolor(xv, yv, mask, cmap=cm, vmin=0, vmax=1, **kwargs)
         self._xc = 0.25*(xv[1:,1:]+xv[1:,:-1]+xv[:-1,1:]+xv[:-1,:-1])
         self._yc = 0.25*(yv[1:,1:]+yv[1:,:-1]+yv[:-1,1:]+yv[:-1,:-1])
         
@@ -973,12 +1010,12 @@ class edit_mask_mesh(object):
         else:
             self._mask = mask.flatten()
         
-        pl.connect('button_press_event', self._on_click)
-        pl.connect('key_press_event', self._on_key)
+        plt.connect('button_press_event', self._on_click)
+        plt.connect('key_press_event', self._on_key)
         self._clicking = False
-        pl.title('Editing %s -- click "e" to toggle' % self._clicking)
-        pl.draw()
-
+        plt.title('Editing %s -- click "e" to toggle' % self._clicking)
+        plt.draw()
+    
 
 if __name__ == '__main__':
     geographic = False
@@ -1004,8 +1041,8 @@ if __name__ == '__main__':
         for seg in proj.coastsegs:
             grd.mask_polygon(seg)
         
-        pl.pcolor(grd.x, grd.y, grd.mask)
-        pl.show()
+        plt.pcolor(grd.x, grd.y, grd.mask)
+        plt.show()
     else:
         x = [0.2, 0.85, 0.9, 0.82, 0.23]
         y = [0.2, 0.25, 0.5, 0.82, .83]
@@ -1013,6 +1050,6 @@ if __name__ == '__main__':
         
         grd = Gridgen(x, y, beta, (32, 32))
         
-        ax = pl.subplot(111)
+        ax = plt.subplot(111)
         BoundaryInteractor(x, y, beta)
-        pl.show()
+        plt.show()

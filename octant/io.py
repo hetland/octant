@@ -1,19 +1,37 @@
 # encoding: utf-8
-'''A wrapper for netCDF4.Dataset and netCDF4.MFDataset
+'''A thin wrapper for netCDF4.Dataset and netCDF4.MFDataset
 
-possible uses include:
+This module provides two functions, Dataset and MFDataset, that are similar to the
+netCDF[3/4] functions of the same name. This package is a thin wrapper around these
+functions, and provides two services. First of all, it will use either netCDF3 or
+netCDF4 (prefering the later), so that the netCDF package does not need to be changed
+on different systems that only have one or the other. Second, it will pass through
+netCDF[3/4] objects unchanged, so that netCDF objects, filenames, lists of files, or
+strings with wildcards can be passed to the function indescriminately.
+
+Examples of usage
+-----------------
 
 with an input of a string:
-  nc = pyroms.Dataset(file) # returns netCDF4.Dataset object based on file
-  nc = pyroms.MFDataset(file) # returns MFnetCDF4.Dataset object based on file (with wildcard chars)
+    # returns netCDF4.Dataset object based on file
+    nc = octant.io.Dataset(file) 
+  
+    # returns MFnetCDF4.Dataset object based on file (with wildcard chars)
+    nc = octant.io.MFDataset(file) 
 
 with an input of a list of files:
-  nc = pyroms.Dataset(files) # returns MFnetCDF4.Dataset object based on list of files
-  nc = pyroms.MFDataset(files) # returns MFnetCDF4.Dataset object based on list of files
+    # returns MFDataset object based on list of files
+    nc = octant.io.Dataset(files) 
+    
+    # returns MFDataset object based on list of files
+    nc = octant.io.MFDataset(files)
 
 with an input of a netCDF4.Dataset or MFnetCDF4.Dataset object:
-  nc = pyroms.Dataset(nc) # passes through netCDF4.Dataset or MFnetCDF4.Dataset object
-  nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on file (with wildcard chars)
+    # passes through netCDF4.Dataset or MFnetCDF4.Dataset object
+    nc = octant.io.Dataset(nc)
+    
+    # passes through MFDataset object based on file (with wildcard chars)
+    nc = octant.io.MFDataset(nc)
 '''
 __docformat__ = "restructuredtext en"
 
