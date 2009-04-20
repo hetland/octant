@@ -86,11 +86,49 @@ layers - a function for plotting vertical transects based on layer heights
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a name="cmap_brightened"></a><span class="summary-sig-name">cmap_brightened</span>(<span class="summary-sig-arg">cmap</span>,
+        <span class="summary-sig-arg">factor</span>=<span class="summary-sig-default">0.5</span>)</span><br />
+      Brightens colormap cmap with using a saturation factor 'factor'
+(0.5 by default).</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.plotting-pysrc.html#cmap_brightened">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="octant.plotting-module.html#cmap_discretize" class="summary-sig-name">cmap_discretize</a>(<span class="summary-sig-arg">cmap</span>,
         <span class="summary-sig-arg">N</span>)</span><br />
       Return a discrete colormap from the continuous colormap cmap.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.plotting-pysrc.html#cmap_discretize">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="octant.plotting-module.html#cmap_map" class="summary-sig-name">cmap_map</a>(<span class="summary-sig-arg">function</span>,
+        <span class="summary-sig-arg">cmap</span>)</span><br />
+      Applies function (which should operate on vectors of shape 3:
+[r, g, b], on colormap cmap.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.plotting-pysrc.html#cmap_map">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -136,8 +174,9 @@ lon-length/2,lat-yoffset, label it with actual distance in km</td>
         <span class="summary-sig-arg">missingbath</span>=<span class="summary-sig-default">-10.0</span>,
         <span class="summary-sig-arg">fillvalue</span>=<span class="summary-sig-default">-9999.0</span>,
         <span class="summary-sig-arg">lw</span>=<span class="summary-sig-default">0.5</span>,
+        <span class="summary-sig-arg">plotsurface</span>=<span class="summary-sig-default">False</span>,
         <span class="summary-sig-arg">**kwargs</span>)</span><br />
-      plot 2d field as layers with pcolor based on layer heights.</td>
+      (perfect for GETM results)</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.plotting-pysrc.html#layers">source&nbsp;code</a></span>
             
@@ -176,10 +215,9 @@ lon-length/2,lat-yoffset, label it with actual distance in km</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.plotting-module.html#ztodepth" class="summary-sig-name">ztodepth</a>(<span class="summary-sig-arg">ax</span>=<span class="summary-sig-default">&lt;matplotlib.axes.AxesSubplot object at 0x2e128f0&gt;</span>,
+          <td><span class="summary-sig"><a href="octant.plotting-module.html#ztodepth" class="summary-sig-name">ztodepth</a>(<span class="summary-sig-arg">ax</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">ylabelstr</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">depth [m]</code><code class="variable-quote">'</code></span>)</span><br />
-      ztodepth - change negative z-ax ticklabels 
-             on the y-axis to positive depths</td>
+      on the y-axis to positive depths</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.plotting-pysrc.html#ztodepth">source&nbsp;code</a></span>
             
@@ -214,18 +252,38 @@ lon-length/2,lat-yoffset, label it with actual distance in km</td>
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-Return a discrete colormap from the continuous colormap cmap.
-
-    cmap: colormap instance, eg. cm.jet. 
-    N: Number of colors.
-
-Example
-    x = resize(arange(100), (5,100))
-    djet = cmap_discretize(cm.jet, 5)
-    imshow(x, cmap=djet)
-
-</pre>
+  <p>Return a discrete colormap from the continuous colormap cmap.</p>
+<blockquote>
+cmap: colormap instance, eg. cm.jet.
+N: Number of colors.</blockquote>
+<dl class="rst-docutils">
+<dt>Example</dt>
+<dd>x = resize(arange(100), (5,100))
+djet = cmap_discretize(cm.jet, 5)
+imshow(x, cmap=djet)</dd>
+</dl>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="cmap_map"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">cmap_map</span>(<span class="sig-arg">function</span>,
+        <span class="sig-arg">cmap</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="octant.plotting-pysrc.html#cmap_map">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Applies function (which should operate on vectors of shape 3:
+[r, g, b], on colormap cmap. This routine will break any discontinuous
+points in a colormap.
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -250,19 +308,17 @@ Example
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-draw a fancy map scale from lon-length/2,lat-yoffset to
-lon-length/2,lat-yoffset, label it with actual distance in km
-
-usage drawscale(m - mapping object,
-                lon - lon value of center of scale
-                lat - lat value of center of scale
-                length - maximum length shown by scale in km
-                yoffset - height of scale in &quot;km&quot;
-                fontsize - fontsize of ticklabels
-                linewidth - width of used lines)
-
-</pre>
+  <p>draw a fancy map scale from lon-length/2,lat-yoffset to
+lon-length/2,lat-yoffset, label it with actual distance in km</p>
+<dl class="rst-docutils">
+<dt>usage drawscale(m - mapping object,</dt>
+<dd>lon - lon value of center of scale
+lat - lat value of center of scale
+length - maximum length shown by scale in km
+yoffset - height of scale in &quot;km&quot;
+fontsize - fontsize of ticklabels
+linewidth - width of used lines)</dd>
+</dl>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -282,6 +338,7 @@ usage drawscale(m - mapping object,
         <span class="sig-arg">missingbath</span>=<span class="sig-default">-10.0</span>,
         <span class="sig-arg">fillvalue</span>=<span class="sig-default">-9999.0</span>,
         <span class="sig-arg">lw</span>=<span class="sig-default">0.5</span>,
+        <span class="sig-arg">plotsurface</span>=<span class="sig-default">False</span>,
         <span class="sig-arg">**kwargs</span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -289,38 +346,31 @@ usage drawscale(m - mapping object,
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-plot 2d field as layers with pcolor based on layer heights.
-          (perfect for GETM results)
-
-usage: layers(2dfield[kmax,xmax],
-              bath[xmax],
-              h=h[kmax,xmax],
-              xc=xc[xmax],
-              missingbath=-10.0,
-              fillvalue=-9999.0,
-              lines=LineColor,
-              lw=0.5,
-              **kwargs)
-
-h,xc,missingbath,fillvalue,shading and lw are optional, default is sigma
+  <dl class="rst-docutils">
+<dt>plot 2d field as layers with pcolor based on layer heights.</dt>
+<dd>(perfect for GETM results)</dd>
+<dt>usage: layers(2dfield[kmax,xmax],</dt>
+<dd>bath[xmax],
+h=h[kmax,xmax],
+xc=xc[xmax],
+missingbath=-10.0,
+fillvalue=-9999.0,
+lines=LineColor,
+lw=0.5,
+<a href="#id1" name="id2"><span class="rst-problematic" id="rst-id2">**</span></a>kwargs)</dd>
+</dl>
+<p>h,xc,missingbath,fillvalue,shading and lw are optional, default is sigma
 coordinates h=bath/kmax, default FillValue=-9999.0,
-default lw=0.05, and default xc is the vector of array indices.
-
-Polygons where bath == missingbath in any point are filled
+default lw=0.05, and default xc is the vector of array indices.</p>
+<p>Polygons where bath == missingbath in any point are filled
 with fillvalue and are masked afterwards.
 The 2dfield can be preconfigured with (fillvalue)s where
 &quot;layers&quot; should not plot any value (e.g. if certain layers
-should be removed)
-
-Additional keyword arguments are passed to pcolor such as
-cmap=cm.hsv or shading='flat'.
-
-If lines is given, the layer interfaces are
-plotted as lines in color e.g. lines='black'
-
-</pre>
+should be removed)</p>
+<p>Additional keyword arguments are passed to pcolor such as
+cmap=cm.hsv or shading='flat'.</p>
+<p>If lines is given, the layer interfaces are
+plotted as lines in color e.g. lines='black'</p>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -346,13 +396,14 @@ plotted as lines in color e.g. lines='black'
   </tr></table>
   
   <p>sticks - create velocity stick plot</p>
-  <p>sticks(date, u, v, tnorm=0.1, color='blue'             figurewidth=8, 
-  pickind=1)</p>
-  <p>date - list/array of datetime elements u - list/array of velocity in 
-  eastern direction v - list/array of velocity in northern direction tnorm 
-  - length of a u=max(u,v) as part of the time axis color - color of sticks
-  figurewidth - width of the figure in inch pickind - plot every 
-  &quot;pickind&quot;-vector</p>
+<p>sticks(date, u, v, tnorm=0.1, color='blue'             figurewidth=8, pickind=1)</p>
+<p>date - list/array of datetime elements
+u - list/array of velocity in eastern direction
+v - list/array of velocity in northern direction
+tnorm - length of a u=max(u,v) as part of the time axis
+color - color of sticks
+figurewidth - width of the figure in inch
+pickind - plot every &quot;pickind&quot;-vector</p>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -364,7 +415,7 @@ plotted as lines in color e.g. lines='black'
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">ztodepth</span>(<span class="sig-arg">ax</span>=<span class="sig-default">&lt;matplotlib.axes.AxesSubplot object at 0x2e128f0&gt;</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">ztodepth</span>(<span class="sig-arg">ax</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">ylabelstr</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">depth [m]</code><code class="variable-quote">'</code></span>)</span>
   </h3>
   </td><td align="right" valign="top"
@@ -372,23 +423,18 @@ plotted as lines in color e.g. lines='black'
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-ztodepth - change negative z-ax ticklabels 
-             on the y-axis to positive depths
-
-usage: ztodepth(ax=gca(),
-                ylabelstr='depth [m]')
-
-ztodepth gets the yticks and creates positive yticklabels
+  <dl class="rst-docutils">
+<dt>ztodepth - change negative z-ax ticklabels</dt>
+<dd>on the y-axis to positive depths</dd>
+<dt>usage: ztodepth(ax=gca(),</dt>
+<dd>ylabelstr='depth [m]')</dd>
+</dl>
+<p>ztodepth gets the yticks and creates positive yticklabels
 for annotation in depth instead of position on z-axis.
 Its recommended to change yticks if needed before
-running ztodepth.
-
-If ylabelstr is not set to &quot;None&quot;, then the y-axis gets
-the label &quot;depth [m]&quot; or other specified with ylabelstr.
-
-</pre>
+running ztodepth.</p>
+<p>If ylabelstr is not set to &quot;None&quot;, then the y-axis gets
+the label &quot;depth [m]&quot; or other specified with ylabelstr.</p>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -421,7 +467,7 @@ the label &quot;depth [m]&quot; or other specified with ylabelstr.
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Mon Apr 21 12:05:39 2008
+    on Mon Apr 20 11:56:30 2009
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

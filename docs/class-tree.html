@@ -71,11 +71,14 @@
       <em class="summary">Bdyinfo(filename): handle for GETM bdyinfo file/definition</em>
     </li>
     <li> <strong class="uidlink"><a href="octant.grid.BoundaryInteractor-class.html">octant.grid.BoundaryInteractor</a></strong>:
-      <em class="summary">bry = BoundaryClick(x=[], y=[], beta=None, ax=gca(), <a href="#id1" name="id2"><span class="rst-problematic" id="rst-id2">**</span></a>gridgen_options)</em>
+      <em class="summary">Interactive grid creation</em>
     </li>
     <li> <strong class="uidlink"><a href="octant.grid.CGrid-class.html">octant.grid.CGrid</a></strong>:
-      <em class="summary">A class for a curvilinear Arikawa C-Grid.</em>
+      <em class="summary">Curvilinear Arakawa C-Grid</em>
     <ul>
+    <li> <strong class="uidlink"><a href="octant.grid.CGrid_geo-class.html">octant.grid.CGrid_geo</a></strong>:
+      <em class="summary">Curvilinear Arakawa C-grid defined in geographic coordinates</em>
+    </li>
     <li> <strong class="uidlink"><a href="octant.grid.Gridgen-class.html">octant.grid.Gridgen</a></strong>:
       <em class="summary">docstring for Gridgen</em>
     </li>
@@ -85,58 +88,31 @@
       <em class="summary">docstring for Depths</em>
     </li>
     <li> <strong class="uidlink"><a href="octant.grid.Focus-class.html">octant.grid.Focus</a></strong>:
-      <em class="summary">foc = Focus(xo, yo, factor=2.0, Rx=0.1, Ry=Rx)</em>
-    </li>
-    <li> <strong class="uidlink"><a href="octant.grid.FocusPoint-class.html">octant.grid.FocusPoint</a></strong>:
-      <em class="summary">A class for creating focus elements for use with gridgen</em>
+      <em class="summary">Return a container for a sequence of Focus objects</em>
     </li>
     <li> <strong class="uidlink"><a href="octant.extern.greatcircle.GreatCircle-class.html">octant.extern.greatcircle.GreatCircle</a></strong>:
       <em class="summary">formula for perfect sphere from Ed Williams' 'Aviation Formulary' 
         (http://williams.best.vwh.net/avform.htm)</em>
     </li>
-    <li> <strong class="uidlink"><a href="octant.extern.delaunay.interpolate.LinearInterpolator-class.html">octant.extern.delaunay.interpolate.LinearInterpolator</a></strong>:
-      <em class="summary">Interpolate a function defined on the nodes of a triangulation by
-using the planes defined by the three function values at each corner of
-the triangles.</em>
-    </li>
-    <li> <strong class="uidlink"><a href="octant.extern.delaunay.testfuncs.LinearTester-class.html">octant.extern.delaunay.testfuncs.LinearTester</a></strong>
-    <ul>
-    <li> <strong class="uidlink"><a href="octant.extern.delaunay.testfuncs.NNTester-class.html">octant.extern.delaunay.testfuncs.NNTester</a></strong>
-    </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="octant.extern.delaunay.interpolate.NNInterpolator-class.html">octant.extern.delaunay.interpolate.NNInterpolator</a></strong>:
-      <em class="summary">Interpolate a function defined on the nodes of a triangulation by
-the natural neighbors method.</em>
+    <li> <strong class="uidlink"><a href="octant.extern.kdtree.KDTree-class.html">octant.extern.kdtree.KDTree</a></strong>:
+      <em class="summary">kd-tree for quick nearest-neighbor lookup</em>
     </li>
     <li> <strong class="uidlink"><a href="octant.extern.pupynere.NetCDFFile-class.html">octant.extern.pupynere.NetCDFFile</a></strong>:
       <em class="summary">A NetCDF file parser.</em>
     </li>
     <li> <strong class="uidlink"><a href="octant.extern.pupynere.NetCDFVariable-class.html">octant.extern.pupynere.NetCDFVariable</a></strong>
     </li>
-    <li> <strong class="uidlink"><a href="octant.extern.poly_editor.PolygonInteractor-class.html">octant.extern.poly_editor.PolygonInteractor</a></strong>:
-      <em class="summary">An polygon editor.</em>
+    <li> <strong class="uidlink"><a href="octant.extern.kdtree.Rectangle-class.html">octant.extern.kdtree.Rectangle</a></strong>:
+      <em class="summary">Hyperrectangle class.</em>
     </li>
     <li> <strong class="uidlink"><a href="octant.ocean.step3d_t.Step3d_t-class.html">octant.ocean.step3d_t.Step3d_t</a></strong>:
       <em class="summary">docstring for Step3d_t</em>
-    </li>
-    <li> <strong class="uidlink"><a href="octant.extern.delaunay.testfuncs.TestDataSet-class.html">octant.extern.delaunay.testfuncs.TestDataSet</a></strong>
     </li>
     <li> <strong class="uidlink"><a href="octant.tools.Transect_extrapolator-class.html">octant.tools.Transect_extrapolator</a></strong>:
       <em class="summary">General Transect object</em>
     <ul>
     <li> <strong class="uidlink"><a href="octant.getm.Transect-class.html">octant.getm.Transect</a></strong>:
       <em class="summary">GETM Transect class</em>
-    </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="octant.extern.delaunay.triangulate.Triangulation-class.html">octant.extern.delaunay.triangulate.Triangulation</a></strong>:
-      <em class="summary">A Delaunay triangulation of points in a plane.</em>
-    </li>
-    <li> <strong class="uidlink">dict</strong>:
-      <em class="summary">dict() -&gt; new empty dictionary.</em>
-    <ul>
-    <li> <strong class="uidlink"><a href="octant.extern.delaunay.testfuncs.TestData-class.html">octant.extern.delaunay.testfuncs.TestData</a></strong>
     </li>
     </ul>
     </li>
@@ -148,16 +124,21 @@ the natural neighbors method.</em>
     <li> <strong class="uidlink"><a href="octant.ocean.velocity.nc_velocity-class.html">octant.ocean.velocity.nc_velocity</a></strong>
     </li>
     <li> <strong class="uidlink">numpy.ndarray</strong>:
-      <em class="summary">An array object represents a multidimensional, homogeneous array
-of fixed-size items.</em>
+      <em class="summary">ndarray(shape, dtype=float, buffer=None, offset=0,
+        strides=None, order=None)</em>
     <ul>
-    <li> <strong class="uidlink"><a href="octant.extern.polygeom.PolygonGeometry-class.html">octant.extern.polygeom.PolygonGeometry</a></strong>:
-      <em class="summary">Polygeom -- Polygon geometry class</em>
-    </li>
     <li> <strong class="uidlink"><a href="octant.cf.time-class.html">octant.cf.time</a></strong>:
       <em class="summary">Return time object from netCDF file</em>
     </li>
     <li> <strong class="uidlink"><a href="octant.ocean.time.time-class.html">octant.ocean.time.time</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="octant.extern.kdtree.KDTree.node-class.html">octant.extern.kdtree.KDTree.node</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="octant.extern.kdtree.KDTree.innernode-class.html">octant.extern.kdtree.KDTree.innernode</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="octant.extern.kdtree.KDTree.leafnode-class.html">octant.extern.kdtree.KDTree.leafnode</a></strong>
     </li>
     </ul>
     </li>
@@ -196,7 +177,7 @@ of fixed-size items.</em>
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Tue May 20 16:56:03 2008
+    on Mon Apr 20 11:56:29 2009
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

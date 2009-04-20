@@ -7,13 +7,10 @@ import warnings
 import numpy as np
 
 from octant.io import Dataset
-from octant.extern import delaunay
+from matplotlib import delaunay
 from octant.extern import GreatCircle
 
-
 import _iso
-
-
 
 
 gc_dist = np.vectorize(lambda lon1, lat1, lon2, lat2: \

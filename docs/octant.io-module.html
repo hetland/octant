@@ -50,19 +50,37 @@
 </table>
 <!-- ==================== MODULE DESCRIPTION ==================== -->
 <h1 class="epydoc">Module io</h1><p class="nomargin-top"><span class="codelink"><a href="octant.io-pysrc.html">source&nbsp;code</a></span></p>
-<p>A wrapper for netCDF4.Dataset and netCDF4.MFDataset</p>
-<p>possible uses include:</p>
+<p>A thin wrapper for netCDF4.Dataset and netCDF4.MFDataset</p>
+<p>This module provides two functions, Dataset and MFDataset, that are similar to the
+netCDF[3/4] functions of the same name. This package is a thin wrapper around these
+functions, and provides two services. First of all, it will use either netCDF3 or
+netCDF4 (prefering the later), so that the netCDF package does not need to be changed
+on different systems that only have one or the other. Second, it will pass through
+netCDF[3/4] objects unchanged, so that netCDF objects, filenames, lists of files, or
+strings with wildcards can be passed to the function indescriminately.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-examples-of-usage" name="rst-examples-of-usage">Examples of usage</a></h1>
 <dl class="rst-docutils">
 <dt>with an input of a string:</dt>
-<dd>nc = pyroms.Dataset(file) # returns netCDF4.Dataset object based on file
-nc = pyroms.MFDataset(file) # returns MFnetCDF4.Dataset object based on file (with wildcard chars)</dd>
+<dd><p class="rst-first"># returns netCDF4.Dataset object based on file
+nc = octant.io.Dataset(file)</p>
+<p class="rst-last"># returns MFnetCDF4.Dataset object based on file (with wildcard chars)
+nc = octant.io.MFDataset(file)</p>
+</dd>
 <dt>with an input of a list of files:</dt>
-<dd>nc = pyroms.Dataset(files) # returns MFnetCDF4.Dataset object based on list of files
-nc = pyroms.MFDataset(files) # returns MFnetCDF4.Dataset object based on list of files</dd>
+<dd><p class="rst-first"># returns MFDataset object based on list of files
+nc = octant.io.Dataset(files)</p>
+<p class="rst-last"># returns MFDataset object based on list of files
+nc = octant.io.MFDataset(files)</p>
+</dd>
 <dt>with an input of a netCDF4.Dataset or MFnetCDF4.Dataset object:</dt>
-<dd>nc = pyroms.Dataset(nc) # passes through netCDF4.Dataset or MFnetCDF4.Dataset object
-nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on file (with wildcard chars)</dd>
+<dd><p class="rst-first"># passes through netCDF4.Dataset or MFnetCDF4.Dataset object
+nc = octant.io.Dataset(nc)</p>
+<p class="rst-last"># passes through MFDataset object based on file (with wildcard chars)
+nc = octant.io.MFDataset(nc)</p>
+</dd>
 </dl>
+</div>
 
 <!-- ==================== FUNCTIONS ==================== -->
 <a name="section-Functions"></a>
@@ -79,7 +97,7 @@ nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on fil
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="octant.io-module.html#Dataset" class="summary-sig-name">Dataset</a>(<span class="summary-sig-arg">ncfile</span>)</span><br />
-      A wrapper for netCDF4.Dataset and netCDF4.MFDataset</td>
+      A thin wrapper for netCDF4.Dataset and netCDF4.MFDataset</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.io-pysrc.html#Dataset">source&nbsp;code</a></span>
             
@@ -96,7 +114,7 @@ nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on fil
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="octant.io-module.html#MFDataset" class="summary-sig-name">MFDataset</a>(<span class="summary-sig-arg">ncfile</span>)</span><br />
-      A wrapper for netCDF4.Dataset and netCDF4.MFDataset</td>
+      A thin wrapper for netCDF4.Dataset and netCDF4.MFDataset</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.io-pysrc.html#MFDataset">source&nbsp;code</a></span>
             
@@ -130,19 +148,37 @@ nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on fil
     </td>
   </tr></table>
   
-  <p>A wrapper for netCDF4.Dataset and netCDF4.MFDataset</p>
-<p>possible uses include:</p>
+  <p>A thin wrapper for netCDF4.Dataset and netCDF4.MFDataset</p>
+<p>This module provides two functions, Dataset and MFDataset, that are similar to the
+netCDF[3/4] functions of the same name. This package is a thin wrapper around these
+functions, and provides two services. First of all, it will use either netCDF3 or
+netCDF4 (prefering the later), so that the netCDF package does not need to be changed
+on different systems that only have one or the other. Second, it will pass through
+netCDF[3/4] objects unchanged, so that netCDF objects, filenames, lists of files, or
+strings with wildcards can be passed to the function indescriminately.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-examples-of-usage" name="rst-examples-of-usage">Examples of usage</a></h1>
 <dl class="rst-docutils">
 <dt>with an input of a string:</dt>
-<dd>nc = pyroms.Dataset(file) # returns netCDF4.Dataset object based on file
-nc = pyroms.MFDataset(file) # returns MFnetCDF4.Dataset object based on file (with wildcard chars)</dd>
+<dd><p class="rst-first"># returns netCDF4.Dataset object based on file
+nc = octant.io.Dataset(file)</p>
+<p class="rst-last"># returns MFnetCDF4.Dataset object based on file (with wildcard chars)
+nc = octant.io.MFDataset(file)</p>
+</dd>
 <dt>with an input of a list of files:</dt>
-<dd>nc = pyroms.Dataset(files) # returns MFnetCDF4.Dataset object based on list of files
-nc = pyroms.MFDataset(files) # returns MFnetCDF4.Dataset object based on list of files</dd>
+<dd><p class="rst-first"># returns MFDataset object based on list of files
+nc = octant.io.Dataset(files)</p>
+<p class="rst-last"># returns MFDataset object based on list of files
+nc = octant.io.MFDataset(files)</p>
+</dd>
 <dt>with an input of a netCDF4.Dataset or MFnetCDF4.Dataset object:</dt>
-<dd>nc = pyroms.Dataset(nc) # passes through netCDF4.Dataset or MFnetCDF4.Dataset object
-nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on file (with wildcard chars)</dd>
+<dd><p class="rst-first"># passes through netCDF4.Dataset or MFnetCDF4.Dataset object
+nc = octant.io.Dataset(nc)</p>
+<p class="rst-last"># passes through MFDataset object based on file (with wildcard chars)
+nc = octant.io.MFDataset(nc)</p>
+</dd>
 </dl>
+</div>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -161,19 +197,37 @@ nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on fil
     </td>
   </tr></table>
   
-  <p>A wrapper for netCDF4.Dataset and netCDF4.MFDataset</p>
-<p>possible uses include:</p>
+  <p>A thin wrapper for netCDF4.Dataset and netCDF4.MFDataset</p>
+<p>This module provides two functions, Dataset and MFDataset, that are similar to the
+netCDF[3/4] functions of the same name. This package is a thin wrapper around these
+functions, and provides two services. First of all, it will use either netCDF3 or
+netCDF4 (prefering the later), so that the netCDF package does not need to be changed
+on different systems that only have one or the other. Second, it will pass through
+netCDF[3/4] objects unchanged, so that netCDF objects, filenames, lists of files, or
+strings with wildcards can be passed to the function indescriminately.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-examples-of-usage" name="rst-examples-of-usage">Examples of usage</a></h1>
 <dl class="rst-docutils">
 <dt>with an input of a string:</dt>
-<dd>nc = pyroms.Dataset(file) # returns netCDF4.Dataset object based on file
-nc = pyroms.MFDataset(file) # returns MFnetCDF4.Dataset object based on file (with wildcard chars)</dd>
+<dd><p class="rst-first"># returns netCDF4.Dataset object based on file
+nc = octant.io.Dataset(file)</p>
+<p class="rst-last"># returns MFnetCDF4.Dataset object based on file (with wildcard chars)
+nc = octant.io.MFDataset(file)</p>
+</dd>
 <dt>with an input of a list of files:</dt>
-<dd>nc = pyroms.Dataset(files) # returns MFnetCDF4.Dataset object based on list of files
-nc = pyroms.MFDataset(files) # returns MFnetCDF4.Dataset object based on list of files</dd>
+<dd><p class="rst-first"># returns MFDataset object based on list of files
+nc = octant.io.Dataset(files)</p>
+<p class="rst-last"># returns MFDataset object based on list of files
+nc = octant.io.MFDataset(files)</p>
+</dd>
 <dt>with an input of a netCDF4.Dataset or MFnetCDF4.Dataset object:</dt>
-<dd>nc = pyroms.Dataset(nc) # passes through netCDF4.Dataset or MFnetCDF4.Dataset object
-nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on file (with wildcard chars)</dd>
+<dd><p class="rst-first"># passes through netCDF4.Dataset or MFnetCDF4.Dataset object
+nc = octant.io.Dataset(nc)</p>
+<p class="rst-last"># passes through MFDataset object based on file (with wildcard chars)
+nc = octant.io.MFDataset(nc)</p>
+</dd>
 </dl>
+</div>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -206,7 +260,7 @@ nc = pyroms.MFDataset(nc) # passes through MFnetCDF4.Dataset object based on fil
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Tue May 20 16:56:03 2008
+    on Mon Apr 20 11:56:29 2009
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

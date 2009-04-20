@@ -58,29 +58,44 @@ object --+
 </pre>
 
 <hr />
-<p>foc = Focus(xo, yo, factor=2.0, Rx=0.1, Ry=Rx)</p>
-<p>Return a transformed, uniform grid, focused around point xo, yo, with a focusing
-factor of focus, and x and y extent given by Rx and Ry.  The region of focusing
-will be approximately Gausian, and the resolution will be increased by approximately
-the value of factor.  To achive focusing on a line in the x- or y-direction, use a
-large value for R in the desired direction; typically a value of 10.0 is good enough
-to have focusing only in one direction.</p>
+<p>Return a container for a sequence of Focus objects</p>
+<p>foc = Focus()</p>
+<p>The sequence is populated by using the 'add_focus_x' and 'add_focus_y'
+methods. These methods define a point ('xo' or 'yo'), around witch to
+focus, a focusing factor of 'focus', and x and y extent of focusing given
+by Rx or Ry. The region of focusing will be approximately Gausian, and the
+resolution will be increased by approximately the value of factor.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-methods" name="rst-methods">Methods</a></h1>
+<p>foc.add_focus_x(xo, factor=2.0, Rx=0.1)
+foc.add_focus_y(yo, factor=2.0, Ry=0.1)</p>
 <dl class="rst-docutils">
 <dt>Calls to the object return transformed coordinates:</dt>
 <dd>xf, yf = foc(x, y)</dd>
 </dl>
-<p>where x and y must be within [0, 1], and are typically a uniform, normalized grid.</p>
-<dl class="rst-docutils">
-<dt>Additional focus points may be added with the add_focus_point method:</dt>
-<dd>foc.add_focus_point(xo, yo, factor=2.0, Rx=0.1, Ry=Rx)</dd>
-</dl>
-<p>subsequent calls to foc will result in a transformed grid with all the focus points
-applied in sequence.</p>
-<p>EXAMPLE:</p>
-<p>foc = Focus(0.7, 0.0, factor=2.0, Rx=0.2, Ry=10)
-foc.add_focus_point(0.2, 0.7, factor=3.0, Rx=0.2)</p>
-<p>y, x = mgrid[0:1:50j, 0:1:70j]
-xf, yf = foc(x, y)</p>
+<p>where x and y must be within [0, 1], and are typically a uniform,
+normalized grid. The focused grid will be the result of applying each of
+the focus elements in the sequence they are added to the series.</p>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-examples" name="rst-examples">EXAMPLES</a></h1>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>foc = octant.grid.Focus()
+<span class="py-prompt">&gt;&gt;&gt; </span>foc.add_focus_x(0.2, factor=3.0, Rx=0.2)
+<span class="py-prompt">&gt;&gt;&gt; </span>foc.add_focus_y(0.6, factor=5.0, Ry=0.35)</pre>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>x, y = np.mgrid[0:1:3j,0:1:3j]
+<span class="py-prompt">&gt;&gt;&gt; </span>xf, yf = foc(x, y)</pre>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">print</span> xf
+<span class="py-output">[[ 0.          0.          0.        ]</span>
+<span class="py-output"> [ 0.36594617  0.36594617  0.36594617]</span>
+<span class="py-output"> [ 1.          1.          1.        ]]</span>
+<span class="py-output"></span><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">print</span> yf
+<span class="py-output">[[ 0.          0.62479833  1.        ]</span>
+<span class="py-output"> [ 0.          0.62479833  1.        ]</span>
+<span class="py-output"> [ 0.          0.62479833  1.        ]]</span></pre>
+</div>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -115,12 +130,7 @@ xf, yf = foc(x, y)</p>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="octant.grid.Focus-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">xo</span>,
-        <span class="summary-sig-arg">yo</span>,
-        <span class="summary-sig-arg">factor</span>=<span class="summary-sig-default">2.0</span>,
-        <span class="summary-sig-arg">Rx</span>=<span class="summary-sig-default">0.1</span>,
-        <span class="summary-sig-arg">Ry</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td><span class="summary-sig"><a href="octant.grid.Focus-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.grid-pysrc.html#Focus.__init__">source&nbsp;code</a></span>
             
@@ -136,15 +146,33 @@ xf, yf = foc(x, y)</p>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="add_focus_point"></a><span class="summary-sig-name">add_focus_point</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a name="add_focus_x"></a><span class="summary-sig-name">add_focus_x</span>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">xo</span>,
-        <span class="summary-sig-arg">yo</span>,
         <span class="summary-sig-arg">factor</span>=<span class="summary-sig-default">2.0</span>,
-        <span class="summary-sig-arg">Rx</span>=<span class="summary-sig-default">0.1</span>,
-        <span class="summary-sig-arg">Ry</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">Rx</span>=<span class="summary-sig-default">0.1</span>)</span><br />
       docstring for add_point</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="octant.grid-pysrc.html#Focus.add_focus_point">source&nbsp;code</a></span>
+            <span class="codelink"><a href="octant.grid-pysrc.html#Focus.add_focus_x">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_focus_y"></a><span class="summary-sig-name">add_focus_y</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">yo</span>,
+        <span class="summary-sig-arg">factor</span>=<span class="summary-sig-default">2.0</span>,
+        <span class="summary-sig-arg">Ry</span>=<span class="summary-sig-default">0.1</span>)</span><br />
+      docstring for add_point</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="octant.grid-pysrc.html#Focus.add_focus_y">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -169,12 +197,7 @@ xf, yf = foc(x, y)</p>
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">xo</span>,
-        <span class="sig-arg">yo</span>,
-        <span class="sig-arg">factor</span>=<span class="sig-default">2.0</span>,
-        <span class="sig-arg">Rx</span>=<span class="sig-default">0.1</span>,
-        <span class="sig-arg">Ry</span>=<span class="sig-default">None</span>)</span>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>)</span>
     <br /><em class="fname">(Constructor)</em>
   </h3>
   </td><td align="right" valign="top"
@@ -219,7 +242,7 @@ xf, yf = foc(x, y)</p>
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Tue May 20 16:56:04 2008
+    on Mon Apr 20 11:56:30 2009
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

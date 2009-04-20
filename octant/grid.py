@@ -2,23 +2,29 @@
 '''Tools for creating and working with Arikawa C-Grids'''
 __docformat__ = "restructuredtext en"
 
-from copy import deepcopy
-import cPickle
-from warnings import warn
-import ctypes
 import os
 import sys
+import ctypes
+import cPickle
+from warnings import warn
+from copy import deepcopy
 
 import numpy as np
 import matplotlib.pyplot as plt
-
 from matplotlib.artist import Artist
 from matplotlib.patches import Polygon, CirclePolygon
 from matplotlib.lines import Line2D
 from matplotlib.numerix.mlab import amin
 from matplotlib.mlab import dist_point_to_segment
+from matplotlib.nxutils import points_inside_poly
 
-from octant.extern import PolygonGeometry
+try:
+    import scipy.spatial.cKDTree as KDTree
+except:
+    #  no scipy
+    from octant.extern import KDTree
+
+
 from octant.extern import GreatCircle
 
 class BoundaryInteractor(object):
@@ -380,6 +386,7 @@ class BoundaryInteractor(object):
     y = property(get_ydata)
     
 
+
 def _approximate_erf(x):
     '''Return approximate solution to error function
     
@@ -484,7 +491,6 @@ class _Focus_y(object):
         yf0 = yf(0.0); yf1 = yf(1.0)
         
         return x, (yf(y)-yf0)/(yf1-yf0)
-
 
 class Focus(object):
     """
@@ -708,8 +714,19 @@ class CGrid(object):
         mask_value [=0.0] may be specified to alter the value of the mask set
         within the polygon.  E.g., mask_value=1 for water points.
         """
+        
+        polyverts = np.asarray(polyverts)
+        assert polyverts.ndim == 2, \
+            'polyverts must be a 2D array, or a similar sequence'
+        assert polyverts.shape[1] == 2, \
+            'polyverts must be two columns of points'
+        assert polyverts.shape[0] > 2, \
+            'polyverts must contain at least 3 points'
+        
         mask = self.mask_rho
-        inside = PolygonGeometry(polyverts).inside(zip(self.x_rho.flat, self.y_rho.flat))        
+        inside = points_inside_poly(
+            vstack( (self.x_rho.flat, self.y_rho.flat) ).T,
+            polyverts)
         if np.any(inside):
             self.mask_rho.flat[inside] = mask_value
     
@@ -789,15 +806,6 @@ class CGrid_geo(CGrid):
 
 class Gridgen(CGrid):
     """docstring for Gridgen"""
-    
-    # for directory in sys.path:
-    #     if directory.endswith('site-packages'):
-    #         print os.path.join(directory, '_gridgen.so')
-    #         try:
-    #             _libgridgen = ctypes.pydll.LoadLibrary(os.path.join(directory, '_gridgen.so'))
-    #             break
-    #         except:
-    #             pass
     
     _libgridgen = np.ctypeslib.load_library('libgridgen',__file__)
     

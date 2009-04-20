@@ -60,44 +60,42 @@ object --+
 <dl><dt>Known Subclasses:</dt>
 <dd>
       <ul class="subclass-list">
-<li><a href="octant.grid.Gridgen-class.html">Gridgen</a></li>  </ul>
+<li><a href="octant.grid.CGrid_geo-class.html">CGrid_geo</a></li><li>, <a href="octant.grid.Gridgen-class.html">Gridgen</a></li>  </ul>
 </dd></dl>
 
 <hr />
-<p>A class for a curvilinear Arikawa C-Grid.</p>
-<p>The basis for the CGrid class are two arrays defining the verticies of
-the grid in either Cartesian or geographic coordinates and an optional
-mask defined on the cell centers. Other grid properties, such as the
-locations of the cell centers (rho-points), cell edges (u- and
-v-points), cell widths (dx and dy) and other metrics (angle, dmde, and
-dndx) are all calculated internally from the vertex points. All
-calculations are done at the time the attribute is requested, so
-changes to the verticies (or mask) are instantly recognized by the
-derived grid properties.</p>
-<blockquote>
-For a geographic grid, a projection may be specified, or The default</blockquote>
-<p>projection for will be defined by the matplotlib.toolkits.Basemap
-projection:</p>
-<blockquote>
-<p>proj = Basemap(projection='merc', resolution=None, lat_ts=0.0)</p>
-<p>For a geographic grid, the cell widths are determined by the great</p>
-</blockquote>
-<p>circle distances. Angles, however, are defined using the projected
-coordinates, so a projection that conserves angles must be used. This
-means typically either Mercator (projection='merc') or Lambert
-Conformal Conic (projection='lcc').</p>
-<blockquote>
-<p>For a grid in Cartesian coordinates:</p>
-<p>grd = CGrid(x, y, mask=None, f=None, h=None)</p>
-<p>For a grid in geographic coordinates:</p>
-<dl class="rst-docutils">
-<dt>grd = CGrid(lon, lat, proj=&lt;Basemap Mercator projection&gt;,</dt>
-<dd>mask=None, f=None, h=None)</dd>
-</dl>
-<p>Input vertex arrays may be either numpy arrays or MaskedArrays. If</p>
-</blockquote>
-<p>masked arrays are used, the mask will be a combination of the specified
+<p>Curvilinear Arakawa C-Grid</p>
+<p>The basis for the CGrid class are two arrays defining the verticies of the
+grid in Cartesian (for geographic coordinates, see CGrid_geo). An optional
+mask may be defined on the cell centers. Other Arakawa C-grid properties,
+such as the locations of the cell centers (rho-points), cell edges (u and
+v velocity points), cell widths (dx and dy) and other metrics (angle,
+dmde, and dndx) are all calculated internally from the vertex points.</p>
+<p>Input vertex arrays may be either type np.array or np.ma.MaskedArray. If
+masked arrays are used, the mask will be a combination of the specified
 mask (if given) and the masked locations.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-examples" name="rst-examples">EXAMPLES:</a></h1>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>x, y = mgrid[0.0:7.0, 0.0:8.0]
+<span class="py-prompt">&gt;&gt;&gt; </span>x = np.ma.masked_where( (x&lt;3) &amp; (y&lt;3), x)
+<span class="py-prompt">&gt;&gt;&gt; </span>y = np.ma.MaskedArray(y, x.mask)
+<span class="py-prompt">&gt;&gt;&gt; </span>grd = octant.grid.CGrid(x, y)
+<span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">print</span> grd.x_rho
+<span class="py-output">[[-- -- -- 0.5 0.5 0.5 0.5]</span>
+<span class="py-output"> [-- -- -- 1.5 1.5 1.5 1.5]</span>
+<span class="py-output"> [-- -- -- 2.5 2.5 2.5 2.5]</span>
+<span class="py-output"> [3.5 3.5 3.5 3.5 3.5 3.5 3.5]</span>
+<span class="py-output"> [4.5 4.5 4.5 4.5 4.5 4.5 4.5]</span>
+<span class="py-output"> [5.5 5.5 5.5 5.5 5.5 5.5 5.5]]</span>
+<span class="py-output"></span><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">print</span> grd.mask
+<span class="py-output">[[ 0.  0.  0.  1.  1.  1.  1.]</span>
+<span class="py-output"> [ 0.  0.  0.  1.  1.  1.  1.]</span>
+<span class="py-output"> [ 0.  0.  0.  1.  1.  1.  1.]</span>
+<span class="py-output"> [ 1.  1.  1.  1.  1.  1.  1.]</span>
+<span class="py-output"> [ 1.  1.  1.  1.  1.  1.  1.]</span>
+<span class="py-output"> [ 1.  1.  1.  1.  1.  1.  1.]]</span></pre>
+</div>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -115,11 +113,7 @@ mask (if given) and the masked locations.</p>
         <tr>
           <td><span class="summary-sig"><a href="octant.grid.CGrid-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">x</span>,
-        <span class="summary-sig-arg">y</span>,
-        <span class="summary-sig-arg">proj</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">mask</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">f</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">None</span>)</span></td>
+        <span class="summary-sig-arg">y</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="octant.grid-pysrc.html#CGrid.__init__">source&nbsp;code</a></span>
             
@@ -178,45 +172,32 @@ mask (if given) and the masked locations.</p>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="octant.grid.CGrid-class.html#lat" class="summary-name">lat</a><br />
-      Shorthand for lat_vert
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a href="octant.grid.CGrid-class.html#lon" class="summary-name">lon</a><br />
-      Shorthand for lon_vert
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
         <a href="octant.grid.CGrid-class.html#mask" class="summary-name">mask</a><br />
-      Shorthand for mask_vert
+      Return mask_rho
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="octant.grid.CGrid-class.html#mask_psi" class="summary-name">mask_psi</a>
+        <a href="octant.grid.CGrid-class.html#mask_psi" class="summary-name">mask_psi</a><br />
+      Return mask_psi
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="octant.grid.CGrid-class.html#mask_u" class="summary-name">mask_u</a>
+        <a href="octant.grid.CGrid-class.html#mask_u" class="summary-name">mask_u</a><br />
+      Return mask_u
     </td>
   </tr>
 <tr>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
-        <a href="octant.grid.CGrid-class.html#mask_v" class="summary-name">mask_v</a>
+        <a href="octant.grid.CGrid-class.html#mask_v" class="summary-name">mask_v</a><br />
+      Return mask_v
     </td>
   </tr>
 <tr>
@@ -224,7 +205,7 @@ mask (if given) and the masked locations.</p>
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a href="octant.grid.CGrid-class.html#x" class="summary-name">x</a><br />
-      Shorthand for x_vert
+      Return x_vert
     </td>
   </tr>
 <tr>
@@ -232,7 +213,7 @@ mask (if given) and the masked locations.</p>
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a href="octant.grid.CGrid-class.html#y" class="summary-name">y</a><br />
-      Shorthand for x_vert
+      Return x_vert
     </td>
   </tr>
 </table>
@@ -254,11 +235,7 @@ mask (if given) and the masked locations.</p>
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
         <span class="sig-arg">x</span>,
-        <span class="sig-arg">y</span>,
-        <span class="sig-arg">proj</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">mask</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">f</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">h</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">y</span>)</span>
     <br /><em class="fname">(Constructor)</em>
   </h3>
   </td><td align="right" valign="top"
@@ -311,35 +288,13 @@ within the polygon.  E.g., mask_value=1 for water points.</p>
     <span class="table-header">Property Details</span></td>
 </tr>
 </table>
-<a name="lat"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <h3 class="epydoc">lat</h3>
-  Shorthand for lat_vert
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
-<a name="lon"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <h3 class="epydoc">lon</h3>
-  Shorthand for lon_vert
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
 <a name="mask"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">mask</h3>
-  Shorthand for mask_vert
+  Return mask_rho
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -350,7 +305,7 @@ within the polygon.  E.g., mask_value=1 for water points.</p>
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">mask_psi</h3>
-  
+  Return mask_psi
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.grid.CGrid-class.html#_get_mask_psi" class="summary-sig-name" onclick="show_private();">_get_mask_psi</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -364,7 +319,7 @@ within the polygon.  E.g., mask_value=1 for water points.</p>
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">mask_u</h3>
-  
+  Return mask_u
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.grid.CGrid-class.html#_get_mask_u" class="summary-sig-name" onclick="show_private();">_get_mask_u</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -378,7 +333,7 @@ within the polygon.  E.g., mask_value=1 for water points.</p>
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">mask_v</h3>
-  
+  Return mask_v
   <dl class="fields">
     <dt>Get Method:</dt>
     <dd class="value"><span class="summary-sig"><a href="octant.grid.CGrid-class.html#_get_mask_v" class="summary-sig-name" onclick="show_private();">_get_mask_v</a>(<span class="summary-sig-arg">self</span>)</span>
@@ -392,7 +347,7 @@ within the polygon.  E.g., mask_value=1 for water points.</p>
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">x</h3>
-  Shorthand for x_vert
+  Return x_vert
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -403,7 +358,7 @@ within the polygon.  E.g., mask_value=1 for water points.</p>
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <h3 class="epydoc">y</h3>
-  Shorthand for x_vert
+  Return x_vert
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -436,7 +391,7 @@ within the polygon.  E.g., mask_value=1 for water points.</p>
   <tr>
     <td align="left" class="footer">
     Generated by Epydoc 3.0.1
-    on Tue May 20 16:56:04 2008
+    on Mon Apr 20 11:56:30 2009
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
