@@ -71,8 +71,7 @@ if __name__ == '__main__':
                       'octant.sw'],
           license = 'BSD',
           platforms = ["any"],
-          ext_modules = [delaunay, iso, gridgen],
+          ext_modules = [iso,],
           classifiers = filter(None, classifiers.split("\n")),
-          # package_data = package_data,
           )
     
