@@ -11,6 +11,10 @@ Bdyinfo - handle for a bdyinfo file object
 Bdy2d - handle for creating and filling of a bdy_2d.nc file
 Bdy3d - handle for creating and filling of a bdy_3d.nc file
 
+Included functions:
+===================
+writeTopofile - write GETM topo file from octant grid object
+
 Dependencies:
 =============
 netCDF4 (as it is now, the only included netCDF library)
@@ -357,4 +361,80 @@ class Transect(Transect_extrapolator):
         
         super(Transect, self).__init__(x, y, verts)
 
+def writeTopofile(grd, depths=None, ncfile='topo.nc', proj=None, defaultdepth=15.0):
+    """
+    GETM > writeTopofile
+
+    writes a getm topofile from an octant grid-object. By
+    default, the grid is cartesian, but if a projection object
+    is given, then a georeferenced grid is written.
+    Depths are filled with 15.0m, if not specified
+
+    grd - octant grid object
+    depths - numpy (masked) array of bathymetry data
+    ncfile - name of the topo file
+    proj - projection, will be used to calculate lat/lon.
+           if set, the grid_type=4 (spherical curvilinear)
+    defaultdepth - 15.0m by default
+    """
+
+    yxnum,xxnum = grd.x_vert.shape
+    ytnum,xtnum = grd.y_rho.shape
+    if proj == None:
+        spherical_grid=False
+    else:
+        spherical_grid=True
+
+    if spherical_grid:
+        lonx,latx = proj(grd.x_vert,grd.y_vert,inverse=True)
+        gridtype=4
+    else:
+        gridtype=3
+
+    angle = grd.angle*180./np.pi
+    inds = pl.where(angle<0.0)
+    angle[inds]=angle[inds]+180.0
+
+    nc = netCDF4.Dataset(ncfile,'w',format='NETCDF3_CLASSIC')
+
+    nc.createDimension('x',xxnum)
+    nc.createDimension('y',yxnum)
+    nc.createDimension('x_T',xtnum)
+    nc.createDimension('y_T',ytnum)
+
+    v = nc.createVariable('grid_type','i')
+    v[:] = gridtype
+
+    v = nc.createVariable('xx','f8',('y','x'))
+    v.units = 'm'
+    v[:] = grd.x_vert
+
+    v = nc.createVariable('yx','f8',('y','x'))
+    v.units = 'm'
+    v[:] = grd.y_vert
+    
+    if spherical_grid:
+        v = nc.createVariable('lonx','f8',('y','x'))
+        v.units = 'degrees east'
+        v[:] = lonx
+        
+        v = nc.createVariable('latx','f8',('y','x'))
+        v.units = 'degrees north'
+        v[:] = latx
+
+    v = nc.createVariable('convx','f8',('y','x'))
+    v.units = 'degree'
+    v[:] = angle
+
+    v = nc.createVariable('bathymetry','f4',('y_T','x_T'))
+    v.units = 'm'
+    if depths == None:
+        v[:] = defaultdepth*np.ones((ytnum,xtnum),dtype='f4')
+    else:
+        if np.ma.isMA(depths):
+            v[:] = depths.filled(-10.0)
+        else:
+            v[:] = depths
+
+    nc.close()
 
