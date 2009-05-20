@@ -98,4 +98,3 @@ class s_coordinate(object):
                 z[n,k,:] = z0 + zeta[n,:]*(1.0 + z0/self.h);
         
         return np.squeeze(z[res_index])
-
