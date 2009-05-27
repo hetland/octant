@@ -807,15 +807,6 @@ class CGrid_geo(CGrid):
 class Gridgen(CGrid):
     """docstring for Gridgen"""
     
-    _libgridgen = np.ctypeslib.load_library('libgridgen',__file__)
-    
-    _libgridgen.gridgen_generategrid2.restype = ctypes.c_void_p
-    _libgridgen.gridnodes_getx.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
-    _libgridgen.gridnodes_gety.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
-    _libgridgen.gridnodes_getnce1.restype = ctypes.c_int
-    _libgridgen.gridnodes_getnce2.restype = ctypes.c_int
-    _libgridgen.gridmap_build.restype = ctypes.c_void_p
-    
     def generate_grid(self):
         
         if self._gn is not None:
@@ -890,6 +881,15 @@ class Gridgen(CGrid):
                  focus=None, proj=None, \
                  nnodes=14, precision=1.0e-12, nppe=3, \
                  newton=True, thin=True, checksimplepoly=True, verbose=False):
+        
+        self._libgridgen = np.ctypeslib.load_library('libgridgen',__file__)
+        
+        self._libgridgen.gridgen_generategrid2.restype = ctypes.c_void_p
+        self._libgridgen.gridnodes_getx.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
+        self._libgridgen.gridnodes_gety.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
+        self._libgridgen.gridnodes_getnce1.restype = ctypes.c_int
+        self._libgridgen.gridnodes_getnce2.restype = ctypes.c_int
+        self._libgridgen.gridmap_build.restype = ctypes.c_void_p
         
         self.xbry = np.asarray(xbry, dtype='d')
         self.ybry = np.asarray(ybry, dtype='d')
