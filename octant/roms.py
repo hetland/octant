@@ -12,6 +12,7 @@ except:
 
 from octant.io import Dataset
 from octant.depths import s_coordinate
+from octant.grid import CGrid
 
 def nc_gls_dissipation(nc, tidx):
     '''Return the dissipation, based on tke, gls and the gls scheme parameters 
@@ -147,7 +148,7 @@ def nc_grid(nc):
             x[1:-1, 1:-1] = xp
             y[1:-1, 1:-1] = yp
         
-        return Grid(x=x, y=y, **variables)
+        return CGrid(x=x, y=y, **variables)
 
 
 def write_grd(grd, filename='ocean_grd.nc', full_output=True, verbose=False):
