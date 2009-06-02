@@ -12,7 +12,7 @@ except:
 
 from octant.io import Dataset
 from octant.depths import s_coordinate
-from octant.grid import CGrid
+from octant.grid import CGrid, rho_to_vert
 
 def nc_gls_dissipation(nc, tidx):
     '''Return the dissipation, based on tke, gls and the gls scheme parameters 
