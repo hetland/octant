@@ -13,7 +13,7 @@ $(includedir)
 
 DISTDIR = ~/pub_web
 
-INSTALL = /usr/local/bin/install -c
+INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA = ${INSTALL} -m 644
 
