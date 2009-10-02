@@ -21,14 +21,14 @@ $(includedir)
 
 DISTDIR = ~/pub_web
 
-INSTALL = /usr/local/bin/install -c
+INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA = ${INSTALL} -m 644
 
 #### End of system configuration section. ####
 
 CC = gcc
-CFLAGS = -g -O2 -Wall -pedantic
+CFLAGS = -g -O2 -Wall -pedantic -fPIC
 LDFLAGS = 
 CPPFLAGS = 
 

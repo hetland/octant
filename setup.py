@@ -54,6 +54,39 @@ from numpy.distutils.core import Extension
 iso = Extension(name = '_iso',
                 sources = ['octant/src/iso.f'])
 
+csa = Extension(name = '_csa',
+                sources=["octant/src/csa/csa.c",
+                         "octant/src/csa/svd.c"])
+
+gridgen = Extension(name = '_gridgen',
+                    extra_compile_args=['-O2', ],
+                    sources=["octant/src/gridgen/csa.c",
+                             "octant/src/gridgen/svd.c",
+                             "octant/src/gridgen/delaunay.c",
+                             "octant/src/gridgen/hash.c",
+                             "octant/src/gridgen/istack.c",
+                             "octant/src/gridgen/lpi.c",
+                             "octant/src/gridgen/minell.c",
+                             "octant/src/gridgen/nnai.c",
+                             "octant/src/gridgen/nnbathy.c",
+                             "octant/src/gridgen/nncommon.c",
+                             "octant/src/gridgen/nncommon-vulnerable.c",
+                             "octant/src/gridgen/nnpi.c",
+                             "octant/src/gridgen/preader.c",
+                             "octant/src/gridgen/triangle.c",
+                             "octant/src/gridgen/gridmap.c",
+                             "octant/src/gridgen/gucommon.c",
+                             "octant/src/gridgen/poly.c",
+                             "octant/src/gridgen/broyden.c",
+                             "octant/src/gridgen/geom.c",
+                             "octant/src/gridgen/gridgen.c",
+                             "octant/src/gridgen/gridnodes.c",
+                             "octant/src/gridgen/issimplepoly.c",
+                             "octant/src/gridgen/ode.c",
+                             "octant/src/gridgen/swcr.c",
+                             "octant/src/gridgen/vertlist.c",
+                             "octant/src/gridgen/zode.c",])
+
 doclines = __doc__.split("\n")
 
 if __name__ == '__main__':
@@ -71,7 +104,8 @@ if __name__ == '__main__':
                       'octant.sw'],
           license = 'BSD',
           platforms = ["any"],
-          ext_modules = [iso,],
+          ext_package='octant',
+          ext_modules = [iso, csa, gridgen],
           classifiers = filter(None, classifiers.split("\n")),
           )
     

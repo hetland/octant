@@ -17,13 +17,15 @@ from matplotlib.lines import Line2D
 from matplotlib.numerix.mlab import amin
 from matplotlib.mlab import dist_point_to_segment
 from matplotlib.nxutils import points_inside_poly
+from mpl_toolkits.basemap import pyproj
+
+import octant
 
 try:
     import scipy.spatial.cKDTree as KDTree
 except:
     #  no scipy
     from octant.extern import KDTree
-
 
 from octant.extern import GreatCircle
 
@@ -740,9 +742,12 @@ class CGrid(object):
         return self.mask_rho[1:,1:]*self.mask_rho[:-1,1:]* \
                self.mask_rho[1:,:-1]*self.mask_rho[:-1,:-1]
     
+    def _set_mask_rho(self, mask_rho):
+        self.mask_rho = mask_rho
+    
     x = property(lambda self: self.x_vert, None, None, 'Return x_vert')
     y = property(lambda self: self.y_vert, None, None, 'Return x_vert')
-    mask = property(lambda self: self.mask_rho, None, None, 'Return mask_rho')
+    mask = property(lambda self: self.mask_rho, _set_mask_rho, None, 'Return mask_rho')
     mask_u   = property(_get_mask_u, None, None, 'Return mask_u')
     mask_v   = property(_get_mask_v, None, None, 'Return mask_v')
     mask_psi = property(_get_mask_psi, None, None, 'Return mask_psi')
@@ -766,23 +771,32 @@ class CGrid_geo(CGrid):
     
     """
     def _calculate_metrics(self):
-        gc_dist = np.vectorize(lambda lon1, lat1, lon2, lat2: \
-                     GreatCircle(6378137.0, 6356752.3142, \
-                                      lon1, lat1, lon2, lat2).distance)
-        dx = gc_dist(self.lon[:,1:],  self.lat[:,1:], \
-                     self.lon[:,:-1], self.lat[:,:-1])
-        self.dx = 0.5*(dx[1:,:]+dx[:-1,:])
-        self.pm = 1.0/self.dx
-        dy = gc_dist(self.lon[1:,:],  self.lat[1:,:], \
-                     self.lon[:-1,:], self.lat[:-1,:])
-        self.dy = 0.5*(dy[:,1:]+dy[:,:-1])
-        self.pn = 1.0/self.dy
+        
+        # calculate metrics based on x and y grid
+        super(CGrid_geo, self)._calculate_metrics()
+        
+        # optionally calculate dx and dy based on great circle distances
+        # for more accurate cell sizes.
+        if self.use_gcdist:
+            geod = pyproj.Geod(ellps=self.ellipse)
+            az1, az2, dx = geod.inv(self.lon[:,1:],  self.lat[:,1:], \
+                                    self.lon[:,:-1], self.lat[:,:-1])
+            self.dx = 0.5*(dx[1:,:]+dx[:-1,:])
+            self.pm = 1.0/self.dx
+            az1, ax2, dy = geod.inv(self.lon[1:,:],  self.lat[1:,:], \
+                                   self.lon[:-1,:], self.lat[:-1,:])
+            self.dy = 0.5*(dy[:,1:]+dy[:,:-1])
+            self.pn = 1.0/self.dy
+        
     
-    def __init__(self, lon, lat, proj):
+    def __init__(self, lon, lat, proj, use_gcdist=True, ellipse='WGS84'):
         x, y = proj(lon, lat)
         self.lon_vert = lon
         self.lat_vert = lat
         self.proj = proj
+        
+        self.use_gcdist = use_gcdist
+        self.ellipse = ellipse
         
         super(CGrid_geo, self).__init__(x, y)
         
@@ -882,7 +896,9 @@ class Gridgen(CGrid):
                  nnodes=14, precision=1.0e-12, nppe=3, \
                  newton=True, thin=True, checksimplepoly=True, verbose=False):
         
-        self._libgridgen = np.ctypeslib.load_library('libgridgen',__file__)
+        # self._libgridgen = np.ctypeslib.load_library('libgridgen', '/usr/local/lib')
+        print octant.__path__[0]
+        self._libgridgen = np.ctypeslib.load_library('_gridgen', octant.__path__[0])
         
         self._libgridgen.gridgen_generategrid2.restype = ctypes.c_void_p
         self._libgridgen.gridnodes_getx.restype = ctypes.POINTER(ctypes.POINTER(ctypes.c_double))
