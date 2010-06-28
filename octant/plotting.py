@@ -16,6 +16,7 @@ cmap_discretize - create a discrete colorbar from standard colormaps
                   which can be applied to e.g. pcolor
 ztodepth - change negative z-ax ticklabels to positive depths
 layers - a function for plotting vertical transects based on layer heights
+jetWoGn - colormap similar to jet, but without Green
 
 """
 __docformat__ = "restructuredtext en"
@@ -368,4 +369,37 @@ def drawscale(m,lon,lat,length,yoffset=None,fontsize=8.0,linewidth=0.5):
             horizontalalignment='center',\
             verticalalignment='bottom',\
             fontsize=fontsize)
+
+def jetWoGn(reverse=False):
+    """
+    jetWoGn(reverse=False)
+       - returning a colormap similar to cm.jet, but without green.
+         if reverse=True, the map starts with red instead of blue.
+    """
+    m=18 # magic number, which works fine
+    m0=pl.floor(m*0.0)
+    m1=pl.floor(m*0.2)
+    m2=pl.floor(m*0.2)
+    m3=pl.floor(m/2)-m2-m1
+
+    b_ = np.hstack( (0.4*np.arange(m1)/(m1-1.)+0.6, np.ones((m2+m3,)) ) )
+    g_ = np.hstack( (np.zeros((m1,)),np.arange(m2)/(m2-1.),np.ones((m3,))) )
+    r_ = np.hstack( (np.zeros((m1,)),np.zeros((m2,)),np.arange(m3)/(m3-1.)))
+
+    r = np.hstack((r_,pl.flipud(b_)))
+    g = np.hstack((g_,pl.flipud(g_)))
+    b = np.hstack((b_,pl.flipud(r_)))
+
+    if reverse:
+        r = pl.flipud(r)
+        g = pl.flipud(g)
+        b = pl.flipud(b)
+
+    ra = pl.linspace(0.0,1.0,m)
+
+    cdict = {'red': zip(ra,r,r),
+            'green': zip(ra,g,g),
+            'blue': zip(ra,b,b)}
+
+    return pl.matplotlib.colors.LinearSegmentedColormap('new_RdBl',cdict,256)
 
