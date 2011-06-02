@@ -58,12 +58,7 @@ class CSA(object):
     
     '''
     
-    # for directory in sys.path:
-    #     try:
     _csa = np.ctypeslib.load_library('_csa', octant.__path__[0])
-    #         break
-    #     except:
-    #         pass
     
     
     _csa.csa_approximatepoints2.restype = ctypes.POINTER(ctypes.c_double)
