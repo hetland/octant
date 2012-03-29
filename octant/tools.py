@@ -95,7 +95,27 @@ def shrink(a,b):
 
 
 class plfilt(object):
-    """docstring for plfilt"""
+    """
+    pl33 filter class, to remove tides and intertial motions from timeseries
+    
+    USAGE:
+    ------
+    
+    >>> pl33 = plfilt(dt=4.0)   # 33 hr filter
+    >>> pl33d = plfilt(dt=4.0, cutoff_period=72.0)  # 3 day filter
+    
+    dt is the time resolution of the timeseries to be filtered in hours.  Default dt=1
+    cutoff_period defines the timescales to low pass filter. Default cutoff_period=33.0
+    
+    Calling the class instance can have two forms:
+    
+    >>> uf = pl33(u)   # returns a filtered timeseries, uf.  Half the filter length is 
+                       # removed from each end of the timeseries
+    
+    >>> uf, tf = pl33(u, t)  # returns a filtered timeseries, uf, plus a new time 
+                             # variable over the valid range of the filtered timeseries.
+    
+    """
     
     _pl33 = np.array([-0.00027, -0.00114, -0.00211, -0.00317, -0.00427, -0.00537,
                       -0.00641, -0.00735, -0.00811, -0.00864, -0.00887, -0.00872,
@@ -112,12 +132,12 @@ class plfilt(object):
     
     _dt = np.linspace(-33, 33, 67)
     
-    def __init__(self, dt=1.0):
+    def __init__(self, dt=1.0, cutoff_period=33.0):
         
         if np.isscalar(dt):
-            self.dt = float(dt)
+            self.dt = float(dt) * (33.0 / cutoff_period)
         else:
-            self.dt = np.diff(dt).mean()
+            self.dt = np.diff(dt).mean() * (33.0 / cutoff_period)
         
         filter_time = np.arange(0.0, 33.0, self.dt, dtype='d')
         self.Nt = len(filter_time)
@@ -133,7 +153,6 @@ class plfilt(object):
         else:
             tf = t[self.Nt-1:-self.Nt+1]
             return uf, tf
-
 
 
 
