@@ -31,4 +31,3 @@
 * getm - Tools specific to the General Estuarine Transport Model
     *nc_variables
     *write_getm_grid
-  
