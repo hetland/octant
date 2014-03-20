@@ -43,10 +43,10 @@ cf2py intent(out) iql
 
 
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-c SUBROUTINE ZSLICE
+c SUBROUTINE SURFACE
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       subroutine surface(z, q, q0, z_iso, L, M, N)
-c Assume q is sorted
+c Assume z is sorted
       
       implicit none
       integer L, M, N
@@ -126,10 +126,17 @@ c  Cubic spline interpolation.
       
       return
       end
-  
-  
-  
-  
+
+
+
+c=======================================================================
+c=======================================================================
+c subroutines below here are used by zslice, and not called directly.
+c=======================================================================
+c=======================================================================
+
+
+
       subroutine lintrp (n,x,y,ni,xi,yi)
 c
 c=======================================================================

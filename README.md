@@ -3,17 +3,6 @@
 
 ##Subpackages:
   
-* grid  -  Tools for dealing with curvilinear grids
-  - gridgen
-  - focus
-  - boundaryclick
-  - Grid
-  - gshhs
-  - greatcircle
-* tools -  Generic tools.
-  - polygeom
-  - polyclick
-  - delaunay
 * io
   - pupynere
   - Dataset

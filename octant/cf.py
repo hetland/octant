@@ -1,5 +1,10 @@
 # encoding: utf-8
 """
+DEPRECATED
+
+Instead use netCDF4.num2date.
+
+
 cf.py - classes around CF compliant files
 
 The cf module is made for reading CF-compliant datasets,
@@ -55,6 +60,7 @@ class time (np.ndarray):
                'days'    : 1.0/(24.0*3600.0)}
 
     def __new__(self, ncfile, name='time', units=None, calendar='standard'):
+        raise DeprecationWarning, 'Use netCDF4.num2date instead.  Wrapper function in octant.roms.nc_time'
         self._nc = octant.io.Dataset(ncfile)
         data = self._nc.variables[name][:]
         data = data.view(time)

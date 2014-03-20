@@ -156,7 +156,7 @@ class plfilt(object):
 
 
 
-def isoslice(z, q, zo=0, mode='spline'):
+def isoslice(q, z, zo=0, mode='spline'):
     """Return a slice a 3D field along an isosurface.
     
     result is a a projection of variable at property == isoval in the first
@@ -187,7 +187,7 @@ def isoslice(z, q, zo=0, mode='spline'):
     q = np.atleast_3d(q)
     assert z.shape == q.shape, 'z and q must be the same shape'
     
-    qo *= np.ones(q.shape[1:])
+    zo *= np.ones(q.shape[1:])
     
     q2d = _iso.zslice(z, q, zo, imode)
     if np.any(q2d==1e20):
@@ -215,6 +215,55 @@ def surface(z, q, qo):
         return np.ma.masked_where(z_iso==1e20, z_iso)
     else:
         return z_iso
+
+
+def hgrad(q, zr, pm, pn):
+    '''
+    Return the horizontal gradient components of a tracer, q
+    
+    Parameters
+    ----------
+    
+    q : 3D array
+        The tracer on which to calculate the horizontal gradient.
+    zr : 3D array
+        The depths field.  Must be the same shape as the tracer, q.
+    pm, pn : 2D arrays
+        The horizontal grid metrics (1/dx, 1/dy, respectively)
+    
+    Returns
+    -------
+    dqdx, dqde : 3D arrays
+        The horizontal gradients in the xi and eta (or x and y) 
+        directions, respectively.  These are not the same shape,
+        but are one smaller in the eta- and xi-dimensions, respectively.
+    
+    '''
+    
+    pmu = 0.5 * (pm[:, 1:] + pm[:, :-1])
+    pnv = 0.5 * (pn[1:, :] + pn[:-1, :])
+    
+    dz = np.diff(zr, axis=-3)
+    dzu = 0.5 * (dz[:, :, 1:] + dz[:, :, :-1])
+    dzv = 0.5 * (dz[:, 1:, :] + dz[:, :-1, :])
+    
+    # xi gradient
+    
+    cff1 = q[1:, :, 1:]  -  q[1:, :, :-1] +  q[:-1, :, 1:] -  q[:-1, :, :-1]
+    cff2 = q[1:, :, 1:]  +  q[1:, :, :-1] -  q[:-1, :, 1:] -  q[:-1, :, :-1]
+    cff3 = zr[1:, :, 1:] + zr[1:, :, :-1] - zr[:-1, :, 1:] - zr[:-1, :, :-1]
+    cff4 = zr[1:, :, 1:] - zr[1:, :, :-1] + zr[:-1, :, 1:] - zr[:-1, :, :-1]
+    drdx = 0.25 * (cff1*cff3 - cff2*cff4) * pmu / dzu
+    
+    # eta gradient
+    
+    cff1 =  q[1:, 1:, :] -  q[1:, :-1, :] +  q[:-1, 1:, :] -  q[:-1, :-1, :]
+    cff2 =  q[1:, 1:, :] +  q[1:, :-1, :] -  q[:-1, 1:, :] -  q[:-1, :-1, :]
+    cff3 = zr[1:, 1:, :] + zr[1:, :-1, :] - zr[:-1, 1:, :] - zr[:-1, :-1, :]
+    cff4 = zr[1:, 1:, :] - zr[1:, :-1, :] + zr[:-1, 1:, :] - zr[:-1, :-1, :]
+    drde = 0.25 * (cff1*cff3 - cff2*cff4) * pnv / dzv
+    
+    return drdx, drde
 
 
 def N2(rho, z, rho_0=1000.0):

@@ -15,7 +15,7 @@ from matplotlib.artist import Artist
 from matplotlib.patches import Polygon, CirclePolygon
 from matplotlib.lines import Line2D
 from matplotlib.mlab import dist_point_to_segment
-from matplotlib.nxutils import points_inside_poly
+# from matplotlib.nxutils import points_inside_poly
 from mpl_toolkits.basemap import pyproj
 
 import octant
@@ -806,7 +806,7 @@ class CGrid_geo(CGrid):
         self.lon_psi, self.lat_psi = self.proj(self.x_psi, self.y_psi,
                                                inverse=True)
         
-        self.f = 2.0 * 7.29e-5 * np.cos(self.lat_rho * np.pi / 180.0)
+        self.f = 2.0 * 7.29e-5 * np.sin(self.lat_rho * np.pi / 180.0)
         
     def mask_polygon_geo(lonlat_verts, mask_value=0.0):
         lon, lat = zip(*lonlat_verts)

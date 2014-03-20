@@ -10,9 +10,10 @@ try:
 except:
     import netCDF3 as netCDF4
 
+import octant.depths as depths
 from octant.io import Dataset
-from octant.depths import s_coordinate
 from octant.grid import CGrid, rho_to_vert
+
 
 def nc_gls_dissipation(nc, tidx):
     '''Return the dissipation, based on tke, gls and the gls scheme parameters 
@@ -223,7 +224,7 @@ def write_grd(grd, filename='ocean_grd.nc', full_output=True, verbose=False):
         write_nc_var(grd.y_v, 'y_v', ('eta_v', 'xi_v'), 'meters')
         write_nc_var(grd.x_psi, 'x_psi', ('eta_psi', 'xi_psi'), 'meters')
         write_nc_var(grd.y_psi, 'y_psi', ('eta_psi', 'xi_psi'), 'meters')
-        if grd.proj is not None:
+        try:
             write_nc_var(grd.lon_vert, 'lon_vert', ('eta_vert', 'xi_vert'), 'meters')
             write_nc_var(grd.lat_vert, 'lat_vert', ('eta_vert', 'xi_vert'), 'meters')
             write_nc_var(grd.lon_rho, 'lon_rho', ('eta_rho', 'xi_rho'), 'meters')
@@ -234,24 +235,117 @@ def write_grd(grd, filename='ocean_grd.nc', full_output=True, verbose=False):
             write_nc_var(grd.lat_v, 'lat_v', ('eta_v', 'xi_v'), 'meters')
             write_nc_var(grd.lon_psi, 'lon_psi', ('eta_psi', 'xi_psi'), 'meters')
             write_nc_var(grd.lat_psi, 'lat_psi', ('eta_psi', 'xi_psi'), 'meters')
+        except:
+            if verbose:
+                print '... NO GEOGRAPHIC GRID INFORMATION FOUND.'
     
     nc.close()
 
+class nc_depths(object):
+    """return an object that can be indexed like an ndarray to return depths
+    
+    Parameters
+    ----------
+    nc : netCDF4-like object
+        A reference to the netCDF file to read.
+    hc : float
+        The critical depth.  Presently hc < h.min() must be true.
+    theta_b : float
+        A parameter (0.0 < theta_b < 1.0) that says whether the coordinate
+        will be focused at the surface (theta_b -> 1.0) or split evenly
+        between surface and bottom (theta_b -> 0).
+    theta_s : float
+        A parameter (typically 0.0 <= theta_s < 5.0) that defines the amount
+        of grid focising. A higher value for theta_s will focus the grid more.
+    N : int
+        The number of rho/tracer-points in the vertical.
+    grid : 'rho' or 'w'
+        Select the type of vertical grid to return.
+    zeta: array_like, optional
+        The free surface, must be the same size as h in all but the leftmost dimension
+        if zeta is a function of time.
+    
+    Returns
+    -------
+    z : object
+        z is an scoord object that contains as attributes all of the input
+        values. The actual depths may be retreived by indexing z. Note that
+        the values of zeta are not calculated until z is indexed, so a netCDF
+        variable for zeta may be passed, even if the file is large, as only
+        the values that are required will be retrieved from the file.
+    
+    """
+    def __init__(self, nc, grid, ncg=None):
+        
+        # Open the netCDF file
+        self.nc = nc
+        if ncg is None:
+            self.ncg = self.nc
+        
+        # Get the vertical dimension of the grid.
+        if 'N' in self.nc.dimensions.keys():
+            self.N = len(self.nc.dimensions['N'])
+        else:
+            self.N = len(self.nc.dimensions['s_rho'])
+        
+        # Get the scoordinate associated with the specified grid-type
+        self.grid = grid
+        if self.grid == 'rho':
+            self.s = depths.get_srho(self.N)
+        elif self.grid == 'w':
+            self.N += 1
+            self.s = depths.get_sw(self.N)
+        else:
+            raise Exception('grid type ', grid, 'not defined.')
+        
+        # Load in the depth and critical depth info
+        self.h = self.ncg.variables['h'][:]
+        self.hc = self.nc.variables['hc'][:]
+        
+        # Load in the stretching parameters
+        self.theta_b = self.nc.variables['theta_b'][:]
+        self.theta_s = self.nc.variables['theta_s'][:]
+        
+        if 'Vtransform' in self.nc.variables.keys():
+            # Define Vtransform using the values specified in the history file
+            self.Vtransform = self.nc.variables['Vtransform'][:]
+            self.Vstretching = self.nc.variables['Vstretching'][:]
+        else:
+            # Otherwise, use the defaults based on old-ROMS
+            self.Vtransform = 1
+            self.Vstretching = 1
+        
+        # Load in the _reference_ to the zeta variable 
+        # (i.e., don't load any actual data yet -- save this for the call to __getitem__)
+        self.zeta = self.nc.variables['zeta']
+        
+        # Load in the function for C(s)
+        self.C = depths.get_Vstretching(self.Vstretching, self.theta_s, self.theta_b, Hscale=3)
+        
+        # Load in the function for depths(s, zeta)
+        self.depths = depths.get_depths(self.Vtransform, self.C, self.h, self.hc)
+    
+    def __getitem__(self, indices):
+        if not isinstance(indices, tuple):
+            indices = (indices, )
+        
+        while len(indices) < 4:
+            indices += (slice(None),)
+        
+        if isinstance(indices[0], int):
+            zeta = self.zeta[indices[0], ...]
+            depths = self.depths(self.s, zeta)[indices[1], indices[2], indices[3]]
+        
+        else:
+            zeta = self.zeta[indices[0]][:, np.newaxis, ...]
+            depths = self.depths(self.s, zeta)[:, indices[1], indices[2], indices[3]]
+        
+        return depths
+    
 
-class nc_depths(s_coordinate):
-    def __init__(self, nc, grid='rho', h=None):
-        """docstring for __init__"""
-        self.nc = Dataset(nc)
-        hc = self.nc.variables['hc'][:]
-        if h is None:
-            h = self.nc.variables['h'][:]
-        theta_b = self.nc.variables['theta_b'][:]
-        theta_s = self.nc.variables['theta_s'][:]
-        try:
-            N = len(self.nc.dimensions['N'])
-        except:
-            N = len(self.nc.dimensions['s_rho'])
-        zeta = self.nc.variables['zeta']
-        super(nc_depths, self).__init__(h, hc, theta_b, theta_s, N, \
-                                           grid=grid, zeta=zeta)
+
+
+
+
+
 
