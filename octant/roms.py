@@ -139,7 +139,7 @@ def nc_grid(nc):
         
         ang = variables['angle']
         if ang is None:
-            ang = zeros(xr.shape, dtype='d')
+            ang = np.zeros(xr.shape, dtype='d')
         
         x, y = rho_to_vert(xr, yr, pm, pn, ang)
         
