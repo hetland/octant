@@ -937,8 +937,8 @@ class Gridgen(CGrid):
 
 def rho_to_vert(xr, yr, pm, pn, ang):
     Mp, Lp = xr.shape
-    x = empty((Mp+1, Lp+1), dtype='d')
-    y = empty((Mp+1, Lp+1), dtype='d')
+    x = np.empty((Mp+1, Lp+1), dtype='d')
+    y = np.empty((Mp+1, Lp+1), dtype='d')
     x[1:-1, 1:-1] = 0.25*(xr[1:,1:]+xr[1:,:-1]+xr[:-1,1:]+xr[:-1,:-1])
     y[1:-1, 1:-1] = 0.25*(yr[1:,1:]+yr[1:,:-1]+yr[:-1,1:]+yr[:-1,:-1])
     
