@@ -15,12 +15,9 @@ External tools included within the source tree for convenience:
 
 '''
 
-import cf
-import csa
 import depths
 import extern
 import grid
-import io
 import ocean
 import tools
 

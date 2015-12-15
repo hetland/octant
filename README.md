@@ -9,7 +9,6 @@
 * ocean
   - depths
   - velocity
-  - time
 * roms -  Tools specific to the Regional Ocean Modeling System
   - nc_variables
   - write_roms_grid

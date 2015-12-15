@@ -240,9 +240,12 @@ def get_Vstretching_4(theta_s, theta_b):
     @check_s_limits
     def C(s):
         C = (1.0 - np.cosh(theta_s * s)) / (np.cosh(theta_s) - 1.0)
-        return (np.exp(theta_b * C) - 1.0) / (1.0 - np.exp(-theta_b))
-    
-    C.__doc__ = get_Vstretching_3.__doc__
+        if theta_b > 0.0:
+            return (np.exp(theta_b * C) - 1.0) / (1.0 - np.exp(-theta_b))
+        else:
+            return -C
+        
+    C.__doc__ = get_Vstretching_4.__doc__
     C.__doc__ += '  -------------- Specified Parameters ----------\n'
     C.__doc__ += '  theta_s = %f\n' % theta_s
     C.__doc__ += '  theta_b = %f\n' % theta_b
