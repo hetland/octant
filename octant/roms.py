@@ -281,7 +281,9 @@ class nc_depths(object):
         self.nc = nc
         if ncg is None:
             self.ncg = self.nc
-        
+        else:
+            self.ncg = ncg
+
         # Get the vertical dimension of the grid.
         if 'N' in self.nc.dimensions.keys():
             self.N = len(self.nc.dimensions['N'])
