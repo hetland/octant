@@ -70,7 +70,6 @@ if __name__ == '__main__':
           author_email = "hetland@tamu.edu",
           url = "http://octant.googlecode.com/",
           packages = ['octant',
-                      'octant.extern',
                       'octant.ocean'],
           license = 'BSD',
           platforms = ["any"],
@@ -79,4 +78,3 @@ if __name__ == '__main__':
           # ext_modules = [iso, csa],
           classifiers = filter(None, classifiers.split("\n")),
           )
-    
