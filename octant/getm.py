@@ -78,7 +78,7 @@ class Bdyinfo(object):
                   j=range(start,end+1)
                   i=(int(spec[0])-1)*np.ones((end-start+1),dtype='i')
                   indlist.extend(zip(i,j))
-        
+
         bdy.close()
         self._indlist=indlist
 
@@ -111,7 +111,7 @@ class Bdy2d(object):
         mode - 'r' for read-only, 'r+' or 'a' for append, 'w' for create or overwrite
         timeunits - CF units string of time variable
         nbdy - number of boundary points
-        updatefields - boolean; should ncdf fields be updated in the python workspace? 
+        updatefields - boolean; should ncdf fields be updated in the python workspace?
         """
 
         self._filename=filename
@@ -175,8 +175,8 @@ class Bdy2d(object):
                 self.elev=self._variables[self._ename][:]
                 self.time=self._variables[self._tname][:]
         else:
-            print "ERROR: length of data has to fit nbdy = ",self_nbdy
-        
+            print("ERROR: length of data has to fit nbdy = ",self_nbdy)
+
     def get_nbdy(self):
         return self._nbdy
     def get_tnum(self):
@@ -204,7 +204,7 @@ class Bdy3d(object):
         timeunits - CF units string of time variable
         nbdy - number of boundary points
         zax - vector of z-levels (positive, increasing depths)
-        updatefields - boolean; should ncdf fields be updated in the python workspace? 
+        updatefields - boolean; should ncdf fields be updated in the python workspace?
         """
 
         self._filename=filename
@@ -230,7 +230,7 @@ class Bdy3d(object):
             self._tnum=0
             self._nbdy=nbdy
             if zax==None:
-                print "you have to specify a zax vector!"
+                print("you have to specify a zax vector!")
             else:
                 self._ncdf.createDimension(self._zname,len(zax))
                 zvar=self._ncdf.createVariable(self._zname,'f8',(self._zname,))
@@ -268,7 +268,7 @@ class Bdy3d(object):
     def putdata(self,time,varname,data,tind=None):
         """
         put data for one timestep into GETM bdy3d file.
-        
+
         time - a float number in the units of variable time,
         varname - the variable name string of an existing variable
         data - a 2D float list or array to be put into the bdy3d file.
@@ -293,8 +293,8 @@ class Bdy3d(object):
                 self._tnum=self._tnum+1
             self._ncdf.sync()
         else:
-            print "ERROR: length of data has to fit nbdy = ",self._nbdy," and znum = ",self._znum
-        
+            print("ERROR: length of data has to fit nbdy = ",self._nbdy," and znum = ",self._znum)
+
     def get_nbdy(self):
         return self._nbdy
     def get_tnum(self):
@@ -314,12 +314,12 @@ class Transect(Transect_extrapolator):
     netcdf file and a list of lon/lat tuples.
     """
     def __init__(self, ncgrid, verts, proj=None):
-        
+
         if proj is None:
             self.proj = Basemap(projection='merc', resolution=None, lat_ts=0.0)
         else:
             self.proj = proj
-        
+
         nc = netCDF4.Dataset(ncgrid)
         gridtype=int(nc.variables['grid_type'][0])
         if gridtype == 2:
@@ -347,7 +347,7 @@ class Transect(Transect_extrapolator):
             y=shrink(y,h.shape)
             mask = h == nc.variables['bathymetry'].missing_value
         nc.close()
-        
+
         if gridtype == 2 or gridtype == 4:
             (lonm,latm)=pylab.meshgrid(lon,lat)
             x, y = self.proj(lonm[~mask], latm[~mask])
@@ -356,9 +356,9 @@ class Transect(Transect_extrapolator):
         elif gridtype == 1 or gridtype == 3:
             (x,y) = pl.meshgrid(x,y)
             xv,yv = zip(*verts)
-             
+
         verts = zip(xv, yv)
-        
+
         super(Transect, self).__init__(x, y, verts)
 
 def writeTopofile(grd, depths=None, ncfile='topo.nc', proj=None, defaultdepth=15.0):
@@ -412,12 +412,12 @@ def writeTopofile(grd, depths=None, ncfile='topo.nc', proj=None, defaultdepth=15
     v = nc.createVariable('yx','f8',('y','x'))
     v.units = 'm'
     v[:] = grd.y_vert
-    
+
     if spherical_grid:
         v = nc.createVariable('lonx','f8',('y','x'))
         v.units = 'degrees east'
         v[:] = lonx
-        
+
         v = nc.createVariable('latx','f8',('y','x'))
         v.units = 'degrees north'
         v[:] = latx
@@ -437,4 +437,3 @@ def writeTopofile(grd, depths=None, ncfile='topo.nc', proj=None, defaultdepth=15
             v[:] = depths
 
     nc.close()
-

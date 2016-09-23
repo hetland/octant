@@ -34,22 +34,22 @@ class Step3d_t(object):
         self.time = self._ocean_time[0]
         self._lidx = -999
         if 'AKt' not in nc.variables:
-            print ' ### Warning -- AKt not found, using AKt_bak = %5.3e' % AKt_bak
+            print(' ### Warning -- AKt not found, using AKt_bak = %5.3e' % AKt_bak)
             self._AKt_bak = AKt_bak
-    
+
     def step(self, static=False):
         """docstring for fname"""
-        
+
         lidx = argwhere(abs(self._ocean_time <= self.time)).max()
         if lidx != self._lidx:
             self._lidx = lidx
             self._uidx = lidx+2
             if self._uidx >= len(self._ocean_time): self._uidx = None
-            
+
             self._tidx=slice(self._lidx,self._uidx)
             self._tstart = self._ocean_time[self._tidx][0]
             self._tend = self._ocean_time[self._tidx][-1]
-            
+
             self._z_wi = self.z_w[self._tidx]
             self._ui = self.nc.variables['u'][self._tidx]
             self._vi = self.nc.variables['v'][self._tidx]
@@ -57,23 +57,23 @@ class Step3d_t(object):
                 self._AKti = self.nc.variables['AKt'][self._tidx]
             except:
                 self._AKti = zeros_like(self._z_wi) + self._AKt_bak
-        
+
         w0 = (self._tend-self.time)/(self._tend-self._tstart)
         w1 = 1.0 - w0
-        self.trc = _step3d_t.step3d_t(self.dt, 
-                          self.rmask.T, self.pm.T, self.pn.T, 
+        self.trc = _step3d_t.step3d_t(self.dt,
+                          self.rmask.T, self.pm.T, self.pn.T,
                           (w0*self._z_wi[0] + w1*self._z_wi[1]).T,
                           (w0*self._AKti[0] + w1*self._AKti[1]).T,
                           (w0*self._ui[0] + w1*self._ui[1]).T,
                           (w0*self._vi[0] + w1*self._vi[1]).T,
                           self.trc.T).T
-        
-        print 'time=%9.2f, mean=%7.3e, min=%7.3e, max=%7.3e' % \
-              (self.time, self.trc.mean(), self.trc.min(), self.trc.max())
-        
+
+        print('time=%9.2f, mean=%7.3e, min=%7.3e, max=%7.3e' % \
+              (self.time, self.trc.mean(), self.trc.min(), self.trc.max()))
+
         if static is False:
             self.time = self.time + self.dt
-        
+
 if __name__ == '__main__':
     nc = octant.io.MFDataset('/Volumes/Hetland_merrimack/field_2007/steady/ocean_1750*.nc')
     step = Step3d_t(nc)
@@ -81,6 +81,3 @@ if __name__ == '__main__':
     y, x = mgrid[0:258, 0:514]
     step.trc = sin(x*8*pi/x.max())[newaxis,:,:] * ones((30,), 'd')[:, newaxis, newaxis]
     step.static_step(17, 500)
-
-
-

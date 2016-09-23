@@ -48,7 +48,7 @@ nx = libgridgen.gridnodes_getnx(gn);
 ny = libgridgen.gridnodes_getny(gn);
 for j in range(ny):
     for i in range(nx):
-        print '  [', j, '][', i, ']: x =', x[j][i], ', y=', y[j][i]
+        print('  [', j, '][', i, ']: x =', x[j][i], ', y=', y[j][i])
 #
 # or print to a file:
 #
@@ -62,9 +62,9 @@ yy = c_double();
 fi = c_double(0.9);
 fj = c_double(0.9);
 libgridgen.gridmap_fij2xy(gm, fi, fj, byref(xx), byref(yy));
-print '  i =', fi.value, ', j =', fj.value, ' -> x =', xx.value, ', y=', yy.value
+print('  i =', fi.value, ', j =', fj.value, ' -> x =', xx.value, ', y=', yy.value)
 libgridgen.gridmap_xy2fij(gm, xx, yy, byref(fi), byref(fj));
-print '  x =', xx.value, ', y=', yy.value, ' ->  i =', fi.value, ', j =', fj.value
+print('  x =', xx.value, ', y=', yy.value, ' ->  i =', fi.value, ', j =', fj.value)
 #
 # Clean-up
 #
