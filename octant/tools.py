@@ -3,10 +3,8 @@
 __docformat__ = "restructuredtext en"
 
 import warnings
-
 import numpy as np
 
-from octant.io import Dataset
 # from matplotlib import delaunay
 
 # import _iso

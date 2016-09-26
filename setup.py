@@ -2,39 +2,24 @@
 
 Requires:
     NumPy (http://numpy.scipy.org)
-    matplotlib with the Basemap toolkit (http://matplotlib.sourceforge.net)
     netCDF4 (http://www.cdc.noaa.gov/people/jeffrey.s.whitaker/python/netCDF4.html)
 
-Contains:
-    grid  -  Tools for dealing with curvilinear grids
-      gridgen
-      focus
-      boundaryclick
-      Grid
-      gshhs
-      greatcircle
+Subpackages:
 
-    tools -  Generic tools.
-      polygeom
-      polyclick
-      delaunay
+depths:
+    get_Vstretching_1, get_Vstretching_2, get_Vstretching_3, \
+    get_Vstretching_4, get_Vstretching, get_Vtransform_1, \
+    get_Vtransform_2, get_depths, get_sw, get_srho, get_s, \
+    get_zw, get_zrho, get_Hz
 
-    io
-      pupynere
-      Dataset
+tools:
+    rot2d, nanmask, shrink, plfilt, hgrad
 
-    ocean
-      depths
-      velocity
-      time
+wvelocity:
+    omegaHz_velocity, w_velocity
 
-    roms -  Tools specific to the Regional Ocean Modeling System
-      nc_variables
-      write_roms_grid
-
-    getm - Tools specific to the General Estuarine Transport Model
-      nc_variables
-      write_getm_grid
+seawater:
+    psu2reference_salinity, o2_saturation, rho_stp
 """
 
 classifiers = """\
@@ -69,12 +54,10 @@ if __name__ == '__main__':
           author = "Robert Hetland",
           author_email = "hetland@tamu.edu",
           url = "http://octant.googlecode.com/",
-          packages = ['octant',
-                      'octant.ocean'],
+          packages = ['octant'],
           license = 'BSD',
           platforms = ["any"],
           ext_package='octant',
           ext_modules = [iso],
-          # ext_modules = [iso, csa],
           classifiers = filter(None, classifiers.split("\n")),
           )

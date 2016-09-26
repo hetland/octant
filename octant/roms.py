@@ -5,13 +5,9 @@ __docformat__ = "restructuredtext en"
 from datetime import datetime
 
 import numpy as np
-try:
-    import netCDF4
-except:
-    import netCDF3 as netCDF4
+import netCDF4
 
 import octant.depths as depths
-from octant.io import Dataset
 from octant.grid import CGrid, rho_to_vert
 
 
@@ -23,7 +19,6 @@ def nc_gls_dissipation(nc, tidx):
 
        where nc is a netcdf object or filename, tidx is the time index to return
     '''
-    nc = Dataset(nc)
     cmu0 = nc.variables['gls_cmu0'][:]
     gls_m = nc.variables['gls_m'][:]
     gls_n = nc.variables['gls_n'][:]
@@ -43,7 +38,6 @@ class nc_N2(object):
        where nc is a netcdf object or filename, tidx is the time index to return
     '''
     def __init__(self, nc):
-        self.nc = Dataset(nc)
         if 'rho' in nc.variables.keys():
             self.rho = nc.variables['rho']
         else:
@@ -56,7 +50,6 @@ class nc_N2(object):
 def nc_curl(nc, tidx, grd=None):
     if grd is None:
         grd = nc_grid(nc)
-    nc = Dataset(nc)
     u = nc.variables['u'][tidx]
     v = nc.variables['v'][tidx]
     return ( diff(v, axis=-1)/diff(grd.x_v, axis=-1) - \
@@ -66,7 +59,6 @@ def nc_curl(nc, tidx, grd=None):
 def nc_div(nc, tidx, grd=None):
     if grd is None:
         grd = nc_grid(nc)
-    nc = Dataset(nc)
     u = nc.variables['u'][tidx]
     v = nc.variables['v'][tidx]
     return ( (diff(u, axis=-1)/diff(grd.x_u, axis=-1))[...,1:-1,:] + \
@@ -76,7 +68,6 @@ def nc_div(nc, tidx, grd=None):
 def nc_pstrain(nc, tidx, grd=None):
     if grd is None:
         grd = nc_grid(nc)
-    nc = Dataset(nc)
     u = nc.variables['u'][tidx]
     v = nc.variables['v'][tidx]
     ex = (diff(u, axis=-1)/diff(grd.x_u, axis=-1))[...,1:-1,:]
@@ -93,8 +84,6 @@ def nc_grid(nc):
     information.  The NetCDF file must contain either 'vert' veriables, or the
     verticies will be calculated with 'rho' and angle points.
     '''
-    nc = Dataset(nc)
-
     varlist = ['h', 'f', 'pm', 'pn', 'angle', 'theta_s', 'theta_b', 'hc']
     variables={}
     for var in varlist:
@@ -346,7 +335,6 @@ class nc_depths(object):
 class nc_velocity (object):
 
     def __init__(self, nc, grid='rho', angle=None):
-        self.nc = pyroms.Dataset(nc)
         self.grid = grid
         self.u = self.nc.variables['u']
         self.v = self.nc.variables['v']
