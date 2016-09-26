@@ -1,4 +1,6 @@
 # encoding: utf-8
+# Deprecated in octant. Will be moved to pygridgen.
+
 '''Tools for creating and working with Arikawa C-Grids'''
 __docformat__ = "restructuredtext en"
 

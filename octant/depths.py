@@ -400,15 +400,18 @@ def get_depths(Vtransform, C, h, hc):
 # S-coordinate
 
 def get_sw(N):
+    'return N evenly s-coordinate w-points.'
     return np.linspace(-1.0, 0.0, N)
 
 
 def get_srho(N):
+    'return N evenly spaced s-coordinate rho-points'
     sr = np.linspace(-1.0, 0.0, N+1)
     return 0.5 * (sr[1:] + sr[:-1])
 
 
 def get_s(grid, N):
+    "return N s-coordinate points on grid: 'rho' or 'w'"
     if grid == 'w':
         return get_sw(N)
     elif grid == 'rho':
@@ -442,17 +445,10 @@ def get_Hz(Vtransform, Vstretching, N, theta_s, theta_b, h, hc, zeta=0, Hscale=3
 
 
 # DESIGN QUESTIONS and TODO items
-
-# should get_srho and get_sw take the same N (i.e., always return N values),
-# or should both be based on N rho points, as in ROMS?
-
-# is the check_s_limits decorator cool/flexible or confusing/distracting?
-
-# Naming and variable input order in wrapper functions OK?
-
-# Unit tests?  Would be nice.
-
-# is there more or better logic that returns things of the right shape?  In particular, is
-# there a way to ensure that zeta broadcasts correctly?  This is probably more important for
-# nc_depths, when the depths object is indexed, but some of that logic could be brought
-# over here.
+#
+#  - Unit tests.
+#
+#  - Logic that returns things of the right shape?  In particular, is
+#    there a way to ensure that zeta broadcasts correctly?  This is probably more important for
+#    nc_depths, when the depths object is indexed, but some of that logic could be brought
+#    over here.

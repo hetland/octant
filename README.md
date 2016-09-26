@@ -1,11 +1,8 @@
 #OCTANT (OCean modeling seTup and ANalysis Tools)
-#A suite of tools for ocean models like ROMS, GETM, ... 
+#A suite of tools for ocean models like ROMS, GETM, ...
 
 ##Subpackages:
-  
-* io
-  - pupynere
-  - Dataset
+
 * ocean
   - depths
   - velocity

@@ -1,3 +1,5 @@
+# This package will be move to an independent package: pycsa.
+
 
 import sys
 

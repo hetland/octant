@@ -153,7 +153,7 @@ class plfilt(object):
             return uf, tf
 
 
-
+### MOVE TO SLICE
 def isoslice(q, z, zo=0, mode='spline'):
     """Return a slice a 3D field along an isosurface.
 
@@ -193,7 +193,7 @@ def isoslice(q, z, zo=0, mode='spline'):
 
     return q2d
 
-
+# MOVE TO SLICE
 def iso_integrate(z_w, q, z_iso):
     z_w = np.atleast_3d(z_w)
     q = np.atleast_3d(q)
@@ -202,7 +202,7 @@ def iso_integrate(z_w, q, z_iso):
     z_iso *= np.ones(q.shape[1:])
     return _iso.integrate(z_w, q, z_iso)
 
-
+# MOVE TO SLICE
 def surface(z, q, qo):
     assert len(z.shape) == 3, 'z must be 3D'
     assert len(q.shape) == 3, 'q must be 3D'
@@ -288,6 +288,7 @@ def N2(rho, z, rho_0=1000.0):
     return -(9.8 / rho_0) * r_z
 
 
+# change to new algorithm.
 def arg_nearest(x, xo, scale=None):
     """returns indices of closest point in an N arrays.
 
@@ -326,7 +327,7 @@ def arg_nearest(x, xo, scale=None):
     q = reduce(np.add, [(y-yo)**2 for (y, yo) in zip(x, xo)])
     return np.where(q == q.min())
 
-
+# I'm not even sure this makes sense anymore. Sandbox.
 def extrapolate_mask(a, mask=None):
     if mask is None and not isinstance(a, np.ma.MaskedArray):
         return a
@@ -348,7 +349,7 @@ def extrapolate_mask(a, mask=None):
     a[mask] = interp(ibad, jbad)
     return a
 
-
+# dito with this. Sandbox.
 class Transect_extrapolator(object):
     """
     General Transect object
