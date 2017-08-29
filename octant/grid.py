@@ -4,20 +4,9 @@
 '''Tools for creating and working with Arikawa C-Grids'''
 __docformat__ = "restructuredtext en"
 
-import os
-import sys
-import ctypes
-import pickle
-from warnings import warn
-from copy import deepcopy
 
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.artist import Artist
-from matplotlib.patches import Polygon, CirclePolygon
-from matplotlib.lines import Line2D
-from matplotlib.mlab import dist_point_to_segment
-
+import pyproj
 
 class CGrid(object):
     """Curvilinear Arakawa C-Grid
