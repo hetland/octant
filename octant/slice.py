@@ -1,6 +1,4 @@
-# encoding: utf-8
-"""Tools for slicing model fields."""
-__docformat__ = "restructuredtext en"
+from __future__ import absolute_import, division, print_function
 
 def isoslice(var,prop,isoval=0,axis=0,masking=True):
     """

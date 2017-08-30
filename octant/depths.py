@@ -1,4 +1,3 @@
-# encoding: utf-8
 '''
 Functions to calculate depths for an ocean model vertical s-coordinate
 
@@ -55,7 +54,7 @@ See Also
     octant.roms.nc_depths
 
 '''
-__docformat__ = "restructuredtext en"
+from __future__ import absolute_import, division, print_function
 
 import numpy as np
 

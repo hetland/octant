@@ -1,6 +1,4 @@
-# encoding: utf-8
-"""Tools for working with seawater data."""
-__docformat__ = "restructuredtext en"
+from __future__ import absolute_import, division, print_function
 
 import numpy as np
 

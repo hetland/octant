@@ -1,11 +1,7 @@
-# encoding: utf-8
-"""Tools for calculating vertical velocity in s-coordinate models."""
-__docformat__ = "restructuredtext en"
-
-
 # TO DO:
 #  - Need to improve API a bit.  Seems inputs are still a bit clunky.
 #  - Probably needs an nc_omegaHz, and nc_wvelocity.
+from __future__ import absolute_import, division, print_function
 
 import numpy as np
 
@@ -86,14 +82,14 @@ def w_velocity(u, v, omegaHz, pm, pn, zr, z_t =0):
 
 if __name__ == '__main__':
 
-    import octant
+    from .depths import get_Hz, get_zrho
     
     k = 1 / 3000.0
     H = 100.0
     Umax = 0.5
     
-    Hz = octant.depths.get_Hz(2, 4, 30, 5.0, 1.0, H*np.ones((40, 50)), 10.0)
-    zr = octant.depths.get_zrho(2, 4, 30, 5.0, 1.0, H*np.ones((40, 50)), 10.0)
+    Hz = depths.get_Hz(2, 4, 30, 5.0, 1.0, H*np.ones((40, 50)), 10.0)
+    zr = depths.get_zrho(2, 4, 30, 5.0, 1.0, H*np.ones((40, 50)), 10.0)
 
     x = 500.0 * np.arange(50)
     y = 500.0 * np.arange(40)

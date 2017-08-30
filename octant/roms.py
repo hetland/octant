@@ -1,14 +1,12 @@
-# encoding: utf-8
-"Tools specific for the Regional Ocean Modeling System"
-__docformat__ = "restructuredtext en"
+from __future__ import absolute_import, division, print_function
 
 from datetime import datetime
 
 import numpy as np
 import netCDF4
 
-import octant.depths as depths
-from octant.grid import CGrid, rho_to_vert
+from .depths import get_srho, get_sw, get_Vstretching, get_depths
+from .grid import CGrid, rho_to_vert
 
 
 def nc_gls_dissipation(nc, tidx):

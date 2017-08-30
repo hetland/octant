@@ -1,6 +1,4 @@
-# encoding: utf-8
-"""Tools for working with ROMS model input and output."""
-__docformat__ = "restructuredtext en"
+from __future__ import absolute_import, division, print_function
 
 import warnings
 import numpy as np

@@ -1,9 +1,4 @@
-# encoding: utf-8
-# Deprecated in octant. Will be moved to pygridgen.
-
-'''Tools for creating and working with Arikawa C-Grids'''
-__docformat__ = "restructuredtext en"
-
+from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import pyproj
