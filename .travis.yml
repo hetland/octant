@@ -1,0 +1,21 @@
+language: python
+sudo: false
+
+python:
+  - 2.7
+  - 3.4
+  - 3.5
+  - 3.6
+
+before_install:
+  - wget http://bit.ly/miniconda -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - travis_retry conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION nomkl --file requirements.txt
+  - source activate TEST
+
+install:
+  - pip install -e .
+
+script:
+  - py.test -s -rxs -v
