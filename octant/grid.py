@@ -115,11 +115,15 @@ class CGrid(object):
 
         # angles are defined using the y-average of the verticies, equivalent
         # to the u-points with extra columns on the edges
-                            
-        self.angle = np.arctan2( np.diff(0.5*( self.y_vert[1:,:]
-                                              +self.y_vert[:-1,:] )),
-                                     np.diff(0.5*( self.x_vert[1:,:]
-                                                  +self.x_vert[:-1,:] )) )
+
+        angle = np.arctan2( np.diff(0.5*( self.y_vert[1:,:]
+                                         +self.y_vert[:-1,:] )),
+                            np.diff(0.5*( self.x_vert[1:,:]
+                                         +self.x_vert[:-1,:] )) )
+
+        # unwrap in each dimension to ensure no discontinuities.
+        self.angle = np.unwrap(np.unwrap(angle, axis=0), axis=1)
+        self.angle_rho = self.angle
 
     def calculate_orthogonality(self):
         '''
