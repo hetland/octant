@@ -113,30 +113,11 @@ class CGrid(object):
         else:
             self.angle = np.zeros(self.x_vert.shape, dtype='d')
 
-        angle_ud = np.arctan2( np.diff(self.y_vert, axis=1), 
-                               np.diff(self.x_vert, axis=1) )
-        angle_lr = np.arctan2( np.diff(self.y_vert, axis=0), 
-                               np.diff(self.x_vert, axis=0) ) - np.pi/2.0
-        # domain center
-        self.angle[1:-1,1:-1] = 0.25*( angle_ud[1:-1,1:]+angle_ud[1:-1,:-1]
-                                      +angle_lr[1:,1:-1]+angle_lr[:-1,1:-1] )
-        # edges
-        self.angle[0,1:-1] = (1.0/3.0)*( angle_lr[0,1:-1]+angle_ud[0,1:]
-                                        +angle_ud[0,:-1] )
-        self.angle[-1,1:-1] = (1.0/3.0)*( angle_lr[-1,1:-1]+angle_ud[-1,1:]
-                                         +angle_ud[-1,:-1] )
-        self.angle[1:-1,0] = (1.0/3.0)*( angle_ud[1:-1,0]+angle_lr[1:,0]
-                                        +angle_lr[:-1,0] )
-        self.angle[1:-1,-1] = (1.0/3.0)*( angle_ud[1:-1,-1]+angle_lr[1:,-1]
-                                         +angle_lr[:-1,-1] )
-        #conrers
-        self.angle[0,0] = 0.5*(angle_lr[0,0]+angle_ud[0,0])
-        self.angle[0,-1] = 0.5*(angle_lr[0,-1]+angle_ud[0,-1])
-        self.angle[-1,0] = 0.5*(angle_lr[-1,0]+angle_ud[-1,0])
-        self.angle[-1,-1] = 0.5*(angle_lr[-1,-1]+angle_ud[-1,-1])
-
-        self.angle_rho = np.arctan2( np.diff(0.5*( self.y_vert[1:,:]
-                                                  +self.y_vert[:-1,:] )), 
+        # angles are defined using the y-average of the verticies, equivalent
+        # to the u-points with extra columns on the edges
+                            
+        self.angle = np.arctan2( np.diff(0.5*( self.y_vert[1:,:]
+                                              +self.y_vert[:-1,:] )),
                                      np.diff(0.5*( self.x_vert[1:,:]
                                                   +self.x_vert[:-1,:] )) )
 
@@ -349,4 +330,3 @@ def uvp_masks(rmask):
     pmask = rmask[:-1, :-1] * rmask[:-1, 1:] * rmask[1:, :-1] * rmask[1:, 1:]
 
     return umask, vmask, pmask
-
