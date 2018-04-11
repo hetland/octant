@@ -233,7 +233,7 @@ def get_Vstretching_4(theta_s, theta_b):
     This double transformation is continuous with respect to "theta_s"
     and "theta_b", as both values approach to zero.
     '''
-    assert 0.0 <  theta_s <= 10.0, 'theta_s not in valid range for Vstretching == 4'
+    assert 0.0 <=  theta_s <= 10.0, 'theta_s not in valid range for Vstretching == 4'
     assert 0.0 <= theta_b <= 3.0, 'theta_s not in valid range for Vstretching == 4'
 
     @check_s_limits
