@@ -47,8 +47,8 @@ class CGrid(object):
             'x and y must be 2D arrays of the same size.'
 
         if np.any(np.isnan(x)) or np.any(np.isnan(y)):
-            x = np.ma.masked_where( (isnan(x)) | (isnan(y)) , x)
-            y = np.ma.masked_where( (isnan(x)) | (isnan(y)) , y)
+            x = np.ma.masked_where( (np.isnan(x)) | (np.isnan(y)) , x)
+            y = np.ma.masked_where( (np.isnan(x)) | (np.isnan(y)) , y)
 
         self.x_vert = x
         self.y_vert = y
@@ -93,6 +93,9 @@ class CGrid(object):
         x_temp = 0.5*(self.x_vert[:,1:]+self.x_vert[:,:-1])
         y_temp = 0.5*(self.y_vert[:,1:]+self.y_vert[:,:-1])
         self.dy = np.sqrt(np.diff(x_temp, axis=0)**2 + np.diff(y_temp, axis=0)**2)
+
+        self.pm = 1.0/self.dx
+        self.pn = 1.0/self.dy
 
         if isinstance(self.dy, np.ma.MaskedArray):
             self.dndx = np.ma.zeros(self.x_rho.shape, dtype='d')
