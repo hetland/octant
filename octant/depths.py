@@ -238,7 +238,10 @@ def get_Vstretching_4(theta_s, theta_b):
 
     @check_s_limits
     def C(s):
-        C = (1.0 - np.cosh(theta_s * s)) / (np.cosh(theta_s) - 1.0)
+        if theta_s>0:
+            C = (1.0 - np.cosh(theta_s * s)) / (np.cosh(theta_s) - 1.0)
+        else:
+            C = -(s*s)
         if theta_b > 0.0:
             return (np.exp(theta_b * C) - 1.0) / (1.0 - np.exp(-theta_b))
         else:
