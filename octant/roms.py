@@ -312,7 +312,15 @@ class nc_depths(object):
         # Load in the function for depths(s, zeta)
         self.depths = get_depths(self.Vtransform, self.C, self.h, self.hc)
 
+    def get_station_depths(self):
+        '''
+        Return array of depths for all times at all stations.
+        '''
+        zeta = self.zeta[:]
+        return self.depths(self.s, zeta[:, np.newaxis, :])
+
     def __getitem__(self, indices):
+        
         if not isinstance(indices, tuple):
             indices = (indices, )
 
