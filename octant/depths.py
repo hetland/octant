@@ -12,12 +12,10 @@ Vstretching:
     C = get_Vstretching_2(theta_s, theta_b)
     C = get_Vstretching_3(theta_s, theta_b, Hscale)
     C = get_Vstretching_4(theta_s, theta_b)
-    C = get_Vstretching(Vstretching, theta_s, theta_b, Hscale=None)
 
 Vtransform and depths:
     Zo = get_Vtransform_1(C, h, hc)
     Zo = get_Vtransform_2(C, h, hc)
-    z = get_depths(Vtransform, C, h, hc)
 
 S-coordinate:
     srho = get_srho(N)
@@ -25,6 +23,9 @@ S-coordinate:
     s = get_s(grid, N)
 
 Wrapper functions:
+    C = get_Vstretching(Vstretching, theta_s, theta_b, Hscale=None)
+    z = get_depths(Vtransform, C, h, hc)
+
     zw = get_zw(Vtransform, Vstretching, N, theta_s, theta_b, h, hc, zeta=0, Hscale=3)
     zrho = get_zrho(Vtransform, Vstretching, N, theta_s, theta_b, h, hc, zeta=0, Hscale=3)
     Hz = get_Hz(Vtransform, Vstretching, N, theta_s, theta_b, h, hc, zeta=0, Hscale=3)
